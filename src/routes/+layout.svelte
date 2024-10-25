@@ -22,6 +22,17 @@
 
 	let ready: boolean = false;
 	onMount(() => (ready = true));
+
+	let routes = [
+		{
+			title: 'Home',
+			path: '/',
+		},
+		{
+			title: 'Codes',
+			path: '/codes',
+		},
+	];
 </script>
 
 <Header
@@ -34,30 +45,15 @@
 		<SkipToContent />
 	</svelte:fragment>
 	<HeaderNav style="-webkit-app-region: drag;">
-		<HeaderNavItem href="/" text="Link 1" />
-		<HeaderNavItem href="/" text="Link 2" />
-		<HeaderNavItem href="/" text="Link 3" />
-		<HeaderNavMenu text="Menu">
-			<HeaderNavItem href="/" text="Link 1" />
-			<HeaderNavItem href="/" text="Link 2" />
-			<HeaderNavItem href="/" text="Link 3" />
-		</HeaderNavMenu>
-		<HeaderNavItem href="/" text="Link 4" />
+		<HeaderNavItem href="/" text="Home" />
+		<HeaderNavItem href="/codes" text="Codes" />
 	</HeaderNav>
 </Header>
 
 <SideNav bind:isOpen={isSideNavOpen}>
 	<SideNavItems>
-		<SideNavLink text="Link 1" />
-		<SideNavLink text="Link 2" />
-		<SideNavLink text="Link 3" />
-		<SideNavMenu text="Menu">
-			<SideNavMenuItem href="/" text="Link 1" />
-			<SideNavMenuItem href="/" text="Link 2" />
-			<SideNavMenuItem href="/" text="Link 3" />
-		</SideNavMenu>
+		<SideNavLink text="Home" />
 		<SideNavDivider />
-		<SideNavLink text="Link 4" />
 	</SideNavItems>
 </SideNav>
 
