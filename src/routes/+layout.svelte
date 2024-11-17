@@ -48,6 +48,9 @@
 		{#each routes as route}
 			<HeaderNavItem href={route.path} text={route.title} />
 		{/each}
+		{#each routes as route}
+			<HeaderNavItem href={route.path} text={route.title} />
+		{/each}
 	</HeaderNav>
 </Header>
 
