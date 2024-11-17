@@ -11,9 +11,6 @@ class Player {
   }
 
   async getPlayer(id) {
-    if (!this.topic) {
-      return;
-    }
     return fetch(`${PUBLIC_API_URL}/players/${id}`)
       .then(response => response.json())
       .then(json => json)
@@ -38,9 +35,6 @@ class Players {
   }
 
   async getPlayers() {
-    if (!this.topic) {
-      return;
-    }
     return fetch(`${PUBLIC_API_URL}/players/`)
       .then(response => response.json())
       .then(json => json)

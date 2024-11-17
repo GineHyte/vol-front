@@ -1,13 +1,9 @@
 <script>
-	export let amplua;
 	export let left;
 	export let top;
+	export let player;
 
-	export let selectedPlayer;
-
-	function setSelectedPlayer() {
-		selectedPlayer = 'TEST';
-	}
+	export let setSelectedPlayer;
 </script>
 
 <button
@@ -16,5 +12,5 @@
 	style="left:{left}px;top:{top}px"
 	on:click={setSelectedPlayer}
 >
-	{amplua}
+	{player.firstName}
 </button>

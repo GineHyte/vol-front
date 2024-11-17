@@ -7,13 +7,6 @@
 		Header,
 		HeaderNav,
 		HeaderNavItem,
-		HeaderNavMenu,
-		SideNav,
-		SideNavItems,
-		SideNavMenu,
-		SideNavMenuItem,
-		SideNavLink,
-		SideNavDivider,
 		SkipToContent,
 		Content,
 	} from 'carbon-components-svelte';
@@ -29,8 +22,16 @@
 			path: '/',
 		},
 		{
-			title: 'Codes',
-			path: '/codes',
+			title: 'Games',
+			path: '/games',
+		},
+		{
+			title: 'Players',
+			path: '/players',
+		},
+		{
+			title: 'Teams',
+			path: '/teams',
 		},
 	];
 </script>
@@ -45,9 +46,6 @@
 		<SkipToContent />
 	</svelte:fragment>
 	<HeaderNav style="-webkit-app-region: drag;">
-		{#each routes as route}
-			<HeaderNavItem href={route.path} text={route.title} />
-		{/each}
 		{#each routes as route}
 			<HeaderNavItem href={route.path} text={route.title} />
 		{/each}

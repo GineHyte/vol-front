@@ -1,7 +1,5 @@
 <script>
-	import Field from '$lib/games/Field.svelte';
+	import Games from '$lib/games/Games.svelte';
 </script>
 
-<div class="flex items-center w-full justify-center p-4">
-	<Field />
-</div>
+<Games />
