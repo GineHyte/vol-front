@@ -45,17 +45,11 @@
 		<SkipToContent />
 	</svelte:fragment>
 	<HeaderNav style="-webkit-app-region: drag;">
-		<HeaderNavItem href="/" text="Home" />
-		<HeaderNavItem href="/codes" text="Codes" />
+		{#each routes as route}
+			<HeaderNavItem href={route.path} text={route.title} />
+		{/each}
 	</HeaderNav>
 </Header>
-
-<SideNav bind:isOpen={isSideNavOpen}>
-	<SideNavItems>
-		<SideNavLink text="Home" />
-		<SideNavDivider />
-	</SideNavItems>
-</SideNav>
 
 <Content>
 	{#if ready}
