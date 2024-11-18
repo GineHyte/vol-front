@@ -1,36 +1,30 @@
 <script>
 	import {
-		Header,
-		HeaderNav,
-		HeaderNavItem,
-		HeaderNavMenu,
-		SideNav,
-		SideNavItems,
-		SideNavMenu,
-		SideNavMenuItem,
-		SideNavLink,
-		SideNavDivider,
-		SkipToContent,
-		Content,
-		Grid,
-		Row,
-		Column,
+		DataTable,
+		ClickableTile,
+		DataTableSkeleton,
+		Toolbar,
+		ToolbarContent,
+		Button,
 	} from 'carbon-components-svelte';
 
-	let isSideNavOpen = true;
+	export let headers;
+	export let model;
 </script>
 
-<SideNav expanded={true} isChildOfHeader={false}>
-	<SideNavItems>
-		<SideNavLink text="Link 1" />
-		<SideNavLink text="Link 2" />
-		<SideNavLink text="Link 3" />
-		<SideNavMenu text="Menu">
-			<SideNavMenuItem href="/" text="Link 1" />
-			<SideNavMenuItem href="/" text="Link 2" />
-			<SideNavMenuItem href="/" text="Link 3" />
-		</SideNavMenu>
-		<SideNavDivider />
-		<SideNavLink text="Link 4" />
-	</SideNavItems>
-</SideNav>
+<div class="absolute right-0 top-24 w-30">
+	{#await model.get()}
+		<DataTableSkeleton {headers} />
+	{:then}
+		<DataTable {headers} rows={model.rawData}>
+			<svelte:fragment slot="cell" let:cell>
+				<ClickableTile>{cell.value}</ClickableTile>
+			</svelte:fragment>
+			<Toolbar>
+				<ToolbarContent>
+					<Button>+ Add</Button>
+				</ToolbarContent>
+			</Toolbar>
+		</DataTable>
+	{/await}
+</div>

@@ -8,7 +8,7 @@ class Team {
     this.coach = '';
   }
 
-  async getTeam(id) {
+  async get(id) {
     return fetch(`${PUBLIC_API_URL}/teams/${id}`)
       .then(response => response.json())
       .then(json => json)
@@ -29,7 +29,7 @@ class Teams {
     this.rawData = [];
   }
 
-  async getTeams() {
+  async get() {
     return fetch(`${PUBLIC_API_URL}/teams/`)
       .then(response => response.json())
       .then(json => json)

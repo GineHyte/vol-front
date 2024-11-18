@@ -21,7 +21,7 @@
 </script>
 
 {#if game.id != null}
-	{#await game.getGame()}
+	{#await game.get()}
 		<div>
 			<div class="flex w-[36rem] h-[18rem] bg-amber-600 relative">
 				{#if isZoneEnabled}

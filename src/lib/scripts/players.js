@@ -10,7 +10,7 @@ class Player {
     this.amplua = '';
   }
 
-  async getPlayer(id) {
+  async get(id) {
     return fetch(`${PUBLIC_API_URL}/players/${id}`)
       .then(response => response.json())
       .then(json => json)
@@ -34,8 +34,8 @@ class Players {
     this.rawData = [];
   }
 
-  async getPlayers() {
-    return fetch(`${PUBLIC_API_URL}/players/`)
+  async get() {
+    return fetch(`${PUBLIC_API_URL}/players/`, {mode: 'no-cors'})
       .then(response => response.json())
       .then(json => json)
       .then(json => { this.rawData = json; return json })

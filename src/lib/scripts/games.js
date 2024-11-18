@@ -11,7 +11,7 @@ class Game {
     this.teamB = [];
   }
 
-  async getGame(id = this.id) {
+  async get(id = this.id) {
     return fetch(`${PUBLIC_API_URL}/games/${id}`)
       .then(response => response.json())
       .then(json => json)
@@ -35,7 +35,7 @@ class Games {
     this.rawData = [];
   }
 
-  async getPlayers() {
+  async get() {
     return fetch(`${PUBLIC_API_URL}/games/`)
       .then(response => response.json())
       .then(json => json)

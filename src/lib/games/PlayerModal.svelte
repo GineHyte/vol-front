@@ -25,7 +25,7 @@
 	<p>Choose a player from the list:</p>
 </Modal>
 
-{#await players.getPlayers()}
+{#await players.get()}
 	<DataTableSkeleton />
 {:then}
 	<DataTable

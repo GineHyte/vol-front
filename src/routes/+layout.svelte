@@ -42,10 +42,7 @@
 	class="w-full"
 	style="-webkit-app-region: drag;"
 >
-	<svelte:fragment slot="skip-to-content">
-		<SkipToContent />
-	</svelte:fragment>
-	<HeaderNav style="-webkit-app-region: drag;">
+	<HeaderNav style="display:block">
 		{#each routes as route}
 			<HeaderNavItem href={route.path} text={route.title} />
 		{/each}
