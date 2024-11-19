@@ -2,13 +2,14 @@ import { PUBLIC_API_URL } from '$env/static/public';
 import { Player } from './players';
 
 class Team {
-  constructor() {
+  constructor(id = null) {
+    this.id = id;
     this.name = '';
     this.players = [];
     this.coach = '';
   }
 
-  async get(id) {
+  async get(id = this.id) {
     return fetch(`${PUBLIC_API_URL}/teams/${id}`)
       .then(response => response.json())
       .then(json => json)

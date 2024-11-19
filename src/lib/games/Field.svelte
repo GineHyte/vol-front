@@ -9,6 +9,7 @@
 	import Player from './Player.svelte';
 	import Zone from './Zone.svelte';
 	import { Game } from '$lib/scripts/games';
+	import { Team } from '$lib/scripts/teams';
 
 	export let game = new Game();
 
@@ -16,12 +17,20 @@
 	let isPlayersEnabled = true;
 	let selectedPlayer = '';
 
-	let teamA = [];
-	let teamB = [];
+	let teamA = new Team();
+	let teamB = new Team();
+
+	async function getGame(id) {
+		game.parseData(await game.get());
+		teamA.id = game.teamA;
+		teamB.id = game.teamB;
+		teamA.parseData(await teamA.get());
+		teamB.parseData(await teamB.get());
+	}
 </script>
 
 {#if game.id != null}
-	{#await game.get()}
+	{#await getGame(game.id)}
 		<div>
 			<div class="flex w-[36rem] h-[18rem] bg-amber-600 relative">
 				{#if isZoneEnabled}
@@ -54,13 +63,13 @@
 				{/if}
 				{#if isPlayersEnabled}
 					<div class="relative w-full">
-						<Player top="50" left="160" />
-						<Player top="170" left="90" />
+						<Player top="50" left="160" player={teamA.players[0]} />
+						<Player top="170" left="90" player={teamA.players[1]} />
 					</div>
 					<div class="h-full w-[1px] bg-black" />
 					<div class="relative w-full">
-						<Player top="170" left="90" />
-						<Player top="50" left="160" />
+						<Player top="170" left="90" player={teamB.players[0]} />
+						<Player top="50" left="160" player={teamA.players[1]} />
 					</div>
 				{/if}
 			</div>

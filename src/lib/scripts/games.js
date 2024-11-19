@@ -7,8 +7,8 @@ class Game {
     this.description = '';
     this.fromDatetime = '';
     this.toDatetime = '';
-    this.teamA = [];
-    this.teamB = [];
+    this.teamA = '';
+    this.teamB = '';
   }
 
   async get(id = this.id) {
@@ -38,7 +38,6 @@ class Games {
   async get() {
     return fetch(`${PUBLIC_API_URL}/games/`)
       .then(response => response.json())
-      .then(json => json)
       .then(json => { this.rawData = json; return json })
       .catch(error => console.log(error));
   }

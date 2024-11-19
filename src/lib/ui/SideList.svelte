@@ -28,5 +28,8 @@
 				</ToolbarContent>
 			</Toolbar>
 		</DataTable>
+		{#if model.rawData.length === 0}
+			<ClickableTile disabled>No Data</ClickableTile>
+		{/if}
 	{/await}
 </div>

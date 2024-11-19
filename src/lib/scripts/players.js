@@ -1,16 +1,18 @@
 import { PUBLIC_API_URL } from '$env/static/public';
 
 class Player {
-  constructor() {
+  constructor(id = null) {
+    this.id = id;
     this.firstName = '';
     this.lastName = '';
     this.age = '';
     this.weight = 0;
     this.height = 0;
     this.amplua = '';
+    this.imageURL = '';
   }
 
-  async get(id) {
+  async get(id = this.id) {
     return fetch(`${PUBLIC_API_URL}/players/${id}`)
       .then(response => response.json())
       .then(json => json)
@@ -24,6 +26,7 @@ class Player {
     this.weight = data.weight;
     this.height = data.height;
     this.amplua = data.amplua;
+    this.imageURL = data.image_url;
   }
 
 }
@@ -35,9 +38,8 @@ class Players {
   }
 
   async get() {
-    return fetch(`${PUBLIC_API_URL}/players/`, {mode: 'no-cors'})
+    return fetch(`${PUBLIC_API_URL}/players/`)
       .then(response => response.json())
-      .then(json => json)
       .then(json => { this.rawData = json; return json })
       .catch(error => console.log(error));
   }
