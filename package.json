@@ -22,6 +22,7 @@
 		"Chrome 89"
 	],
 	"dependencies": {
+		"carbon-icons-svelte": "^12.13.0",
 		"electron-context-menu": "^3.6.1",
 		"electron-reloader": "^1.2.3",
 		"electron-serve": "^1.1.0",

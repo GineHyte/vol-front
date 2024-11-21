@@ -35,12 +35,17 @@ class Players {
   constructor() {
     this.players = [];
     this.rawData = [];
+    this.totalPages = 0;
   }
 
-  async get() {
-    return fetch(`${PUBLIC_API_URL}/players/`)
+  async get(size = 100, page = 1) {
+    return fetch(`${PUBLIC_API_URL}/players?size=${size}&page=${page}`)
       .then(response => response.json())
-      .then(json => { this.rawData = json; return json })
+      .then(json => {
+        this.rawData = json.items;
+        this.totalPages = json.pages;
+        return json
+      })
       .catch(error => console.log(error));
   }
 

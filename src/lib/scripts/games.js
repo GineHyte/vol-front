@@ -35,10 +35,14 @@ class Games {
     this.rawData = [];
   }
 
-  async get() {
-    return fetch(`${PUBLIC_API_URL}/games/`)
+  async get(size = 100, page = 1) {
+    return fetch(`${PUBLIC_API_URL}/games?size=${size}&page=${page}`)
       .then(response => response.json())
-      .then(json => { this.rawData = json; return json })
+      .then(json => {
+        this.rawData = json.items;
+        this.totalPages = json.pages;
+        return json
+      })
       .catch(error => console.log(error));
   }
 
