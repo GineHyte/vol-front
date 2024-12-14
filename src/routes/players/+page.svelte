@@ -14,6 +14,7 @@
 		ClickableTile,
 		SkeletonText,
 	} from 'carbon-components-svelte';
+	import { getPlayers } from '$lib/scripts/endpoints';
 
 	let games = new Games();
 	let player = new Player();
@@ -78,7 +79,7 @@
 {/if}
 
 <SideList
-	model={new Players()}
+	getFunc={getPlayers}
 	headers={[{ key: 'first_name', value: 'Player' }]}
 	selectFunc={selectPlayer}
 />

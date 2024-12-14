@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import {
 		DataTable,
 		ClickableTile,
@@ -10,22 +10,22 @@
 	} from 'carbon-components-svelte';
 
 	import CompactPagination from '$lib/ui/CompactPagination.svelte';
+	import { Pagination, PaginationProps } from '$lib/scripts/pagination';
+	import Model from '$lib/scripts/model';
 
-	export let headers;
-	export let model;
-
+	export let getFunc: (props: PaginationProps) => Promise<Pagination<Model>>;
 	export let selectFunc;
 
 	let pageSize = 4;
-	let page;
+	let page: number;
 </script>
 
 <div class="absolute right-0 top-24 w-44">
 	{#key page}
-		{#await model.get(pageSize, page)}
-			<DataTableSkeleton {headers} />
-		{:then}
-			<DataTable {headers} rows={model.rawData}>
+		{#await getFunc(new PaginationProps(page, pageSize))}
+			<DataTableSkeleton />
+		{:then model}
+			<DataTable headers={model.getHeaders()} rows={model.getRows()}>
 				<svelte:fragment slot="cell" let:cell let:row>
 					<ClickableTile on:click={() => selectFunc(row.id)}>{cell.value}</ClickableTile>
 				</svelte:fragment>
@@ -35,10 +35,10 @@
 					</ToolbarContent>
 				</Toolbar>
 			</DataTable>
-			{#if model.rawData.length === 0}
+			{#if model.total === 0}
 				<ClickableTile disabled>No Data</ClickableTile>
 			{/if}
-			<CompactPagination bind:page bind:total={model.totalPages} />
+			<CompactPagination bind:page total={model.pages} />
 		{/await}
 	{/key}
 </div>
