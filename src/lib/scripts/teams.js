@@ -12,7 +12,7 @@ class Team {
 
   async get(id = this.id) {
     if (id === null) {
-      pushNotification({title: "Error", message: 'No Team id provided', kind: 'error' });
+      pushNotification({ title: 'Error', message: 'No Team id provided', kind: 'error' });
       return Promise.reject('No id provided');
     }
     return fetch(`${PUBLIC_API_URL}/teams/${id}`)

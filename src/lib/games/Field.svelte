@@ -69,13 +69,13 @@
 				{/if}
 				{#if isPlayersEnabled}
 					<div class="relative w-full">
-						<!-- <Player top="50" left="160" player={teamA.players[0]} /> -->
-						<!-- <Player top="170" left="90" player={teamA.players[1]} /> -->
+						<!-- <Player top='50' left='160' player={teamA.players[0]} /> -->
+						<!-- <Player top='170' left='90' player={teamA.players[1]} /> -->
 					</div>
 					<div class="h-full w-[1px] bg-black" />
 					<div class="relative w-full">
-						<!-- <Player top="170" left="90" player={teamB.players[0]} /> -->
-						<!-- <Player top="50" left="160" player={teamA.players[1]} /> -->
+						<!-- <Player top='170' left='90' player={teamB.players[0]} /> -->
+						<!-- <Player top='50' left='160' player={teamA.players[1]} /> -->
 					</div>
 				{/if}
 			</div>

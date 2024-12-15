@@ -1,0 +1,108 @@
+<script lang="ts">
+	export let label = '';
+	export let title = 'New';
+	export let model: Model;
+	export let requiredFields: string[] = ['all'];
+	export let handleSubmit: (e: Event) => void;
+
+	import Model from '$lib/scripts/model';
+	import Field from '$lib/scripts/field';
+	import {
+		ComposedModal,
+		ModalHeader,
+		ModalBody,
+		ModalFooter,
+		NumberInput,
+		TextInput,
+		Dropdown,
+		SelectableTile,
+	} from 'carbon-components-svelte';
+	import { IbmCloudSecurityComplianceCenterWorkloadProtection } from 'carbon-icons-svelte';
+
+	let data: any[] = [];
+	let inputData: any = {};
+
+	if (requiredFields.includes('all')) {
+		requiredFields = Object.keys(model).filter((key) => {
+			return model[key as keyof Model] instanceof Field && key !== 'id';
+		});
+	}
+
+	Object.keys(model).forEach((key) => {
+		if (!(model[key as keyof Model] instanceof Field) || key === 'id') {
+			return;
+		}
+		// @ts-ignore
+		const field = model[key as keyof Model] as Field;
+		let item = {
+			type: field.originalType.jsType,
+			title: field.tableTitle,
+			key: field.deserializationAlias,
+			relation: field.relation,
+		};
+		console.log(item);
+		data.push(item);
+	});
+
+	let primaryButtonDisabled = true;
+	let target: HTMLInputElement;
+
+	function handleDropdownInput(e: CustomEvent) {
+		inputData[e.detail.selectedItem.key] = e.detail.selectedId;
+		primaryButtonDisabled = false;
+
+		requiredFields.forEach((field) => {
+			if (!Object.keys(inputData).includes(field)) {
+				primaryButtonDisabled = true;
+			}
+		});
+	}
+
+	function handleInput(e: KeyboardEvent | CustomEvent) {
+		if (e instanceof KeyboardEvent) {
+			target = e.target as HTMLInputElement;
+			return;
+		}
+		let value = target.value;
+		inputData[target.id] = value;
+		if (inputData[target.id] === '') {
+			delete inputData[target.id];
+		}
+
+		primaryButtonDisabled = false;
+
+		requiredFields.forEach((field) => {
+			if (!Object.keys(inputData).includes(field)) {
+				console.log(field);
+				primaryButtonDisabled = true;
+			}
+		});
+	}
+</script>
+
+<ComposedModal size={'lg'} open on:submit={() => handleSubmit(inputData)}>
+	<ModalHeader {label} {title} />
+	<ModalBody hasForm>
+		<!-- TODO: make dropdowns dynamic -->
+		{#each data as item}
+			{#if item.type === 'number'}
+				<NumberInput
+					id={item.key}
+					label={item.title}
+					value={0}
+					on:keydown={handleInput}
+					on:input={handleInput}
+				/>
+			{:else if item.type === 'string'}
+				<!-- @ts-ignore -->
+				<TextInput
+					id={item.key}
+					labelText={item.title}
+					on:keydown={handleInput}
+					on:input={handleInput}
+				/>
+			{/if}
+		{/each}
+	</ModalBody>
+	<ModalFooter primaryButtonText="Готово" {primaryButtonDisabled} />
+</ComposedModal>

@@ -11,6 +11,7 @@
 		Content,
 	} from 'carbon-components-svelte';
 	import Notifications from '$lib/ui/Notifications.svelte';
+	import ModalCreate from '$lib/ui/ModalCreate.svelte';
 
 	let isSideNavOpen = false;
 

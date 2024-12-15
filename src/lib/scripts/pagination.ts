@@ -32,7 +32,8 @@ export class Pagination<T extends Model> {
     return rows
   }
 
-  getHeaders(): { [key: string]: any }[] {
+  getHeaders(): { [key: string]: any }[] | undefined {
+    if (this.items.length == 0) { return [{ key: 'noData', 'value': 'Немає Даних' }] }
     const headers = this.items[0].getHeaders();
     return headers
   }

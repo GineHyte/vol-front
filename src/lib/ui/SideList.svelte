@@ -14,7 +14,8 @@
 	import Model from '$lib/scripts/model';
 
 	export let getFunc: (props: PaginationProps) => Promise<Pagination<Model>>;
-	export let selectFunc;
+	export let selectFunc: (id: number) => void;
+	export let newFunc: () => void | undefined;
 
 	let pageSize = 4;
 	let page: number;
@@ -30,13 +31,15 @@
 					<ClickableTile on:click={() => selectFunc(row.id)}>{cell.value}</ClickableTile>
 				</svelte:fragment>
 				<Toolbar>
-					<ToolbarContent>
-						<Button class="w-full">+ Add</Button>
-					</ToolbarContent>
+					{#if newFunc}
+						<ToolbarContent>
+							<Button on:click={newFunc} class="w-full">+ Новий</Button>
+						</ToolbarContent>
+					{/if}
 				</Toolbar>
 			</DataTable>
 			{#if model.total === 0}
-				<ClickableTile disabled>No Data</ClickableTile>
+				<ClickableTile disabled>Немає даних</ClickableTile>
 			{/if}
 			<CompactPagination bind:page total={model.pages} />
 		{/await}

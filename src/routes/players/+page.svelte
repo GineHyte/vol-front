@@ -1,6 +1,4 @@
-<script>
-	import { Player, Players } from '$lib/scripts/players';
-	import { Games } from '$lib/scripts/games';
+<script lang="ts">
 	import SideList from '$lib/ui/SideList.svelte';
 	import {
 		SkeletonPlaceholder,
@@ -14,47 +12,52 @@
 		ClickableTile,
 		SkeletonText,
 	} from 'carbon-components-svelte';
-	import { getPlayers } from '$lib/scripts/endpoints';
+	import { getPlayers, getPlayer, createPlayer } from '$lib/scripts/endpoints';
+	import { Player } from '$lib/scripts/models';
+	import ModalCreate from '$lib/ui/ModalCreate.svelte';
+	import { pushNotification } from '$lib/utils/utils';
 
-	let games = new Games();
-	let player = new Player();
+	let playerId: number | undefined = undefined;
+	let createOpen = false;
 
-	let headers = [
-		{ key: 'name', value: 'Name' },
-		{ key: 'team_a_score', value: 'Team A' },
-		{ key: 'team_b_score', value: 'Team B' },
-		{ key: 'to_datetime', value: 'Datetime' },
-	];
-
-	function selectPlayer(id) {
-		player.id = id;
+	function selectPlayer(id: number) {
+		playerId = id;
 	}
 
-	async function getPlayer(id) {
-		player.parseData(await player.get());
+	async function createPlayerRenderer() {
+		let player = new Player();
+		let status = await createPlayer(player);
+		if (status.status.value === 'success') {
+			pushNotification({
+				title: 'Успіх!',
+				message: 'Ви створили нового гравця.',
+				kind: 'success',
+			});
+		} else {
+			pushNotification({
+				title: 'Помилка!',
+				message: 'Гравець не може бути створений.',
+				kind: 'error',
+			});
+		}
+		createOpen = false;
 	}
 </script>
 
-{#if player.id}
+{#if playerId}
 	<Content>
 		<Grid>
 			<Row class="min-h-96 m-4">
-				{#await getPlayer(player.id)}
+				{#await getPlayer(playerId)}
 					<Column>
 						<SkeletonPlaceholder class="size-96" />
 					</Column>
 					<Column>
 						<SkeletonText paragraph lines={8} />
 					</Column>
-				{:then}
+				{:then player}
 					<Column>
-						<ImageLoader
-							class="size-96"
-							ratio="4x3"
-							fadeIn
-							src={player.imageURL}
-							alt="Player`s photo"
-						/>
+						<ImageLoader class="size-96" ratio="4x3" fadeIn alt="Player`s photo" />
 					</Column>
 					<Column>
 						<p>First Name: {player.firstName}</p>
@@ -66,20 +69,26 @@
 				{/await}
 			</Row>
 			<Row>
-				<Column>
+				<!-- <Column>
 					{#await games.get()}
 						<DataTableSkeleton {headers} />
 					{:then}
 						<DataTable {headers} rows={games.rawData} />
 					{/await}
-				</Column>
+				</Column> -->
 			</Row>
 		</Grid>
 	</Content>
 {/if}
 
 <SideList
+	newFunc={() => {
+		createOpen = true;
+	}}
 	getFunc={getPlayers}
-	headers={[{ key: 'first_name', value: 'Player' }]}
 	selectFunc={selectPlayer}
 />
+
+{#if createOpen}
+	<ModalCreate title="+ Гравець" model={new Player()} handleSubmit={createPlayerRenderer} />
+{/if}
