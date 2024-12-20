@@ -19,13 +19,18 @@
 
 	let playerId: number | undefined = undefined;
 	let createOpen = false;
+	let tableUpdate = false;
 
 	function selectPlayer(id: number) {
 		playerId = id;
 	}
 
-	async function createPlayerRenderer() {
+	async function createPlayerRenderer(inputData: any) {
 		let player = new Player();
+		Object.keys(inputData).forEach((key) => {
+			// @ts-ignore
+			player[key as keyof Player].originalType.value = inputData[key];
+		});
 		let status = await createPlayer(player);
 		if (status.status.value === 'success') {
 			pushNotification({
@@ -81,14 +86,22 @@
 	</Content>
 {/if}
 
+{#if createOpen}
+	<ModalCreate
+		title="+ Гравець"
+		model={new Player()}
+		handleSubmit={createPlayerRenderer}
+		bind:open={createOpen}
+		requiredFields={['age', 'firstName', 'lastName']}
+		bind:tableUpdate
+	/>
+{/if}
+
 <SideList
 	newFunc={() => {
 		createOpen = true;
 	}}
 	getFunc={getPlayers}
 	selectFunc={selectPlayer}
+	headers={[{ key: 'firstName', value: "Ім'я" }]}
 />
-
-{#if createOpen}
-	<ModalCreate title="+ Гравець" model={new Player()} handleSubmit={createPlayerRenderer} />
-{/if}

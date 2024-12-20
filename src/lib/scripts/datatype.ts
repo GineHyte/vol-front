@@ -21,4 +21,8 @@ export default class Datatype {
     }
     return 'undefined';
   }
+
+  isNaN(): boolean {
+    return isNaN(this.value);
+  }
 }

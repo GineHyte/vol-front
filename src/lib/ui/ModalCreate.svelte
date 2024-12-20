@@ -4,6 +4,8 @@
 	export let model: Model;
 	export let requiredFields: string[] = ['all'];
 	export let handleSubmit: (e: Event) => void;
+	export let open: boolean = false;
+	export let tableUpdate: boolean = false;
 
 	import Model from '$lib/scripts/model';
 	import Field from '$lib/scripts/field';
@@ -40,12 +42,10 @@
 			key: field.deserializationAlias,
 			relation: field.relation,
 		};
-		console.log(item);
 		data.push(item);
 	});
 
 	let primaryButtonDisabled = true;
-	let target: HTMLInputElement;
 
 	function handleDropdownInput(e: CustomEvent) {
 		inputData[e.detail.selectedItem.key] = e.detail.selectedId;
@@ -58,29 +58,33 @@
 		});
 	}
 
-	function handleInput(e: KeyboardEvent | CustomEvent) {
-		if (e instanceof KeyboardEvent) {
-			target = e.target as HTMLInputElement;
-			return;
-		}
+	function handleInput(id: string) {
+		// workaround for Carbon Design System Custom Events
+		let target = document.getElementById(id) as HTMLInputElement;
 		let value = target.value;
-		inputData[target.id] = value;
-		if (inputData[target.id] === '') {
-			delete inputData[target.id];
+		inputData[id] = value;
+		if (inputData[id] === '') {
+			delete inputData[id];
 		}
 
 		primaryButtonDisabled = false;
 
 		requiredFields.forEach((field) => {
 			if (!Object.keys(inputData).includes(field)) {
-				console.log(field);
 				primaryButtonDisabled = true;
 			}
 		});
 	}
 </script>
 
-<ComposedModal size={'lg'} open on:submit={() => handleSubmit(inputData)}>
+<ComposedModal
+	size={'lg'}
+	bind:open
+	on:submit={() => {
+		handleSubmit(inputData);
+		tableUpdate = !tableUpdate;
+	}}
+>
 	<ModalHeader {label} {title} />
 	<ModalBody hasForm>
 		<!-- TODO: make dropdowns dynamic -->
@@ -90,16 +94,14 @@
 					id={item.key}
 					label={item.title}
 					value={0}
-					on:keydown={handleInput}
-					on:input={handleInput}
+					on:input={(_) => handleInput(item.key)}
 				/>
 			{:else if item.type === 'string'}
 				<!-- @ts-ignore -->
 				<TextInput
 					id={item.key}
 					labelText={item.title}
-					on:keydown={handleInput}
-					on:input={handleInput}
+					on:input={(_) => handleInput(item.key)}
 				/>
 			{/if}
 		{/each}
