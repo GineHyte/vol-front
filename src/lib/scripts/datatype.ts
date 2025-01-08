@@ -2,27 +2,19 @@ export default class Datatype {
   value: any;
   jsType: string;
 
-  constructor(typeConstructor: any, value: any = undefined) {
-    this.value = new typeConstructor(value);
-    this.jsType = this.getType(typeConstructor);
+  constructor(jsType: string | undefined, value: any = undefined) {
+    this.value = value;
+    this.jsType = jsType || typeof value;
   }
 
-  getType(typeConstructor: any): string {
-    if (typeConstructor === String) {
-      return 'string';
-    } else if (typeConstructor === Number) {
-      return 'number';
-    } else if (typeConstructor === Boolean) {
-      return 'boolean';
-    } else if (typeConstructor === Date) {
-      return 'date';
-    } else if (typeConstructor === Array) {
-      return 'array';
+  isNaN() {
+    if (this.jsType == 'number') {
+      return isNaN(this.value)
+    } else if (this.jsType == 'string') {
+      return this.value == ''
+    } else if (this.jsType == 'array') {
+      return !this.value || this.value?.length == 0 || this.value.every((item: any) => item.isNaN())
     }
-    return 'undefined';
-  }
-
-  isNaN(): boolean {
-    return isNaN(this.value);
+    return false
   }
 }

@@ -9,7 +9,7 @@ export default class Model {
     for (const key in this) {
       if (!(this[key] instanceof Field)) { continue }
       const field = this[key] as Field
-      data[field.deserializationAlias] = field.value
+      data[field.deserializationAlias] = field.originalType.value
     }
     return data
   }
@@ -23,9 +23,9 @@ export default class Model {
       }
     }
     for (const key in data) {
-      console.log(key)
       const field = this[this.serializationMap[key] as keyof this] as Field
-      field.value = data[key]
+      if (!field) { continue }
+      field.originalType = new Datatype(undefined, data[key])
     }
     return this
   }
@@ -35,7 +35,11 @@ export default class Model {
     for (const key in this) {
       if (!(this[key] instanceof Field) || (key == "id")) { continue }
       const field = this[key] as Field
-      if (field.originalType.isNaN()) { continue}
+      if (field.originalType.jsType == 'array') {
+        data[field.sereliazationAlias] = field.originalType.value.map((item: any) => item.serialize())
+        continue
+      }
+      if (field.originalType.isNaN()) { continue }
       data[field.sereliazationAlias] = field.originalType.value
     }
     return data

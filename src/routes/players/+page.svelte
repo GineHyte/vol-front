@@ -32,7 +32,7 @@
 			player[key as keyof Player].originalType.value = inputData[key];
 		});
 		let status = await createPlayer(player);
-		if (status.status.value === 'success') {
+		if (status.status.originalType.value === 'success') {
 			pushNotification({
 				title: 'Успіх!',
 				message: 'Ви створили нового гравця.',
@@ -65,11 +65,19 @@
 						<ImageLoader class="size-96" ratio="4x3" fadeIn alt="Player`s photo" />
 					</Column>
 					<Column>
-						<p>First Name: {player.firstName}</p>
-						<p>Last Name: {player.lastName}</p>
-						<p>Age: {player.age}</p>
-						<p>Height: {player.height}</p>
-						<p>Weight: {player.weight}</p>
+						<p>Ім'я: {player.firstName.originalType.value}</p>
+						<p>Прізвище: {player.lastName.originalType.value}</p>
+						<p>Вік: {player.age.originalType.value}</p>
+						<p>
+							Зріст: {player.height.originalType.value
+								? player.height.originalType.value
+								: ''}
+						</p>
+						<p>
+							Вага: {player.weight.originalType.value
+								? player.weight.originalType.value
+								: ''}
+						</p>
 					</Column>
 				{/await}
 			</Row>
@@ -93,7 +101,6 @@
 		handleSubmit={createPlayerRenderer}
 		bind:open={createOpen}
 		requiredFields={['age', 'firstName', 'lastName']}
-		bind:tableUpdate
 	/>
 {/if}
 

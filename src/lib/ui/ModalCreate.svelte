@@ -5,7 +5,6 @@
 	export let requiredFields: string[] = ['all'];
 	export let handleSubmit: (e: Event) => void;
 	export let open: boolean = false;
-	export let tableUpdate: boolean = false;
 
 	import Model from '$lib/scripts/model';
 	import Field from '$lib/scripts/field';
@@ -16,13 +15,14 @@
 		ModalFooter,
 		NumberInput,
 		TextInput,
-		Dropdown,
-		SelectableTile,
+		Tile,
+		Button,
 	} from 'carbon-components-svelte';
-	import { IbmCloudSecurityComplianceCenterWorkloadProtection } from 'carbon-icons-svelte';
+	import ModalCreateRelation from './ModalCreateRelation.svelte';
 
 	let data: any[] = [];
 	let inputData: any = {};
+	let openRelations: { [key: string]: boolean } = {};
 
 	if (requiredFields.includes('all')) {
 		requiredFields = Object.keys(model).filter((key) => {
@@ -82,7 +82,6 @@
 	bind:open
 	on:submit={() => {
 		handleSubmit(inputData);
-		tableUpdate = !tableUpdate;
 	}}
 >
 	<ModalHeader {label} {title} />
@@ -104,7 +103,36 @@
 					on:input={(_) => handleInput(item.key)}
 				/>
 			{/if}
+			{#if item.type === 'array' && item.relation}
+				{#if inputData[item.key]}
+					{#each inputData[item.key] as relation}
+						<Tile>{relation}</Tile>
+					{/each}
+				{/if}
+				<Button class="mt-4" on:click={() => (openRelations[item.key] = true)}>
+					Вибрати {item.title}
+				</Button>
+			{/if}
 		{/each}
 	</ModalBody>
 	<ModalFooter primaryButtonText="Готово" {primaryButtonDisabled} />
 </ComposedModal>
+
+{#each data as item}
+	{#if item.type === 'array' && item.relation}
+		<ModalCreateRelation
+			relation={item.relation}
+			selectedRelation={inputData[item.key] || []}
+			open={openRelations[item.key] || false}
+			bind:parentOpen={open}
+			on:submit={(selectedRelation) => {
+				console.log(inputData);
+				if (Array.isArray(inputData[item.key])) {
+					inputData[item.key].push(selectedRelation.detail);
+				} else {
+					inputData[item.key] = [selectedRelation.detail];
+				}
+			}}
+		/>
+	{/if}
+{/each}

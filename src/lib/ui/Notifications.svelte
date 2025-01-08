@@ -8,7 +8,6 @@
 		() => {
 			setTimeout(() => {
 				notifications.set($notifications.slice(1, -1));
-				console.log($notifications);
 			}, 3100);
 		};
 </script>
