@@ -77,7 +77,6 @@
 			legend="Амплуа"
 			selected={playersAmplua[0]}
 			on:select={(e) => {
-				console.log(e);
 				playersAmplua = [e.detail];
 			}}
 		>

@@ -35,7 +35,7 @@ export default class Model {
     for (const key in this) {
       if (!(this[key] instanceof Field) || (key == "id")) { continue }
       const field = this[key] as Field
-      if (field.originalType.jsType == 'array') {
+      if (field.originalType.jsType == 'array' && field.originalType.value) {
         data[field.sereliazationAlias] = field.originalType.value.map((item: any) => item.serialize())
         continue
       }

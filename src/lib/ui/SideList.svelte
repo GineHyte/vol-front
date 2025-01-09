@@ -14,10 +14,13 @@
 	import Model from '$lib/scripts/model';
 	import ContextMenuSideList from '$lib/ui/ContextMenuSideList.svelte';
 
+	export let title: string = '';
 	export let getFunc: (props: PaginationProps) => Promise<Pagination<Model>>;
 	export let selectFunc: (id: number) => void;
 	export let newFunc: () => void | undefined;
 	export let headers: { key: string; value: string }[];
+	export let deleteFunc: (dispatch: (event: string) => void, currentId: number) => void;
+	export let duplicateFunc: (dispatch: (event: string) => void, currentId: number) => void;
 
 	let pageSize = 4;
 	let page = 1;
@@ -39,7 +42,7 @@
 				<Toolbar>
 					{#if newFunc}
 						<ToolbarContent>
-							<Button on:click={newFunc} class="w-full">+ Новий</Button>
+							<Button on:click={newFunc} class="w-full">+ {title}</Button>
 						</ToolbarContent>
 					{/if}
 				</Toolbar>
@@ -48,7 +51,12 @@
 				<ClickableTile disabled>Немає даних</ClickableTile>
 			{/if}
 			<CompactPagination bind:page total={model.pages} />
-			<ContextMenuSideList {target} on:update={() => (tableUpdate = !tableUpdate)} />
+			<ContextMenuSideList
+				{target}
+				{deleteFunc}
+				{duplicateFunc}
+				on:update={() => (tableUpdate = !tableUpdate)}
+			/>
 		{/await}
 	{/key}
 </div>

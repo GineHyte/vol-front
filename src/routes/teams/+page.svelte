@@ -12,10 +12,11 @@
 		ClickableTile,
 		SkeletonText,
 	} from 'carbon-components-svelte';
-	import { getTeams, getTeam, createTeam } from '$lib/scripts/endpoints';
-	import { Team, PlayerTeam } from '$lib/scripts/models';
+	import { getTeams, getTeam, getPlayer, createTeam, deleteTeam } from '$lib/scripts/endpoints';
+	import { Team, PlayerTeam, Player } from '$lib/scripts/models';
 	import ModalCreate from '$lib/ui/ModalCreate.svelte';
 	import { pushNotification } from '$lib/utils/utils';
+	import { Pagination } from '$lib/scripts/pagination';
 
 	let teamId: number | undefined = undefined;
 	let createOpen = false;
@@ -23,6 +24,57 @@
 
 	function selectTeam(id: number) {
 		teamId = id;
+	}
+
+	async function duplicateTeam(dispatch: (event: string) => void, currentId: number) {
+		if (currentId) {
+			let team = await getTeam(currentId);
+			let players: PlayerTeam[] = [];
+			for (const player of team.players.originalType.value) {
+				let playerTeam = new PlayerTeam();
+				console.log(player);
+				playerTeam.playerId.originalType.value = player;
+				playerTeam.teamId.originalType.value = team.id.originalType.value;
+				playerTeam.amplua.originalType.value = player.amplua.originalType.value;
+				players.push(playerTeam);
+			}
+			team.players.originalType.value = players;
+			let status = await createTeam(team);
+			if (status.status.originalType.value === 'success') {
+				pushNotification({
+					title: 'Успіх!',
+					message: 'Команда дубльована.',
+					kind: 'success',
+				});
+				dispatch('update');
+			} else {
+				pushNotification({
+					title: 'Помилка!',
+					message: 'Команда не може бути дубльована.',
+					kind: 'error',
+				});
+			}
+		}
+	}
+
+	async function removeTeam(dispatch: (event: string) => void, currentId: number) {
+		if (currentId) {
+			let status = await deleteTeam(currentId);
+			if (status.status.originalType.value === 'success') {
+				pushNotification({
+					title: 'Успіх!',
+					message: 'Команда видалена.',
+					kind: 'success',
+				});
+				dispatch('update');
+			} else {
+				pushNotification({
+					title: 'Помилка!',
+					message: 'Команда не може бути видалена.',
+					kind: 'error',
+				});
+			}
+		}
 	}
 
 	async function createTeamRenderer(inputData: any) {
@@ -59,43 +111,57 @@
 		}
 		createOpen = false;
 	}
+
+	async function getTeamPlayers(team: Team) {
+		let players: Pagination<Player>;
+		let playersData: any[] = [];
+		if (team.players.originalType.value) {
+			for (const player of team.players.originalType.value) {
+				let playerData = await getPlayer(player);
+				playersData.push(playerData);
+			}
+		}
+		players = new Pagination(
+			{ page: 1, size: 10, pages: 1, total: playersData.length, items: playersData },
+			Player,
+		);
+		return players;
+	}
 </script>
 
 {#if teamId}
 	<Content>
 		<Grid>
-			<Row class="min-h-96 m-4">
-				{#await getTeam(teamId)}
+			{#await getTeam(teamId)}
+				<Row class="min-h-96 m-4">
 					<Column>
 						<SkeletonPlaceholder class="size-96" />
 					</Column>
 					<Column>
 						<SkeletonText paragraph lines={8} />
 					</Column>
-				{:then team}
+				</Row>
+			{:then team}
+				<Row>
 					<Column>
 						<ImageLoader class="size-96" ratio="4x3" fadeIn alt="Team`s photo" />
 					</Column>
 					<Column>
 						<p>Назва: {team.name.originalType.value}</p>
 					</Column>
+				</Row>
+				{#await getTeamPlayers(team)}
+					<p>Loading...</p>
+				{:then players}
+					<DataTable headers={players.getHeaders()} rows={players.getRows()} />
 				{/await}
-			</Row>
-			<Row>
-				<!-- <Column>
-					{#await games.get()}
-						<DataTableSkeleton {headers} />
-					{:then}
-						<DataTable {headers} rows={games.rawData} />
-					{/await}
-				</Column> -->
-			</Row>
+			{/await}
 		</Grid>
 	</Content>
 {/if}
 
 <ModalCreate
-	title="+ Команда"
+	title="Команда"
 	model={new Team()}
 	handleSubmit={createTeamRenderer}
 	bind:open={createOpen}
@@ -104,6 +170,9 @@
 
 {#key createOpen}
 	<SideList
+		title="Команда"
+		deleteFunc={removeTeam}
+		duplicateFunc={duplicateTeam}
 		newFunc={() => {
 			createOpen = true;
 		}}

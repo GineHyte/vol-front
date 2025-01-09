@@ -1,6 +1,6 @@
 <script lang="ts">
 	export let label = '';
-	export let title = 'New';
+	export let title = '+ ';
 	export let model: Model;
 	export let requiredFields: string[] = ['all'];
 	export let handleSubmit: (e: Event) => void;
@@ -23,6 +23,7 @@
 	let data: any[] = [];
 	let inputData: any = {};
 	let openRelations: { [key: string]: boolean } = {};
+	title = '+ ' + title;
 
 	if (requiredFields.includes('all')) {
 		requiredFields = Object.keys(model).filter((key) => {
@@ -75,6 +76,8 @@
 			}
 		});
 	}
+
+	$: console.log(inputData);
 </script>
 
 <ComposedModal
@@ -126,9 +129,8 @@
 			open={openRelations[item.key] || false}
 			bind:parentOpen={open}
 			on:submit={(selectedRelation) => {
-				console.log(inputData);
 				if (Array.isArray(inputData[item.key])) {
-					inputData[item.key].push(selectedRelation.detail);
+					inputData[item.key] = [...inputData[item.key], selectedRelation.detail];
 				} else {
 					inputData[item.key] = [selectedRelation.detail];
 				}

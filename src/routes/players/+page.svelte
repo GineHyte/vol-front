@@ -12,7 +12,7 @@
 		ClickableTile,
 		SkeletonText,
 	} from 'carbon-components-svelte';
-	import { getPlayers, getPlayer, createPlayer } from '$lib/scripts/endpoints';
+	import { getPlayers, getPlayer, createPlayer, deletePlayer } from '$lib/scripts/endpoints';
 	import { Player } from '$lib/scripts/models';
 	import ModalCreate from '$lib/ui/ModalCreate.svelte';
 	import { pushNotification } from '$lib/utils/utils';
@@ -23,6 +23,46 @@
 
 	function selectPlayer(id: number) {
 		playerId = id;
+	}
+
+	async function duplicatePlayer(dispatch: (event: string) => void, currentId: number) {
+		if (currentId) {
+			let status = await createPlayer(await getPlayer(currentId));
+			if (status.status.originalType.value === 'success') {
+				pushNotification({
+					title: 'Успіх!',
+					message: 'Гравець дубльований.',
+					kind: 'success',
+				});
+				dispatch('update');
+			} else {
+				pushNotification({
+					title: 'Помилка!',
+					message: 'Гравець не може бути дубльований.',
+					kind: 'error',
+				});
+			}
+		}
+	}
+
+	async function removePlayer(dispatch: (event: string) => void, currentId: number) {
+		if (currentId) {
+			let status = await deletePlayer(currentId);
+			if (status.status.originalType.value === 'success') {
+				pushNotification({
+					title: 'Успіх!',
+					message: 'Гравець видалений.',
+					kind: 'success',
+				});
+				dispatch('update');
+			} else {
+				pushNotification({
+					title: 'Помилка!',
+					message: 'Гравець не може бути видалений.',
+					kind: 'error',
+				});
+			}
+		}
 	}
 
 	async function createPlayerRenderer(inputData: any) {
@@ -103,12 +143,16 @@
 		requiredFields={['age', 'firstName', 'lastName']}
 	/>
 {/if}
-
-<SideList
-	newFunc={() => {
-		createOpen = true;
-	}}
-	getFunc={getPlayers}
-	selectFunc={selectPlayer}
-	headers={[{ key: 'firstName', value: "Ім'я" }]}
-/>
+{#key createOpen}
+	<SideList
+		title="Гравець"
+		deleteFunc={removePlayer}
+		duplicateFunc={duplicatePlayer}
+		newFunc={() => {
+			createOpen = true;
+		}}
+		getFunc={getPlayers}
+		selectFunc={selectPlayer}
+		headers={[{ key: 'firstName', value: "Ім'я" }]}
+	/>
+{/key}

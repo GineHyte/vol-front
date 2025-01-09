@@ -24,7 +24,7 @@ export class Pagination<T extends Model> {
     this.pages = data.pages;
     this.size = data.size;
     this.total = data.total;
-    this.items = data.items.map((item: any) => { return this.deserialize(item, type) });
+    this.items = data.items.map((item: any) => { return item instanceof type ? item : this.deserialize(item, type) });
   }
 
   getRows(): { [key: string]: any }[] {

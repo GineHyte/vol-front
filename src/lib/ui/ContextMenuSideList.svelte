@@ -4,6 +4,8 @@
 	const dispatch = createEventDispatcher();
 
 	export let target: readonly (HTMLElement | null)[] | null = null;
+	export let deleteFunc: (dispatch: (event: string) => void, currentId: number) => void;
+	export let duplicateFunc: (dispatch: (event: string) => void, currentId: number) => void;
 
 	import { createPlayer, getPlayer, deletePlayer } from '$lib/scripts/endpoints';
 
@@ -15,52 +17,24 @@
 	} from 'carbon-components-svelte';
 
 	let currentId: number | null = null;
-
-	async function duplicate() {
-		if (currentId) {
-			let status = await createPlayer(await getPlayer(currentId));
-			console.log(status);
-			if (status.status.originalType.value === 'success') {
-				pushNotification({
-					title: 'Успіх!',
-					message: 'Гравець дубльований.',
-					kind: 'success',
-				});
-				dispatch('update');
-			} else {
-				pushNotification({
-					title: 'Помилка!',
-					message: 'Гравець не може бути дубльований.',
-					kind: 'error',
-				});
-			}
-		}
-	}
-
-	async function remove() {
-		if (currentId) {
-			let status = await deletePlayer(currentId);
-			if (status.status.originalType.value === 'success') {
-				pushNotification({
-					title: 'Успіх!',
-					message: 'Гравець видалений.',
-					kind: 'success',
-				});
-				dispatch('update');
-			} else {
-				pushNotification({
-					title: 'Помилка!',
-					message: 'Гравець не може бути видалений.',
-					kind: 'error',
-				});
-			}
-		}
-	}
 </script>
 
 {#if target !== null}
 	<ContextMenu {target} on:open={(e) => (currentId = Number(e.detail.id))}>
-		<ContextMenuOption indented kind="danger" labelText="Видалити" on:click={remove} />
-		<ContextMenuOption indented labelText="Дублювати" on:click={duplicate} />
+		<ContextMenuOption
+			indented
+			kind="danger"
+			labelText="Видалити"
+			on:click={() => {
+				if (currentId) deleteFunc(dispatch, currentId);
+			}}
+		/>
+		<ContextMenuOption
+			indented
+			labelText="Дублювати"
+			on:click={() => {
+				if (currentId) duplicateFunc(dispatch, currentId);
+			}}
+		/>
 	</ContextMenu>
 {/if}
