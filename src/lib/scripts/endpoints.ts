@@ -1,5 +1,5 @@
 import { ApiImpl } from './api';
-import { Player, Team, Game, Status } from '$lib/scripts/models'
+import { Player, Team, Game, Status, Action, Tech } from '$lib/scripts/models'
 import { Pagination, PaginationProps } from '$lib/scripts/pagination'
 
 export function getPlayers(paginationProps: PaginationProps = new PaginationProps()): Promise<Pagination<Player>> {
@@ -56,4 +56,69 @@ export function deleteTeam(id: number): Promise<Status> {
     .then((data: any) => {
       return new Status().deserialize(data) as Status
     })
-} 
+}
+
+
+export function getGames(paginationProps: PaginationProps = new PaginationProps()): Promise<Pagination<Game>> {
+  return new ApiImpl().get('/games/', paginationProps)
+    .then((data: any) => {
+      return new Pagination<Game>(data, Game)
+    })
+}
+
+export function getGame(id: number): Promise<Game> {
+  return new ApiImpl().get(`/games/${id}`)
+    .then((data: any) => {
+      return new Game().deserialize(data) as Game
+    })
+}
+
+export function createGame(game: Game): Promise<Status> {
+  return new ApiImpl().post('/games/', game.serialize())
+    .then((data: any) => {
+      return new Status().deserialize(data) as Status
+    })
+}
+
+export function deleteGame(id: number): Promise<Status> {
+  return new ApiImpl().delete(`/games/${id}`)
+    .then((data: any) => {
+      return new Status().deserialize(data) as Status
+    })
+}
+
+
+export function getActions(gameId: number, paginationProps: PaginationProps = new PaginationProps()): Promise<Pagination<Action>> {
+  return new ApiImpl().get(`/actions/?game_id=${gameId}`, paginationProps)
+    .then((data: any) => {
+      return new Pagination<Action>(data, Action)
+    })
+}
+
+export function getTechs(paginationProps: PaginationProps = new PaginationProps()): Promise<Pagination<Tech>> {
+  return new ApiImpl().get('/techs/', paginationProps)
+    .then((data: any) => {
+      return new Pagination<Tech>(data, Tech)
+    })
+}
+
+export function getTech(id: number): Promise<Tech> {
+  return new ApiImpl().get(`/techs/${id}`)
+    .then((data: any) => {
+      return new Tech().deserialize(data) as Tech
+    })
+}
+
+export function createTech(tech: Tech): Promise<Status> {
+  return new ApiImpl().post('/techs/', tech.serialize())
+    .then((data: any) => {
+      return new Status().deserialize(data) as Status
+    })
+}
+
+export function deleteTech(id: number): Promise<Status> {
+  return new ApiImpl().delete(`/techs/${id}`)
+    .then((data: any) => {
+      return new Status().deserialize(data) as Status
+    })
+}

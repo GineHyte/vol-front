@@ -32,10 +32,10 @@ export class Pagination<T extends Model> {
     return rows
   }
 
-  getHeaders(): { [key: string]: any }[] | undefined {
+  getHeaders(exclude: string[] = []): { [key: string]: any }[] | undefined {
     if (this.items.length == 0) { return [{ key: 'noData', 'value': 'Немає Даних' }] }
     const headers = this.items[0].getHeaders();
-    return headers
+    return headers.filter((header: any) => !exclude.includes(header.key))
   }
 
   private deserialize<U extends Model>(data: any, type: { new(): U; }): U {

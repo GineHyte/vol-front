@@ -12,7 +12,11 @@ interface Api {
 export class ApiImpl implements Api {
   async get(url: string, paginationProps: PaginationProps | null = null, headers: any = {}): Promise<any> {
     return new Promise((resolve, reject) => {
-      fetch(`${PUBLIC_API_URL}${PUBLIC_API_VERSION}${url}${paginationProps !== null ? "?page=" + paginationProps.page + "&size=" + paginationProps.size : ""}`, {
+      let queryUrl = `${PUBLIC_API_URL}${PUBLIC_API_VERSION}${url}`
+      if (paginationProps !== null) {
+        queryUrl += `${queryUrl.includes('?') ? '&' : '?'}page=${paginationProps.page}&size=${paginationProps.size}`
+      }
+      fetch(queryUrl, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

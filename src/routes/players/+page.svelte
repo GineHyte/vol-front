@@ -141,10 +141,12 @@
 		handleSubmit={createPlayerRenderer}
 		bind:open={createOpen}
 		requiredFields={['age', 'firstName', 'lastName']}
+		excludeFields={['teams', 'imageFileId']}
 	/>
 {/if}
 {#key createOpen}
 	<SideList
+		bind:currentId={playerId}
 		title="Гравець"
 		deleteFunc={removePlayer}
 		duplicateFunc={duplicatePlayer}

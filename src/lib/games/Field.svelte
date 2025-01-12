@@ -83,7 +83,7 @@
 				<div slot="above"><h1 class="text-lg font-bold">Field Legend:</h1></div>
 				<div slot="below">
 					<ul>
-						<li>A - Atacker</li>
+						<li>A - Attacker</li>
 						<li>D - Defender</li>
 					</ul>
 				</div>

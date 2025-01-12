@@ -1,33 +1,144 @@
-<script>
-	import Field from '$lib/games/Field.svelte';
+<script lang="ts">
 	import SideList from '$lib/ui/SideList.svelte';
-	import { Game, Games } from '$lib/scripts/games';
-	import { Column, DataTable, Grid, Row } from 'carbon-components-svelte';
+	import {
+		SkeletonPlaceholder,
+		ImageLoader,
+		Content,
+		Grid,
+		Row,
+		Column,
+		DataTable,
+		DataTableSkeleton,
+		ClickableTile,
+		SkeletonText,
+	} from 'carbon-components-svelte';
+	import { getGames, getGame, createGame, deleteGame, getActions } from '$lib/scripts/endpoints';
+	import { Game } from '$lib/scripts/models';
+	import ModalCreate from '$lib/ui/ModalCreate.svelte';
+	import { pushNotification } from '$lib/utils/utils';
+	import { Pagination } from '$lib/scripts/pagination';
+	import Datatype from '$lib/scripts/datatype';
 
-	let game;
+	let gameId: number | undefined = undefined;
+	let createOpen = false;
+	let tableUpdate = false;
 
-	function selectGame(id) {
-		game.id = id;
+	function selectGame(id: number) {
+		gameId = id;
 	}
 
-	let teamsHeaders = [
-		{
-			key: '',
-		},
-	];
+	async function duplicateGame(dispatch: (event: string) => void, currentId: number) {
+		if (currentId) {
+			let game = await getGame(currentId);
+			console.log(game);
+			let status = await createGame(game);
+			if (status.status.originalType.value === 'success') {
+				pushNotification({
+					title: 'Успіх!',
+					message: 'Гра дубльована.',
+					kind: 'success',
+				});
+				dispatch('update');
+			} else {
+				pushNotification({
+					title: 'Помилка!',
+					message: 'Гра не може бути дубльована.',
+					kind: 'error',
+				});
+			}
+		}
+	}
+
+	async function removeGame(dispatch: (event: string) => void, currentId: number) {
+		if (currentId) {
+			let status = await deleteGame(currentId);
+			if (status.status.originalType.value === 'success') {
+				pushNotification({
+					title: 'Успіх!',
+					message: 'Гра видалена.',
+					kind: 'success',
+				});
+				dispatch('update');
+			} else {
+				pushNotification({
+					title: 'Помилка!',
+					message: 'Гра не може бути видалена.',
+					kind: 'error',
+				});
+			}
+		}
+	}
+
+	async function createGameRenderer(inputData: any) {
+		let game = new Game();
+		Object.keys(inputData).forEach((key) => {
+			// @ts-ignore
+			game[key as keyof Game].originalType.value = inputData[key];
+		});
+		let status = await createGame(game);
+		if (status.status.originalType.value === 'success') {
+			pushNotification({
+				title: 'Успіх!',
+				message: 'Ви створили нову гру.',
+				kind: 'success',
+			});
+		} else {
+			pushNotification({
+				title: 'Помилка!',
+				message: 'Гра не може бути створена.',
+				kind: 'error',
+			});
+		}
+		createOpen = false;
+	}
 </script>
 
-<Grid>
-	<Row>
-		<Column />
-		<Column>
-			<Field bind:game />
-		</Column>
-		<Column />
-	</Row>
-	<Row>
-		<DataTable />
-	</Row>
-</Grid>
+{#if gameId}
+	<Content>
+		<Grid>
+			{#await getGame(gameId)}
+				<Row class="min-h-96 m-4">
+					<SkeletonPlaceholder class="size-96" />
+				</Row>
+			{:then game}
+				<Row>
+					<Column>
+						{#await getTechs()}
+						<DataTable />
+					</Column>
+				</Row>
+				<Row>
+					{#await getActions(gameId)}
+						<DataTableSkeleton />
+					{:then actions}
+						<DataTable headers={actions.getHeaders()} rows={actions.getRows()} />
+					{/await}
+				</Row>
+			{/await}
+		</Grid>
+	</Content>
+{/if}
 
-<SideList model={new Games()} headers={[{ key: 'name', value: 'Games' }]} selectFunc={selectGame} />
+<ModalCreate
+	label="game"
+	title="Гра"
+	model={new Game()}
+	handleSubmit={createGameRenderer}
+	bind:open={createOpen}
+	requiredFields={['name', 'teamA', 'teamB']}
+/>
+
+{#key createOpen}
+	<SideList
+		bind:currentId={gameId}
+		title="Гра"
+		deleteFunc={removeGame}
+		duplicateFunc={duplicateGame}
+		newFunc={() => {
+			createOpen = true;
+		}}
+		getFunc={getGames}
+		selectFunc={selectGame}
+		headers={[{ key: 'name', value: 'Назва' }]}
+	/>
+{/key}

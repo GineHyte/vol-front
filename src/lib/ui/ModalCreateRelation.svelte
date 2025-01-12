@@ -1,37 +1,40 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import {
-		ClickableTile,
 		DataTable,
 		DataTableSkeleton,
 		Modal,
 		TileGroup,
 		RadioTile,
 	} from 'carbon-components-svelte';
-	import { getPlayers, getTeams } from '$lib/scripts/endpoints';
+	import { getPlayers, getTeams, getGames } from '$lib/scripts/endpoints';
 	import { Pagination } from '$lib/scripts/pagination';
 	import Model from '$lib/scripts/model';
 	import { PaginationProps } from '$lib/scripts/pagination';
 	import { createEventDispatcher } from 'svelte';
-	import { PlayersAmplua } from '$lib/scripts/enums';
+	import { Relation } from '$lib/scripts/relation';
+	import { AMPLUA } from '$lib/utils/utils';
 
-	export let relation: string;
+	export let relation: Relation;
 	export let selectedRelation: number[] = [];
 	export let open: boolean = false;
 	export let parentOpen: boolean = false; // workaround for Carbon, because it doesn't support nested modals
 
 	let dispatch = createEventDispatcher();
 	let getFunc: (paginationProps: PaginationProps) => Promise<Pagination<any>>;
-	let playersAmplua: string[] = [PlayersAmplua.DEFENDER];
+	let playersAmplua: string[] = [AMPLUA.Defender];
 	let playersAmpluaOpen: boolean = false;
 
-	if (relation === 'player') {
+	if (relation.jsRelation === 'players') {
 		getFunc = getPlayers;
-	} else if (relation === 'team') {
+	} else if (relation.jsRelation === 'teams') {
 		getFunc = getTeams;
+	} else if (relation.jsRelation === 'games') {
+		getFunc = getGames;
 	}
 
 	$: parentOpen = !open;
+	$: if (!open) dispatch('close');
 	$: playersAmpluaOpen = !open && selectedRelation.length !== 0;
 </script>
 
@@ -39,30 +42,34 @@
 	size={'lg'}
 	bind:open
 	primaryButtonText="Готово"
-	modalHeading={relation}
+	modalHeading={relation.relationTitle}
 	primaryButtonDisabled={selectedRelation.length === 0}
 	on:submit={() => {
 		open = false;
-		if (relation === 'player') return;
+		if (relation.jsRelation === 'players') return;
 		dispatch('submit', selectedRelation);
 	}}
 >
-	{#await getFunc(new PaginationProps())}
-		<DataTableSkeleton />
-	{:then data}
-		<DataTable
-			bind:selectedRowIds={selectedRelation}
-			headers={data.getHeaders()}
-			rows={data.getRows()}
-			on:click:row={(e) => {
-				selectedRelation = [e.detail.id];
-				playersAmpluaOpen = true;
-			}}
-		/>
-	{/await}
+	{#if getFunc}
+		{#await getFunc(new PaginationProps())}
+			<DataTableSkeleton />
+		{:then data}
+			<DataTable
+				bind:selectedRowIds={selectedRelation}
+				headers={data.getHeaders(['teams', 'players', 'imageFileId'])}
+				rows={data.getRows()}
+				on:click:row={(e) => {
+					selectedRelation = [e.detail.id];
+					if (relation.jsRelation === 'players') {
+						playersAmpluaOpen = true;
+					}
+				}}
+			/>
+		{/await}
+	{/if}
 </Modal>
 
-{#if relation === 'player'}
+{#if relation.jsRelation === 'players'}
 	<Modal
 		size={'lg'}
 		bind:open={playersAmpluaOpen}
@@ -80,9 +87,9 @@
 				playersAmplua = [e.detail];
 			}}
 		>
-			<RadioTile value={PlayersAmplua.DEFENDER}>Захисник</RadioTile>
-			<RadioTile value={PlayersAmplua.ATTACKER}>Нападник</RadioTile>
-			<RadioTile value={PlayersAmplua.UNIVERSAL}>Все</RadioTile>
+			{#each Object.entries(AMPLUA) as amplua}
+				<RadioTile value={amplua[0]}>{amplua[1]}</RadioTile>
+			{/each}
 		</TileGroup>
 	</Modal>
 {/if}

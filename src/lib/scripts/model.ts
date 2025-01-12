@@ -25,7 +25,22 @@ export default class Model {
     for (const key in data) {
       const field = this[this.serializationMap[key] as keyof this] as Field
       if (!field) { continue }
-      field.originalType = new Datatype(undefined, data[key])
+      if (field.relation && field.relation.relationModel) {
+        if (field.originalType.jsType === 'array') {
+          let relations = []
+          for (const item of data[key]) {
+            let relation = new field.relation.relationModel()
+            relation.deserialize(item)
+            relations.push(relation)
+          }
+          field.originalType.value = relations
+        } else {
+          let relation = new field.relation.relationModel()
+          relation.deserialize(data[key])
+          field.originalType.value = relation
+        }
+      }
+      field.originalType.value = data[key]
     }
     return this
   }

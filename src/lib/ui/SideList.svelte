@@ -21,6 +21,7 @@
 	export let headers: { key: string; value: string }[];
 	export let deleteFunc: (dispatch: (event: string) => void, currentId: number) => void;
 	export let duplicateFunc: (dispatch: (event: string) => void, currentId: number) => void;
+	export let currentId: number | null = null;
 
 	let pageSize = 4;
 	let page = 1;
@@ -33,9 +34,13 @@
 		{#await getFunc(new PaginationProps(page, pageSize))}
 			<DataTableSkeleton />
 		{:then model}
-			<DataTable {headers} rows={model.getRows()}>
+			<DataTable size="compact" {headers} rows={model.getRows()}>
 				<svelte:fragment slot="cell" let:cell let:row>
-					<ClickableTile id={row.id} on:click={() => selectFunc(row.id)}>
+					<ClickableTile
+						id={row.id}
+						disabled={row.id === currentId}
+						on:click={() => selectFunc(row.id)}
+					>
 						{cell.value}
 					</ClickableTile>
 				</svelte:fragment>

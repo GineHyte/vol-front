@@ -20,26 +20,34 @@
 
 	let routes = [
 		{
-			title: 'Home',
+			title: 'Головна',
 			path: '/',
 		},
 		{
-			title: 'Games',
+			title: 'Ігри',
 			path: '/games',
 		},
 		{
-			title: 'Players',
+			title: 'Гравці',
 			path: '/players',
 		},
 		{
-			title: 'Teams',
+			title: 'Команди',
 			path: '/teams',
+		},
+		{
+			title: 'Технічні навички',
+			path: '/techs',
+		},
+		{
+			title: 'Вправи',
+			path: '/exercises',
 		},
 	];
 </script>
 
 <Header
-	platformName="Technical Skills in Beach Volleyball"
+	platformName="Технічні навички в пляжному волейболі"
 	bind:isSideNavOpen
 	class="w-full"
 	style="-webkit-app-region: drag;"

@@ -13,3 +13,9 @@ export function getTime() {
   let now = new Date();
   return ('0' + now.getHours()).slice(-2) + ':' + ('0' + now.getMinutes()).slice(-2);
 }
+
+export const AMPLUA = {
+  "Defender": "Захисник",
+  "Attacker": "Нападник",
+  "Universal": "Універсальний",
+}

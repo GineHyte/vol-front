@@ -17,6 +17,7 @@
 	import ModalCreate from '$lib/ui/ModalCreate.svelte';
 	import { pushNotification } from '$lib/utils/utils';
 	import { Pagination } from '$lib/scripts/pagination';
+	import Datatype from '$lib/scripts/datatype';
 
 	let teamId: number | undefined = undefined;
 	let createOpen = false;
@@ -29,16 +30,7 @@
 	async function duplicateTeam(dispatch: (event: string) => void, currentId: number) {
 		if (currentId) {
 			let team = await getTeam(currentId);
-			let players: PlayerTeam[] = [];
-			for (const player of team.players.originalType.value) {
-				let playerTeam = new PlayerTeam();
-				console.log(player);
-				playerTeam.playerId.originalType.value = player;
-				playerTeam.teamId.originalType.value = team.id.originalType.value;
-				playerTeam.amplua.originalType.value = player.amplua.originalType.value;
-				players.push(playerTeam);
-			}
-			team.players.originalType.value = players;
+			console.log(team);
 			let status = await createTeam(team);
 			if (status.status.originalType.value === 'success') {
 				pushNotification({
@@ -117,7 +109,7 @@
 		let playersData: any[] = [];
 		if (team.players.originalType.value) {
 			for (const player of team.players.originalType.value) {
-				let playerData = await getPlayer(player);
+				let playerData = await getPlayer(player.playerId.originalType.value);
 				playersData.push(playerData);
 			}
 		}
@@ -153,7 +145,10 @@
 				{#await getTeamPlayers(team)}
 					<p>Loading...</p>
 				{:then players}
-					<DataTable headers={players.getHeaders()} rows={players.getRows()} />
+					<DataTable
+						headers={players.getHeaders(['teams', 'imageFileId'])}
+						rows={players.getRows()}
+					/>
 				{/await}
 			{/await}
 		</Grid>
@@ -161,6 +156,7 @@
 {/if}
 
 <ModalCreate
+	label="team"
 	title="Команда"
 	model={new Team()}
 	handleSubmit={createTeamRenderer}
@@ -170,6 +166,7 @@
 
 {#key createOpen}
 	<SideList
+		bind:currentId={teamId}
 		title="Команда"
 		deleteFunc={removeTeam}
 		duplicateFunc={duplicateTeam}
