@@ -58,3 +58,10 @@ export class Tech extends Model {
   name: Field = new Field('name', 'name', new Datatype('string'), 'Назва')
   description: Field = new Field('description', 'description', new Datatype('string'), 'Опис')
 }
+
+export class Subtech extends Model {
+  id: Field = new Field('id', 'id', new Datatype('number'))
+  name: Field = new Field('name', 'name', new Datatype('string'), 'Назва')
+  description: Field = new Field('description', 'description', new Datatype('string'), 'Опис')
+  techId: Field = new Field('techId', 'tech_id', new Datatype('number'), 'Техніка', new Relation('techs', 'Техніка'))
+}

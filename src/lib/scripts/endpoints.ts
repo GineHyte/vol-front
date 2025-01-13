@@ -1,5 +1,5 @@
 import { ApiImpl } from './api';
-import { Player, Team, Game, Status, Action, Tech } from '$lib/scripts/models'
+import { Player, Team, Game, Status, Action, Tech, Subtech } from '$lib/scripts/models'
 import { Pagination, PaginationProps } from '$lib/scripts/pagination'
 
 export function getPlayers(paginationProps: PaginationProps = new PaginationProps()): Promise<Pagination<Player>> {
@@ -120,5 +120,12 @@ export function deleteTech(id: number): Promise<Status> {
   return new ApiImpl().delete(`/techs/${id}`)
     .then((data: any) => {
       return new Status().deserialize(data) as Status
+    })
+}
+
+export function getSubtechs(techId: number, paginationProps: PaginationProps = new PaginationProps()): Promise<Pagination<Subtech>> {
+  return new ApiImpl().get(`/subtechs/?tech_id=${techId}`, paginationProps)
+    .then((data: any) => {
+      return new Pagination<Subtech>(data, Subtech)
     })
 }

@@ -12,12 +12,21 @@
 		ClickableTile,
 		SkeletonText,
 	} from 'carbon-components-svelte';
-	import { getGames, getGame, createGame, deleteGame, getActions } from '$lib/scripts/endpoints';
+	import {
+		getGames,
+		getGame,
+		createGame,
+		deleteGame,
+		getActions,
+		getSubtechs,
+		getTechs,
+	} from '$lib/scripts/endpoints';
 	import { Game } from '$lib/scripts/models';
 	import ModalCreate from '$lib/ui/ModalCreate.svelte';
 	import { pushNotification } from '$lib/utils/utils';
 	import { Pagination } from '$lib/scripts/pagination';
 	import Datatype from '$lib/scripts/datatype';
+	import Field from '$lib/games/Field.svelte';
 
 	let gameId: number | undefined = undefined;
 	let createOpen = false;
@@ -104,8 +113,19 @@
 				<Row>
 					<Column>
 						{#await getTechs()}
-						<DataTable />
+							<DataTableSkeleton />
+						{:then techs}
+							<DataTable
+								useStaticWidth
+								headers={[{ key: 'name', value: 'Технічна навичка' }]}
+								rows={techs.getRows()}
+							/>
+						{/await}
 					</Column>
+					<Column>
+						<Field {game} />
+					</Column>
+					<Column />
 				</Row>
 				<Row>
 					{#await getActions(gameId)}
