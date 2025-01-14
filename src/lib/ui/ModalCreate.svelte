@@ -23,7 +23,7 @@
 		DatePickerInput,
 	} from 'carbon-components-svelte';
 	import { getPlayer, getTeam } from '$lib/scripts/endpoints';
-	import { AMPLUA } from '$lib/utils/utils';
+	import { Amplua } from '$lib/utils/utils';
 	import ModalCreateRelation from './ModalCreateRelation.svelte';
 
 	let data: any[] = [];
@@ -138,7 +138,7 @@
 									<Tile>
 										{player.firstName.originalType.value}
 										{player.lastName.originalType.value}
-										{AMPLUA[relation[1]]}
+										{Amplua[relation[1]]}
 									</Tile>
 								{/await}
 							{/if}

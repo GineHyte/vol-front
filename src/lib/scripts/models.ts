@@ -50,7 +50,7 @@ export class Action extends Model {
   subtech: Field = new Field('subtech', 'subtech', new Datatype('number'), 'Субтехніка', new Relation('subtechs', 'Субтехніка'))
   from_zone: Field = new Field('from_zone', 'from_zone', new Datatype('number'), 'Зона від')
   to_zone: Field = new Field('to_zone', 'to_zone', new Datatype('number'), 'Зона до')
-  impact: Field = new Field('impact', 'impact', new Datatype('number'), 'Вплив')
+  impact: Field = new Field('impact', 'impact', new Datatype('string'), 'Якісний показник гри')
 }
 
 export class Tech extends Model {
@@ -63,5 +63,5 @@ export class Subtech extends Model {
   id: Field = new Field('id', 'id', new Datatype('number'))
   name: Field = new Field('name', 'name', new Datatype('string'), 'Назва')
   description: Field = new Field('description', 'description', new Datatype('string'), 'Опис')
-  techId: Field = new Field('techId', 'tech_id', new Datatype('number'), 'Техніка', new Relation('techs', 'Техніка'))
+  techId: Field = new Field('techId', 'tech_id', new Datatype('number'), 'Технічна дія', new Relation('techs', 'Техніка'))
 }

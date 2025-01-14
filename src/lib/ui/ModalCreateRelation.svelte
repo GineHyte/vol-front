@@ -13,7 +13,7 @@
 	import { PaginationProps } from '$lib/scripts/pagination';
 	import { createEventDispatcher } from 'svelte';
 	import { Relation } from '$lib/scripts/relation';
-	import { AMPLUA } from '$lib/utils/utils';
+	import { Amplua } from '$lib/utils/utils';
 
 	export let relation: Relation;
 	export let selectedRelation: number[] = [];
@@ -22,7 +22,7 @@
 
 	let dispatch = createEventDispatcher();
 	let getFunc: (paginationProps: PaginationProps) => Promise<Pagination<any>>;
-	let playersAmplua: string[] = [AMPLUA.Defender];
+	let playersAmplua: string[] = [Amplua.Defender];
 	let playersAmpluaOpen: boolean = false;
 
 	if (relation.jsRelation === 'players') {
@@ -87,7 +87,7 @@
 				playersAmplua = [e.detail];
 			}}
 		>
-			{#each Object.entries(AMPLUA) as amplua}
+			{#each Object.entries(Amplua) as amplua}
 				<RadioTile value={amplua[0]}>{amplua[1]}</RadioTile>
 			{/each}
 		</TileGroup>

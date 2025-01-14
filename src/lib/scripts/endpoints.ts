@@ -129,3 +129,10 @@ export function getSubtechs(techId: number, paginationProps: PaginationProps = n
       return new Pagination<Subtech>(data, Subtech)
     })
 }
+
+export function createAction(action: Action): Promise<Status> {
+  return new ApiImpl().post('/actions/', action.serialize())
+    .then((data: any) => {
+      return new Status().deserialize(data) as Status
+    })
+}

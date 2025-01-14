@@ -2,15 +2,13 @@
 	import SideList from '$lib/ui/SideList.svelte';
 	import {
 		SkeletonPlaceholder,
-		ImageLoader,
 		Content,
 		Grid,
 		Row,
 		Column,
 		DataTable,
 		DataTableSkeleton,
-		ClickableTile,
-		SkeletonText,
+		Pagination,
 	} from 'carbon-components-svelte';
 	import {
 		getGames,
@@ -20,17 +18,34 @@
 		getActions,
 		getSubtechs,
 		getTechs,
+		createAction,
 	} from '$lib/scripts/endpoints';
-	import { Game } from '$lib/scripts/models';
+	import { Game, Action } from '$lib/scripts/models';
+	import { PaginationProps } from '$lib/scripts/pagination';
 	import ModalCreate from '$lib/ui/ModalCreate.svelte';
 	import { pushNotification } from '$lib/utils/utils';
-	import { Pagination } from '$lib/scripts/pagination';
-	import Datatype from '$lib/scripts/datatype';
 	import Field from '$lib/games/Field.svelte';
+	import { Impact, Side } from '$lib/utils/utils';
 
 	let gameId: number | undefined = undefined;
 	let createOpen = false;
-	let tableUpdate = false;
+	let selectedTech: number = -1;
+	let selectedSubtech: number = -1;
+	let selectedImpact: string = '';
+	let selectedZones: number[] = [];
+	let selectedSide: Side = Side.NOTSET;
+	let selectedPlayer: number = -1;
+	let zoneEnabled: number = 0;
+	let actionTableUpdate = false;
+	let actionsPage = 1;
+	let actionsPageSize = 10;
+
+	let localGame: Game | undefined = undefined;
+
+	async function getGameLocal(gameIdLocal: number) {
+		localGame = await getGame(gameIdLocal);
+		return localGame;
+	}
 
 	function selectGame(id: number) {
 		gameId = id;
@@ -100,39 +115,142 @@
 		}
 		createOpen = false;
 	}
+
+	async function submitAction() {
+		let action = new Action();
+		action.game.originalType.value = gameId;
+		action.team.originalType.value =
+			selectedSide === Side.LEFT
+				? localGame?.teamA.originalType.value
+				: localGame?.teamB.originalType.value;
+		action.player.originalType.value = selectedPlayer;
+		action.subtech.originalType.value = selectedSubtech;
+		action.from_zone.originalType.value = selectedZones[0];
+		action.to_zone.originalType.value = selectedZones[1];
+		action.impact.originalType.value = selectedImpact;
+
+		let status = await createAction(action);
+		if (status.status.originalType.value === 'success') {
+			pushNotification({
+				title: 'Успіх!',
+				message: 'Дія створена.',
+				kind: 'success',
+			});
+		} else {
+			pushNotification({
+				title: 'Помилка!',
+				message: 'Дія не може бути створена.',
+				kind: 'error',
+			});
+		}
+
+		selectedTech = -1;
+		selectedSubtech = -1;
+		selectedImpact = '';
+		selectedZones = [];
+		selectedSide = Side.NOTSET;
+		selectedPlayer = -1;
+		zoneEnabled = 0;
+		actionTableUpdate = !actionTableUpdate;
+	}
+
+	$: if (selectedImpact !== '') {
+		zoneEnabled = selectedSide;
+	}
 </script>
 
 {#if gameId}
 	<Content>
 		<Grid>
-			{#await getGame(gameId)}
+			{#await getGameLocal(gameId)}
 				<Row class="min-h-96 m-4">
 					<SkeletonPlaceholder class="size-96" />
 				</Row>
 			{:then game}
 				<Row>
 					<Column>
-						{#await getTechs()}
-							<DataTableSkeleton />
-						{:then techs}
-							<DataTable
-								useStaticWidth
-								headers={[{ key: 'name', value: 'Технічна навичка' }]}
-								rows={techs.getRows()}
-							/>
-						{/await}
+						{#if selectedPlayer > 0}
+							{#if selectedTech < 0}
+								{#await getTechs()}
+									<DataTableSkeleton />
+								{:then techs}
+									<DataTable
+										useStaticWidth
+										headers={[{ key: 'name', value: 'Технічна навичка' }]}
+										rows={techs.getRows()}
+									>
+										<svelte:fragment slot="cell" let:cell let:row>
+											<button on:click={() => (selectedTech = row.id)}>
+												{cell.value}
+											</button>
+										</svelte:fragment>
+									</DataTable>
+								{/await}
+							{:else if selectedSubtech < 0}
+								{#await getSubtechs(selectedTech)}
+									<DataTableSkeleton />
+								{:then subtechs}
+									<DataTable
+										useStaticWidth
+										headers={[{ key: 'name', value: 'Під-техніка' }]}
+										rows={subtechs.getRows()}
+									>
+										<svelte:fragment slot="cell" let:cell let:row>
+											<button on:click={() => (selectedSubtech = row.id)}>
+												{cell.value}
+											</button>
+										</svelte:fragment>
+									</DataTable>
+								{/await}
+							{:else if selectedImpact === ''}
+								<DataTable
+									headers={[{ key: 'impact', value: 'Якісний показник гри' }]}
+									rows={Object.entries(Impact).map(([key, value]) => ({
+										id: key,
+										impact: value,
+									}))}
+								>
+									<svelte:fragment slot="cell" let:cell let:row>
+										<button on:click={() => (selectedImpact = row.id)}>
+											{cell.value}
+										</button>
+									</svelte:fragment>
+								</DataTable>
+							{/if}
+						{/if}
 					</Column>
 					<Column>
-						<Field {game} />
+						<Field
+							{game}
+							bind:selectedZones
+							bind:selectedSide
+							bind:selectedPlayer
+							bind:zoneEnabled
+							submitFunc={submitAction}
+						/>
 					</Column>
 					<Column />
 				</Row>
 				<Row>
-					{#await getActions(gameId)}
-						<DataTableSkeleton />
-					{:then actions}
-						<DataTable headers={actions.getHeaders()} rows={actions.getRows()} />
-					{/await}
+					<div class="w-full h-full mt-8">
+						{#key actionTableUpdate}
+							{#await getActions(gameId, new PaginationProps(actionsPage, actionsPageSize))}
+								<DataTableSkeleton />
+							{:then actions}
+								<DataTable
+									sortable
+									headers={actions.getHeaders()}
+									rows={actions.getRows()}
+								/>
+								<Pagination
+									pageSizes={[5, 10, 20, 50]}
+									bind:pageSize={actionsPageSize}
+									bind:page={actionsPage}
+									totalItems={actions.total}
+								/>
+							{/await}
+						{/key}
+					</div>
 				</Row>
 			{/await}
 		</Grid>

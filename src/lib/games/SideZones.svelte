@@ -19,7 +19,7 @@
 			class="w-full h-full border-2 border-white flex items-center justify-center cursor-pointer {disabled
 				? 'bg-gray-500 cursor-not-allowed'
 				: 'hover:bg-red-500 cursor-pointer'}"
-			on:click={() => dispatch('selectZone', { zone: 1, side })}
+			on:click={() => dispatch('selectZone', 1)}
 		>
 			1
 		</button>
@@ -27,7 +27,7 @@
 			class="w-full h-full border-2 border-white flex items-center justify-center cursor-pointer {disabled
 				? 'bg-gray-500 cursor-not-allowed'
 				: 'hover:bg-red-500 cursor-pointer'}"
-			on:click={() => dispatch('selectZone', { zone: 1, side })}
+			on:click={() => dispatch('selectZone', 2)}
 		>
 			2
 		</button>
@@ -37,7 +37,7 @@
 			class="w-full h-full border-2 border-white flex items-center justify-center cursor-pointer {disabled
 				? 'bg-gray-500 cursor-not-allowed'
 				: 'hover:bg-red-500 cursor-pointer'}"
-			on:click={() => dispatch('selectZone', { zone: 1, side })}
+			on:click={() => dispatch('selectZone', 3)}
 		>
 			3
 		</button>
@@ -45,6 +45,7 @@
 			class="w-full h-full border-2 border-white flex items-center justify-center cursor-pointer {disabled
 				? 'bg-gray-500 cursor-not-allowed'
 				: 'hover:bg-red-500 cursor-pointer'}"
+			on:click={() => dispatch('selectZone', 4)}
 		>
 			4
 		</button>
@@ -54,7 +55,7 @@
 			class="w-full h-full border-2 border-white flex items-center justify-center cursor-pointer {disabled
 				? 'bg-gray-500 cursor-not-allowed'
 				: 'hover:bg-red-500 cursor-pointer'}"
-			on:click={() => dispatch('selectZone', { zone: 1, side })}
+			on:click={() => dispatch('selectZone', 5)}
 		>
 			5
 		</button>
@@ -62,6 +63,7 @@
 			class="w-full h-full border-2 border-white flex items-center justify-center cursor-pointer {disabled
 				? 'bg-gray-500 cursor-not-allowed'
 				: 'hover:bg-red-500 cursor-pointer'}"
+			on:click={() => dispatch('selectZone', 6)}
 		>
 			6
 		</button>
