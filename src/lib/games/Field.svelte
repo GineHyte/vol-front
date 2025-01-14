@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import {
 		Column,
 		Grid,
@@ -8,52 +8,48 @@
 	} from 'carbon-components-svelte';
 	import { Game, Player, Team } from '$lib/scripts/models';
 	import { getGame, getTeam, getPlayers } from '$lib/scripts/endpoints';
-	import Zone from './Zone.svelte';
+	import Zone from './SideZones.svelte';
 	import PlayerElement from './Player.svelte';
+	import { IbmZEnvironmentsDevSecOps, RightPanelClose, RowExpand } from 'carbon-icons-svelte';
+	import { Side } from '$lib/utils/utils';
+	import SideZones from './SideZones.svelte';
+	import { current_component } from 'svelte/internal';
 
 	export let game = new Game();
 
-	let isZoneEnabled = false;
+	let zoneEnabled: number = 0; // 0 - false, 1 - left, 2 - right
 	let isPlayersEnabled = true;
-	let selectedPlayer = '';
+	let selectedPlayer: { playerId: number; side: Side } = { playerId: -1, side: Side.NOTSET }; // playerId, side
+	let selectedZone: { zone: number; side: Side } = { zone: -1, side: Side.NOTSET }; // zone, side
 
-	$: if (selectedPlayer) {
-		console.log(selectedPlayer);
-		isPlayersEnabled = false;
-		isZoneEnabled = true;
+	$: {
+		isPlayersEnabled = selectedPlayer.playerId < 0;
+		zoneEnabled = selectedPlayer.side;
+		console.log('isPlayersEnabled', isPlayersEnabled);
 	}
 </script>
 
 {#if game}
 	<div>
 		<div class="flex w-[36rem] h-[18rem] bg-amber-600 relative">
-			{#if isZoneEnabled}
-				<Grid>
-					<Row>
-						<Column><Zone number={1} /></Column>
-						<Column><Zone number={2} /></Column>
-					</Row>
-					<Row>
-						<Column><Zone number={3} /></Column>
-						<Column><Zone number={4} /></Column>
-					</Row>
-					<Row>
-						<Column><Zone number={5} /></Column>
-						<Column><Zone number={6} /></Column>
-					</Row>
-				</Grid>
+			{#if zoneEnabled}
+				<SideZones
+					currentSide={zoneEnabled}
+					side={Side.LEFT}
+					on:selectZone={(e) => {
+						selectedZone = e.detail;
+						zoneEnabled = Side.RIGHT;
+					}}
+				/>
 				<div class="h-full w-[1px] bg-black" />
-				<Grid>
-					<Row>
-						<Column><Zone number={1} /></Column>
-						<Column><Zone number={2} /></Column>
-					</Row>
-					<Row>
-						<Column><Zone number={3} /></Column>
-						<Column><Zone number={5} /></Column>
-						<Column><Zone number={6} /></Column>
-					</Row>
-				</Grid>
+				<SideZones
+					currentSide={zoneEnabled}
+					side={Side.RIGHT}
+					on:selectZone={(e) => {
+						selectedZone = e.detail;
+						zoneEnabled = Side.LEFT;
+					}}
+				/>
 			{/if}
 			{#if isPlayersEnabled}
 				<div class="relative w-full">
@@ -61,15 +57,16 @@
 						{#await getTeam(game.teamA.originalType.value)}
 							teamA
 						{:then team}
-							{console.log(team)}
 							{#if team.players.originalType.value[0]}
 								<PlayerElement
 									top="50"
 									left="160"
 									title={team.players.originalType.value[0].amplua}
-									on:select={() =>
-										(selectedPlayer =
-											team.players.originalType.value[0].playerId)}
+									on:select={() => {
+										selectedPlayer.side = Side.LEFT;
+										selectedPlayer.playerId =
+											team.players.originalType.value[0].player_id;
+									}}
 								/>
 							{/if}
 							{#if team.players.originalType.value[1]}
@@ -77,9 +74,11 @@
 									top="170"
 									left="90"
 									title={team.players.originalType.value[1].amplua}
-									on:select={() =>
-										(selectedPlayer =
-											team.players.originalType.value[1].playerId)}
+									on:select={() => {
+										selectedPlayer.side = Side.LEFT;
+										selectedPlayer.playerId =
+											team.players.originalType.value[1].player_id;
+									}}
 								/>
 							{/if}
 						{/await}
@@ -96,9 +95,11 @@
 									top="170"
 									left="90"
 									title={team.players.originalType.value[0].amplua}
-									on:select={() =>
-										(selectedPlayer =
-											team.players.originalType.value[0].playerId)}
+									on:select={() => {
+										selectedPlayer.side = Side.RIGHT;
+										selectedPlayer.playerId =
+											team.players.originalType.value[0].player_id;
+									}}
 								/>
 							{/if}
 							{#if team.players.originalType.value[1]}
@@ -106,9 +107,11 @@
 									top="50"
 									left="160"
 									title={team.players.originalType.value[1].amplua}
-									on:select={() =>
-										(selectedPlayer =
-											team.players.originalType.value[1].playerId)}
+									on:select={() => {
+										selectedPlayer.side = Side.RIGHT;
+										selectedPlayer.playerId =
+											team.players.originalType.value[1].player_id;
+									}}
 								/>
 							{/if}
 						{/await}

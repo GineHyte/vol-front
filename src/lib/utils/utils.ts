@@ -19,3 +19,9 @@ export const AMPLUA = {
   "Attacker": "Нападник",
   "Universal": "Універсальний",
 }
+
+export enum Side {
+  LEFT = 1,
+  RIGHT = 2,
+  NOTSET = 0,
+}
