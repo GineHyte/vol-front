@@ -70,11 +70,11 @@ contextMenu({
   ],
 });
 
-function loadVite(port) {
+function loadDev(port) {
   mainWindow.loadURL(`http://localhost:${port}`).catch((e) => {
     console.log('Error loading URL, retrying', e);
     setTimeout(() => {
-      loadVite(port);
+      loadDev(port);
     }, 200);
   });
 }
@@ -94,7 +94,7 @@ function createMainWindow() {
     mainWindow = null;
   });
 
- loadProduction();
+ isDev ? loadDev(port) : loadProduction();
 }
 
 app.once('ready', createMainWindow);
