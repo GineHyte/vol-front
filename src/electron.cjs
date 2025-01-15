@@ -1,6 +1,7 @@
 const windowStateManager = require('electron-window-state');
 const { app, BrowserWindow, ipcMain } = require('electron');
 const contextMenu = require('electron-context-menu');
+const isDev = require('electron-is-dev');
 const serve = require('electron-serve');
 const path = require('path');
 
@@ -12,7 +13,6 @@ try {
 
 const serveURL = serve({ directory: '.' });
 const port = process.env.PORT || 5173;
-const dev = !app.isPackaged;
 let mainWindow;
 
 function createWindow() {
@@ -36,7 +36,7 @@ function createWindow() {
       contextIsolation: true,
       nodeIntegration: true,
       spellcheck: false,
-      devTools: dev,
+      devTools: true, // isDev,
       preload: path.join(__dirname, 'preload.cjs'),
     },
     x: windowState.x,
@@ -79,14 +79,22 @@ function loadVite(port) {
   });
 }
 
+function loadProduction() {
+  mainWindow.loadURL(`file://${path.join(__dirname, '../build/index.html')}`).catch((e) => {
+    console.log('Error loading URL, retrying', e);
+    setTimeout(() => {
+      loadProduction();
+    }, 200);
+  });
+}
+
 function createMainWindow() {
   mainWindow = createWindow();
   mainWindow.once('close', () => {
     mainWindow = null;
   });
 
-  if (dev) loadVite(port);
-  else serveURL(mainWindow);
+ loadProduction();
 }
 
 app.once('ready', createMainWindow);
