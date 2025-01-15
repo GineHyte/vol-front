@@ -1,43 +1,48 @@
 <script lang="ts">
 	import SideList from '$lib/ui/SideList.svelte';
 	import {
-		SkeletonPlaceholder,
-		ImageLoader,
+		Toolbar,
+		ToolbarContent,
 		Content,
 		Grid,
 		Row,
 		Column,
 		DataTable,
 		DataTableSkeleton,
-		ClickableTile,
+		Pagination,
 		SkeletonText,
+		Tile,
+		Button,
 	} from 'carbon-components-svelte';
 	import {
-		getTeams,
-		getTeam,
-		getPlayer,
-		createTeam,
-		deleteTeam,
 		getTech,
 		getTechs,
 		createTech,
 		deleteTech,
+		createSubtech,
+		deleteSubtech,
+		getSubtechs,
+		getSubtech,
 	} from '$lib/scripts/endpoints';
-	import { Team, PlayerTeam, Player, Tech } from '$lib/scripts/models';
+	import { Tech, Subtech } from '$lib/scripts/models';
 	import ModalCreate from '$lib/ui/ModalCreate.svelte';
 	import { pushNotification } from '$lib/utils/utils';
-	import { Pagination } from '$lib/scripts/pagination';
-	import Datatype from '$lib/scripts/datatype';
+	import { PaginationProps } from '$lib/scripts/pagination';
+	import ContextMenuSideList from '$lib/ui/ContextMenuSideList.svelte';
 
 	let techId: number | undefined = undefined;
 	let createOpen = false;
-	let tableUpdate = false;
+	let createSubtechOpen = false;
+	let subtechPage = 1;
+	let subtechPageSize = 5;
+	let targetForSubtechs: any;
+	let subtechTableUpdate = false;
 
 	function selectTech(id: number) {
 		techId = id;
 	}
 
-	async function duplicateTech(dispatch: (event: string) => void, currentId: number) {
+	async function duplicateTech(currentId: number) {
 		if (currentId) {
 			let tech = await getTech(currentId);
 			console.log(tech);
@@ -48,7 +53,6 @@
 					message: 'Техніка дубльована.',
 					kind: 'success',
 				});
-				dispatch('update');
 			} else {
 				pushNotification({
 					title: 'Помилка!',
@@ -59,7 +63,28 @@
 		}
 	}
 
-	async function removeTech(dispatch: (event: string) => void, currentId: number) {
+	async function duplicateSubtech(currentId: number) {
+		if (currentId) {
+			let subtech = await getSubtech(currentId);
+			console.log(subtech);
+			let status = await createSubtech(subtech);
+			if (status.status.originalType.value === 'success') {
+				pushNotification({
+					title: 'Успіх!',
+					message: 'Підтехніка дубльована.',
+					kind: 'success',
+				});
+			} else {
+				pushNotification({
+					title: 'Помилка!',
+					message: 'Підтехніка не може бути дубльована.',
+					kind: 'error',
+				});
+			}
+		}
+	}
+
+	async function removeTech(currentId: number) {
 		if (currentId) {
 			let status = await deleteTech(currentId);
 			if (status.status.originalType.value === 'success') {
@@ -68,11 +93,29 @@
 					message: 'Техніка видалена.',
 					kind: 'success',
 				});
-				dispatch('update');
 			} else {
 				pushNotification({
 					title: 'Помилка!',
 					message: 'Техніка не може бути видалена.',
+					kind: 'error',
+				});
+			}
+		}
+	}
+
+	async function removeSubtech(currentId: number) {
+		if (currentId) {
+			let status = await deleteSubtech(currentId);
+			if (status.status.originalType.value === 'success') {
+				pushNotification({
+					title: 'Успіх!',
+					message: 'Підтехніка видалена.',
+					kind: 'success',
+				});
+			} else {
+				pushNotification({
+					title: 'Помилка!',
+					message: 'Підтехніка не може бути видалена.',
 					kind: 'error',
 				});
 			}
@@ -98,6 +141,27 @@
 		}
 		createOpen = false;
 	}
+
+	async function createSubtechRenderer(inputData: any) {
+		let subtech = new Subtech();
+		subtech.techId.originalType.value = techId;
+		subtech.deserialize(inputData);
+		let status = await createSubtech(subtech);
+		if (status.status.originalType.value === 'success') {
+			pushNotification({
+				title: 'Успіх!',
+				message: 'Ви створили нову підтехніку.',
+				kind: 'success',
+			});
+		} else {
+			pushNotification({
+				title: 'Помилка!',
+				message: 'Підтехніка не може бути створена.',
+				kind: 'error',
+			});
+		}
+		createSubtechOpen = false;
+	}
 </script>
 
 {#if techId}
@@ -106,20 +170,56 @@
 			{#await getTech(techId)}
 				<Row class="min-h-96 m-4">
 					<Column>
-						<SkeletonPlaceholder class="size-96" />
-					</Column>
-					<Column>
 						<SkeletonText paragraph lines={8} />
 					</Column>
 				</Row>
 			{:then tech}
 				<Row>
 					<Column>
-						<ImageLoader class="size-96" ratio="4x3" fadeIn alt="Tech`s photo" />
-					</Column>
-					<Column>
 						<p>Назва: {tech.name.originalType.value}</p>
 					</Column>
+					<div class="h-[12rem]" />
+					<div class="w-full h-full mt-8" bind:this={targetForSubtechs}>
+						{#key [subtechTableUpdate, createSubtechOpen]}
+							{#await getSubtechs(techId, new PaginationProps(subtechPage, subtechPageSize))}
+								<DataTableSkeleton />
+							{:then subtechs}
+								<DataTable
+									sortable
+									headers={subtechs.getHeaders()}
+									rows={subtechs.getRows()}
+								>
+									<svelte:fragment slot="cell" let:cell let:row>
+										<div class="w-full h-full" id={row.id}>
+											{cell.value}
+										</div>
+									</svelte:fragment>
+									<Toolbar>
+										<ToolbarContent class="w-full">
+											<Button
+												on:click={() => (createSubtechOpen = true)}
+												class="w-full"
+											>
+												+ Підтехніка
+											</Button>
+										</ToolbarContent>
+									</Toolbar>
+								</DataTable>
+								<Pagination
+									pageSizes={[5, 10, 20, 50]}
+									bind:pageSize={subtechPageSize}
+									bind:page={subtechPage}
+									totalItems={subtechs.total}
+								/>
+							{/await}
+						{/key}
+					</div>
+					<ContextMenuSideList
+						target={targetForSubtechs}
+						deleteFunc={removeSubtech}
+						duplicateFunc={duplicateSubtech}
+						on:update={() => (subtechTableUpdate = !subtechTableUpdate)}
+					/>
 				</Row>
 			{/await}
 		</Grid>
@@ -133,6 +233,16 @@
 	handleSubmit={createTechRenderer}
 	bind:open={createOpen}
 	requiredFields={['name', 'description']}
+/>
+
+<ModalCreate
+	label="subtech"
+	title="Підтехніка"
+	model={new Subtech()}
+	handleSubmit={createSubtechRenderer}
+	bind:open={createSubtechOpen}
+	requiredFields={['name', 'description']}
+	excludeFields={['techId']}
 />
 
 {#key createOpen}

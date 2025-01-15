@@ -8,8 +8,6 @@
 		Row,
 		Column,
 		DataTable,
-		DataTableSkeleton,
-		ClickableTile,
 		SkeletonText,
 	} from 'carbon-components-svelte';
 	import { getTeams, getTeam, getPlayer, createTeam, deleteTeam } from '$lib/scripts/endpoints';
@@ -17,17 +15,15 @@
 	import ModalCreate from '$lib/ui/ModalCreate.svelte';
 	import { pushNotification } from '$lib/utils/utils';
 	import { Pagination } from '$lib/scripts/pagination';
-	import Datatype from '$lib/scripts/datatype';
 
 	let teamId: number | undefined = undefined;
 	let createOpen = false;
-	let tableUpdate = false;
 
 	function selectTeam(id: number) {
 		teamId = id;
 	}
 
-	async function duplicateTeam(dispatch: (event: string) => void, currentId: number) {
+	async function duplicateTeam(currentId: number) {
 		if (currentId) {
 			let team = await getTeam(currentId);
 			console.log(team);
@@ -38,7 +34,6 @@
 					message: 'Команда дубльована.',
 					kind: 'success',
 				});
-				dispatch('update');
 			} else {
 				pushNotification({
 					title: 'Помилка!',
@@ -49,7 +44,7 @@
 		}
 	}
 
-	async function removeTeam(dispatch: (event: string) => void, currentId: number) {
+	async function removeTeam(currentId: number) {
 		if (currentId) {
 			let status = await deleteTeam(currentId);
 			if (status.status.originalType.value === 'success') {
@@ -58,7 +53,6 @@
 					message: 'Команда видалена.',
 					kind: 'success',
 				});
-				dispatch('update');
 			} else {
 				pushNotification({
 					title: 'Помилка!',

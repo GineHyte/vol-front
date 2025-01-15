@@ -17,10 +17,10 @@
 	export let title: string = '';
 	export let getFunc: (props: PaginationProps) => Promise<Pagination<Model>>;
 	export let selectFunc: (id: number) => void;
-	export let newFunc: () => void | undefined;
+	export let newFunc: () => Promise<void> | undefined;
 	export let headers: { key: string; value: string }[];
-	export let deleteFunc: (dispatch: (event: string) => void, currentId: number) => void;
-	export let duplicateFunc: (dispatch: (event: string) => void, currentId: number) => void;
+	export let deleteFunc: (currentId: number) => Promise<void>;
+	export let duplicateFunc: (currentId: number) => Promise<void>;
 	export let currentId: number | null = null;
 
 	let pageSize = 4;

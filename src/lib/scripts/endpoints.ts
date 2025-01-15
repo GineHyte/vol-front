@@ -123,7 +123,7 @@ export function deleteTech(id: number): Promise<Status> {
     })
 }
 
-export function getSubtechs(techId: number, paginationProps: PaginationProps = new PaginationProps()): Promise<Pagination<Subtech>> {
+export function getSubtechs(techId: number | undefined, paginationProps: PaginationProps = new PaginationProps()): Promise<Pagination<Subtech>> {
   return new ApiImpl().get(`/subtechs/?tech_id=${techId}`, paginationProps)
     .then((data: any) => {
       return new Pagination<Subtech>(data, Subtech)
@@ -132,6 +132,44 @@ export function getSubtechs(techId: number, paginationProps: PaginationProps = n
 
 export function createAction(action: Action): Promise<Status> {
   return new ApiImpl().post('/actions/', action.serialize())
+    .then((data: any) => {
+      return new Status().deserialize(data) as Status
+    })
+}
+
+
+export function createSubtech(subtech: Subtech): Promise<Status> {
+  return new ApiImpl().post('/subtechs/', subtech.serialize())
+    .then((data: any) => {
+      return new Status().deserialize(data) as Status
+    })
+}
+
+export function deleteSubtech(id: number): Promise<Status> {
+  return new ApiImpl().delete(`/subtechs/${id}`)
+    .then((data: any) => {
+      return new Status().deserialize(data) as Status
+    })
+}
+
+
+export function getSubtech(id: number): Promise<Subtech> {
+  return new ApiImpl().get(`/subtechs/${id}`)
+    .then((data: any) => {
+      return new Subtech().deserialize(data) as Subtech
+    })
+}
+
+export function getAction(id: number): Promise<Action> {
+  return new ApiImpl().get(`/actions/${id}`)
+    .then((data: any) => {
+      return new Action().deserialize(data) as Action
+    })
+}
+
+
+export function deleteAction(id: number): Promise<Status> {
+  return new ApiImpl().delete(`/actions/${id}`)
     .then((data: any) => {
       return new Status().deserialize(data) as Status
     })

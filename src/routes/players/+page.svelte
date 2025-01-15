@@ -7,9 +7,6 @@
 		Grid,
 		Row,
 		Column,
-		DataTable,
-		DataTableSkeleton,
-		ClickableTile,
 		SkeletonText,
 	} from 'carbon-components-svelte';
 	import { getPlayers, getPlayer, createPlayer, deletePlayer } from '$lib/scripts/endpoints';
@@ -19,13 +16,12 @@
 
 	let playerId: number | undefined = undefined;
 	let createOpen = false;
-	let tableUpdate = false;
 
 	function selectPlayer(id: number) {
 		playerId = id;
 	}
 
-	async function duplicatePlayer(dispatch: (event: string) => void, currentId: number) {
+	async function duplicatePlayer(currentId: number) {
 		if (currentId) {
 			let status = await createPlayer(await getPlayer(currentId));
 			if (status.status.originalType.value === 'success') {
@@ -34,7 +30,6 @@
 					message: 'Гравець дубльований.',
 					kind: 'success',
 				});
-				dispatch('update');
 			} else {
 				pushNotification({
 					title: 'Помилка!',
@@ -45,7 +40,7 @@
 		}
 	}
 
-	async function removePlayer(dispatch: (event: string) => void, currentId: number) {
+	async function removePlayer(currentId: number) {
 		if (currentId) {
 			let status = await deletePlayer(currentId);
 			if (status.status.originalType.value === 'success') {
@@ -54,7 +49,6 @@
 					message: 'Гравець видалений.',
 					kind: 'success',
 				});
-				dispatch('update');
 			} else {
 				pushNotification({
 					title: 'Помилка!',

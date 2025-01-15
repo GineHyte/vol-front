@@ -16,15 +16,18 @@
 		createGame,
 		deleteGame,
 		getActions,
+		getAction,
 		getSubtechs,
 		getTechs,
 		createAction,
+		deleteAction,
 	} from '$lib/scripts/endpoints';
 	import { Game, Action } from '$lib/scripts/models';
 	import { PaginationProps } from '$lib/scripts/pagination';
 	import ModalCreate from '$lib/ui/ModalCreate.svelte';
 	import { pushNotification } from '$lib/utils/utils';
 	import Field from '$lib/games/Field.svelte';
+	import ContextMenuSideList from '$lib/ui/ContextMenuSideList.svelte';
 	import { Impact, Side } from '$lib/utils/utils';
 
 	let gameId: number | undefined = undefined;
@@ -39,6 +42,7 @@
 	let actionTableUpdate = false;
 	let actionsPage = 1;
 	let actionsPageSize = 10;
+	let targetForActions: any;
 
 	let localGame: Game | undefined = undefined;
 
@@ -51,7 +55,7 @@
 		gameId = id;
 	}
 
-	async function duplicateGame(dispatch: (event: string) => void, currentId: number) {
+	async function duplicateGame(currentId: number) {
 		if (currentId) {
 			let game = await getGame(currentId);
 			console.log(game);
@@ -62,7 +66,6 @@
 					message: 'Гра дубльована.',
 					kind: 'success',
 				});
-				dispatch('update');
 			} else {
 				pushNotification({
 					title: 'Помилка!',
@@ -73,7 +76,7 @@
 		}
 	}
 
-	async function removeGame(dispatch: (event: string) => void, currentId: number) {
+	async function removeGame(currentId: number) {
 		if (currentId) {
 			let status = await deleteGame(currentId);
 			if (status.status.originalType.value === 'success') {
@@ -82,7 +85,6 @@
 					message: 'Гра видалена.',
 					kind: 'success',
 				});
-				dispatch('update');
 			} else {
 				pushNotification({
 					title: 'Помилка!',
@@ -152,6 +154,46 @@
 		selectedPlayer = -1;
 		zoneEnabled = 0;
 		actionTableUpdate = !actionTableUpdate;
+	}
+
+	async function duplicateAction(currentId: number) {
+		if (currentId) {
+			let action = await getAction(currentId);
+			console.log(action);
+			let status = await createAction(action);
+			if (status.status.originalType.value === 'success') {
+				pushNotification({
+					title: 'Успіх!',
+					message: 'Дія дубльована.',
+					kind: 'success',
+				});
+			} else {
+				pushNotification({
+					title: 'Помилка!',
+					message: 'Дія не може бути дубльована.',
+					kind: 'error',
+				});
+			}
+		}
+	}
+
+	async function removeAction(currentId: number) {
+		if (currentId) {
+			let status = await deleteAction(currentId);
+			if (status.status.originalType.value === 'success') {
+				pushNotification({
+					title: 'Успіх!',
+					message: 'Дія видалена.',
+					kind: 'success',
+				});
+			} else {
+				pushNotification({
+					title: 'Помилка!',
+					message: 'Гра не може бути видалена.',
+					kind: 'error',
+				});
+			}
+		}
 	}
 
 	$: if (selectedImpact !== '') {
@@ -232,7 +274,7 @@
 					<Column />
 				</Row>
 				<Row>
-					<div class="w-full h-full mt-8">
+					<div class="w-full h-full mt-8" bind:this={targetForActions}>
 						{#key actionTableUpdate}
 							{#await getActions(gameId, new PaginationProps(actionsPage, actionsPageSize))}
 								<DataTableSkeleton />
@@ -241,7 +283,13 @@
 									sortable
 									headers={actions.getHeaders()}
 									rows={actions.getRows()}
-								/>
+								>
+									<svelte:fragment slot="cell" let:cell let:row>
+										<div class="w-full h-full" id={row.id}>
+											{cell.value}
+										</div>
+									</svelte:fragment>
+								</DataTable>
 								<Pagination
 									pageSizes={[5, 10, 20, 50]}
 									bind:pageSize={actionsPageSize}
@@ -251,6 +299,12 @@
 							{/await}
 						{/key}
 					</div>
+					<ContextMenuSideList
+						target={targetForActions}
+						deleteFunc={removeAction}
+						duplicateFunc={duplicateAction}
+						on:update={() => (actionTableUpdate = !actionTableUpdate)}
+					/>
 				</Row>
 			{/await}
 		</Grid>

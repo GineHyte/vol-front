@@ -1,15 +1,25 @@
 {
-	"appId": "com.example.app",
-	"productName": "Sveltekit Electron",
+	"appId": "com.vol-techs.app",
+	"productName": "Technical Skills in Beach Volleyball",
 	"directories": {
-		"output": "dist"
+		"output": "dist/artifacts/local",
+		"buildResources": "installer/resources"
 	},
 	"files": [
-		"src/electron.cjs",
-		"src/preload.cjs",
+		"out"
+	],
+	"extraFiles": [
 		{
-			"from": "build",
-			"to": ""
+			"from": "build/Release",
+			"to": "TEST",
+			"filter": "*.node"
 		}
-	]
+	],
+	"win": {
+		"target": "nsis"
+	},
+	"nsis": {
+		"deleteAppDataOnUninstall": true,
+		"include": "installer/win/nsis-installer.nsh"
+	}
 }

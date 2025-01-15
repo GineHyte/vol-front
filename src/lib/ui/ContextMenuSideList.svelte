@@ -1,39 +1,39 @@
 <script lang="ts">
-	import { pushNotification } from '$lib/utils/utils';
+	import { ContextMenu, ContextMenuOption } from 'carbon-components-svelte';
 	import { createEventDispatcher } from 'svelte';
-	const dispatch = createEventDispatcher();
 
 	export let target: readonly (HTMLElement | null)[] | null = null;
-	export let deleteFunc: (dispatch: (event: string) => void, currentId: number) => void;
-	export let duplicateFunc: (dispatch: (event: string) => void, currentId: number) => void;
-
-	import { createPlayer, getPlayer, deletePlayer } from '$lib/scripts/endpoints';
-
-	import {
-		ContextMenu,
-		ContextMenuDivider,
-		ContextMenuGroup,
-		ContextMenuOption,
-	} from 'carbon-components-svelte';
+	export let deleteFunc: (currentId: number) => Promise<void>;
+	export let duplicateFunc: (currentId: number) => Promise<void>;
 
 	let currentId: number | null = null;
+	let dispatch = createEventDispatcher();
 </script>
 
 {#if target !== null}
-	<ContextMenu {target} on:open={(e) => (currentId = Number(e.detail.id))}>
+	<ContextMenu
+		{target}
+		on:open={(e) => {
+			if (e.detail.id) {
+				currentId = Number(e.detail.id);
+			}
+		}}
+	>
 		<ContextMenuOption
 			indented
 			kind="danger"
 			labelText="Видалити"
-			on:click={() => {
-				if (currentId) deleteFunc(dispatch, currentId);
+			on:click={async () => {
+				if (currentId) await deleteFunc(currentId);
+				dispatch('update');
 			}}
 		/>
 		<ContextMenuOption
 			indented
 			labelText="Дублювати"
-			on:click={() => {
-				if (currentId) duplicateFunc(dispatch, currentId);
+			on:click={async () => {
+				if (currentId) await duplicateFunc(currentId);
+				dispatch('update');
 			}}
 		/>
 	</ContextMenu>

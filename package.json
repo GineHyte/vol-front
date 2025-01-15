@@ -2,6 +2,7 @@
 	"name": "vol-front",
 	"version": "0.0.1",
 	"private": true,
+	"description": "Technical Skills in Beach Volleyball",
 	"main": "src/electron.cjs",
 	"type": "module",
 	"author": "Petrenko Oleksii",
@@ -12,7 +13,8 @@
 		"dev:electron": "electron src/electron.cjs",
 		"build": "cross-env NODE_ENV=production npm run build:svelte && npm run build:electron",
 		"build:svelte": "vite build",
-		"build:electron": "electron-builder -mwl --config build.config.json"
+		"build:electron": "electron-builder -mwl --config build.config.json",
+		"package": "node package.cjs"
 	},
 	"engines": {
 		"npm": ">=7",
@@ -26,7 +28,8 @@
 		"electron-context-menu": "^3.6.1",
 		"electron-reloader": "^1.2.3",
 		"electron-serve": "^1.1.0",
-		"electron-window-state": "^5.0.3"
+		"electron-window-state": "^5.0.3",
+		"electron-winstaller": "^5.4.0"
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-static": "2.0.1",
