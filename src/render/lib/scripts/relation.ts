@@ -1,4 +1,4 @@
-import Model from "$lib/scripts/model";
+import Model from "$lib/scripts/model"
 
 export class Relation {
   jsRelation: string

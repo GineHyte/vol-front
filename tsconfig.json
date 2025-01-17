@@ -26,10 +26,10 @@
 		"allowJs": true,
 		"checkJs": false,
 		"paths": {
-			"$lib": ["src/lib"],
-			"$lib/*": ["src/lib/*"],
-			"$app/*": [".svelte/dev/runtime/app/*", ".svelte/build/runtime/app/*"]
+			"@/*": ["src/*"],
+			"$lib/*": ["src/render/lib/*"],
+			"$lib": ["src/render/lib"]
 		}
 	},
-	"include": ["src/**/*.d.ts", "src/**/*.ts", "src/**/*.svelte", "src/electron.js"]
+	"include": ["src/**/*.d.ts", "src/**/*.ts", "src/**/*.svelte"]
 }

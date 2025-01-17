@@ -3,17 +3,23 @@
 	"version": "0.0.1",
 	"private": true,
 	"description": "Technical Skills in Beach Volleyball",
-	"main": "src/electron.cjs",
+	"main": "src/main/electron.cjs",
 	"type": "module",
 	"author": "Petrenko Oleksii",
 	"scripts": {
 		"dev": "cross-env NODE_ENV=dev npm run dev:all",
 		"dev:all": "concurrently -n=svelte,electron -c='#ff3e00',blue \"npm run dev:svelte\" \"npm run dev:electron\"",
-		"dev:svelte": "vite dev --base=./",
-		"dev:electron": "electron src/electron.cjs",
+		"dev:svelte": "vite dev",
+		"dev:electron": "electron src/main/electron.cjs",
 		"build": "cross-env NODE_ENV=production npm run build:svelte && npm run build:electron",
 		"build:svelte": "vite build",
-		"build:electron": "node package.cjs"
+		"build:electron": "node package.cjs",
+		"preview": "electron ."
+	},
+	"build": {
+		"files": [
+			"src/**/*"
+		]
 	},
 	"engines": {
 		"npm": ">=7",

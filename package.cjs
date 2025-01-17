@@ -22,10 +22,9 @@ let woptions = {
         "^/out$",
         "^/dist$",
         "^/examples$",
-        "^/src/routes$",
-        "^/src/lib$",
-        "^/node_modules/[.]cache"
+        "^/node_modules/[.]cache",
     ],
+    derefSymlinks: true,
     junk: true,
     name: "VolTechs",
     out: "./out/",

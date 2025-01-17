@@ -1,20 +1,32 @@
 import adapter from '@sveltejs/adapter-static';
-import 'dotenv/config';
 import preprocess from 'svelte-preprocess';
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
-	// Consult https://github.com/sveltejs/svelte-preprocess
-	// for more information about preprocessors
 	preprocess: preprocess(),
-
 	kit: {
 		adapter: adapter({
+			pages: 'build',
+			assets: 'build',
 			fallback: 'index.html',
+			precompress: false,
+			strict: true
 		}),
-		prerender: { entries: [] },
-		csrf: { checkOrigin: false },
-	},
+		paths: {
+			base: '',
+			relative: true
+		},
+		appDir: 'app',
+		files: {
+			routes: 'src/render/routes',
+			lib: 'src/render/lib',
+			appTemplate: 'src/app.html',
+		},
+		prerender: { 
+			entries: [],
+			handleHttpError: 'warn'
+		}
+	}
 };
 
 export default config;

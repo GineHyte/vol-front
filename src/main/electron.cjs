@@ -5,14 +5,14 @@ const isDev = require('electron-is-dev');
 const serve = require('electron-serve');
 const path = require('path');
 
+const loadURL = serve({ directory: 'build' });
+
 try {
   require('electron-reloader')(module);
 } catch (e) {
   console.error(e);
 }
 
-const serveURL = serve({ directory: '.' });
-const port = process.env.PORT || 5173;
 let mainWindow;
 
 function createWindow() {
@@ -80,8 +80,8 @@ function loadDev(port) {
 }
 
 function loadProduction() {
-  mainWindow.loadURL(`file://${path.join(__dirname, '../build/index.html')}`).catch((e) => {
-    console.log('Error loading URL, retrying', e);
+  loadURL(mainWindow).catch((e) => {
+    console.log('Error loading with electron-serve:', e);
     setTimeout(() => {
       loadProduction();
     }, 200);
