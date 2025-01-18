@@ -4,7 +4,9 @@ const contextMenu = require('electron-context-menu');
 const isDev = require('electron-is-dev');
 const serve = require('electron-serve');
 const path = require('path');
+const settingsManager = require('electron-settings');
 
+const port = 5173;
 const loadURL = serve({ directory: 'build' });
 
 try {
@@ -14,6 +16,7 @@ try {
 }
 
 let mainWindow;
+var settings = {};
 
 function createWindow() {
   let windowState = windowStateManager({
@@ -56,7 +59,8 @@ function createWindow() {
     windowState.saveState(mainWindow);
   });
 
-  return mainWindow;
+  return mainWindow; console.log("setSettings main: ", data);
+
 }
 
 contextMenu({
@@ -94,7 +98,9 @@ function createMainWindow() {
     mainWindow = null;
   });
 
- isDev ? loadDev(port) : loadProduction();
+  ipcInit();
+
+  isDev ? loadDev(port) : loadProduction();
 }
 
 app.once('ready', createMainWindow);
@@ -110,3 +116,14 @@ app.on('window-all-closed', () => {
 ipcMain.on('to-main', (event, count) => {
   return mainWindow.webContents.send('from-main', `next count is ${count + 1}`);
 });
+
+
+function ipcInit() {
+  ipcMain.on('set-settings', (event, data) => {
+    settingsManager.set('settings', data);
+  });
+
+  ipcMain.handle('get-settings', () => {
+    return settingsManager.get('settings');
+  });
+}

@@ -1,6 +1,26 @@
 // @ts-ignore
-import { PUBLIC_API_URL, PUBLIC_API_VERSION } from '$env/static/public';
 import { PaginationProps } from '$lib/scripts/pagination';
+import { pushNotification } from '$lib/utils/utils';
+import { settingsRenderer } from '$lib/utils/store';
+
+let settings;
+var apiUrl = '';
+var apiVersion = '';
+
+settingsRenderer.subscribe((v: any) => {
+  settings = v;
+  if (settings) {
+    apiUrl = settings.apiUrl || '';
+    apiVersion = settings.apiVersion || '';
+  }
+  if (apiUrl === '') {
+    pushNotification({
+      title: 'Помилка!',
+      message: 'Налаштування не знайдено. Будь ласка, вкажіть IP адрес сервера в налаштуваннях.',
+      kind: 'error',
+    });
+  }
+});
 
 interface Api {
   get(url: string, paginationProps: PaginationProps | null, headers: any): Promise<any>
@@ -12,7 +32,7 @@ interface Api {
 export class ApiImpl implements Api {
   async get(url: string, paginationProps: PaginationProps | null = null, headers: any = {}): Promise<any> {
     return new Promise((resolve, reject) => {
-      let queryUrl = `${PUBLIC_API_URL}${PUBLIC_API_VERSION}${url}`
+      let queryUrl = `http://${apiUrl}:8000${apiVersion}${url}`
       if (paginationProps !== null) {
         queryUrl += `${queryUrl.includes('?') ? '&' : '?'}page=${paginationProps.page}&size=${paginationProps.size}`
       }
@@ -32,7 +52,7 @@ export class ApiImpl implements Api {
 
   async post(url: string, data: any, headers: any = {}): Promise<any> {
     return new Promise((resolve, reject) => {
-      fetch(`${PUBLIC_API_URL}${PUBLIC_API_VERSION}${url}`, {
+      fetch(`${apiUrl}${apiVersion}${url}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -48,7 +68,7 @@ export class ApiImpl implements Api {
 
   async put(url: string, data: any, headers: any = {}): Promise<any> {
     return new Promise((resolve, reject) => {
-      fetch(`${PUBLIC_API_URL}${PUBLIC_API_VERSION}${url}`, {
+      fetch(`${apiUrl}${apiVersion}${url}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -64,7 +84,7 @@ export class ApiImpl implements Api {
 
   async delete(url: string, headers: any = {}): Promise<any> {
     return new Promise((resolve, reject) => {
-      fetch(`${PUBLIC_API_URL}${PUBLIC_API_VERSION}${url}`, {
+      fetch(`${apiUrl}${apiVersion}${url}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',

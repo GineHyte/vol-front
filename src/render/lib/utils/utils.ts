@@ -1,4 +1,4 @@
-import { notifications } from '$lib/utils/store';
+import { notifications, settingsRenderer } from '$lib/utils/store';
 
 // @ts-ignore
 export function pushNotification(notification) {
@@ -7,6 +7,10 @@ export function pushNotification(notification) {
   // @ts-ignore
   notifications.set([...notificationsLocal, notification]);
   unsubscribe();
+}
+
+export function setSetting(key: string, value: string) {
+  settingsRenderer.set({ ...settingsRenderer, [key]: value });
 }
 
 export function getTime() {
@@ -32,3 +36,4 @@ export const Impact = {
   "Score": "Вигране очко",
   "Fail": "Брак",
 }
+

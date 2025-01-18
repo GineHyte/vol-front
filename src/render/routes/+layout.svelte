@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import { onMount } from 'svelte';
 	import 'carbon-components-svelte/css/all.css';
 	import '$lib/_global.css';
@@ -10,13 +10,19 @@
 		SkipToContent,
 		Content,
 	} from 'carbon-components-svelte';
+	import { settingsRenderer } from '$lib/utils/store';
 	import Notifications from '$lib/ui/Notifications.svelte';
 	import ModalCreate from '$lib/ui/ModalCreate.svelte';
 
 	let isSideNavOpen = false;
 
 	let ready = false;
-	onMount(() => (ready = true));
+	onMount(() => {
+		ready = true;
+		window.electron.getSettings().then((settings: any) => {
+			settingsRenderer.set(settings);
+		});
+	});
 
 	let routes = [
 		{
@@ -42,6 +48,10 @@
 		{
 			title: 'Вправи',
 			path: '/exercises',
+		},
+		{
+			title: 'Налаштування',
+			path: '/settings',
 		},
 	];
 </script>

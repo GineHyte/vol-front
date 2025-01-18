@@ -33,6 +33,7 @@
 		"electron-context-menu": "^3.6.1",
 		"electron-reloader": "^1.2.3",
 		"electron-serve": "^1.1.0",
+		"electron-settings": "^4.0.4",
 		"electron-window-state": "^5.0.3",
 		"electron-winstaller": "^5.4.0"
 	},
