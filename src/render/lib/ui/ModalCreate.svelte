@@ -70,7 +70,6 @@
 		let date = document.getElementById(id + 'date') as HTMLInputElement;
 		let time = document.getElementById(id + 'time') as HTMLInputElement;
 		inputData[id] = date.value + ' ' + time.value;
-		console.log(inputData[id]);
 	}
 
 	async function getPrimaryButtonDisabled() {
@@ -85,7 +84,7 @@
 		return primaryButtonDisabled;
 	}
 
-	$: console.log(inputData);
+	$: console.log(openRelations);
 </script>
 
 {#if open}
@@ -168,7 +167,13 @@
 							{/if}
 						{/if}
 					{/if}
-					<Button class="mt-4" on:click={() => (openRelations[item.key] = true)}>
+					<Button
+						class="mt-4"
+						on:click={() => {
+							openRelations[item.key] = true;
+							open = false;
+						}}
+					>
 						Вибрати {item.title}
 					</Button>
 				{/if}
@@ -182,29 +187,28 @@
 			{/await}
 		{/key}
 	</ComposedModal>
-
-	{#each data as item}
-		{#if item.relation}
-			<ModalCreateRelation
-				relation={item.relation}
-				selectedRelation={inputData[item.key] || []}
-				open={openRelations[item.key] || false}
-				on:close={() => {
-					openRelations[item.key] = false;
-				}}
-				bind:parentOpen={open}
-				on:submit={(selectedRelation) => {
-					if (item.type === 'array') {
-						if (Array.isArray(inputData[item.key])) {
-							inputData[item.key] = [...inputData[item.key], selectedRelation.detail];
-						} else {
-							inputData[item.key] = [selectedRelation.detail];
-						}
-					} else {
-						inputData[item.key] = selectedRelation.detail[0];
-					}
-				}}
-			/>
-		{/if}
-	{/each}
 {/if}
+{#each data as item}
+	{#if item.relation}
+		<ModalCreateRelation
+			relation={item.relation}
+			selectedRelation={inputData[item.key] || []}
+			open={openRelations[item.key] || false}
+			on:close={() => {
+				openRelations[item.key] = false;
+				open = true;
+			}}
+			on:submit={(selectedRelation) => {
+				if (item.type === 'array') {
+					if (Array.isArray(inputData[item.key])) {
+						inputData[item.key] = [...inputData[item.key], selectedRelation.detail];
+					} else {
+						inputData[item.key] = [selectedRelation.detail];
+					}
+				} else {
+					inputData[item.key] = selectedRelation.detail[0];
+				}
+			}}
+		/>
+	{/if}
+{/each}

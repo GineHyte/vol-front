@@ -18,7 +18,6 @@
 	export let relation: Relation;
 	export let selectedRelation: number[] = [];
 	export let open: boolean = false;
-	export let parentOpen: boolean = false; // workaround for Carbon, because it doesn't support nested modals
 
 	let dispatch = createEventDispatcher();
 	let getFunc: (paginationProps: PaginationProps) => Promise<Pagination<any>>;
@@ -33,7 +32,6 @@
 		getFunc = getGames;
 	}
 
-	$: parentOpen = !open;
 	$: if (!open) dispatch('close');
 	$: playersAmpluaOpen = !open && selectedRelation.length !== 0;
 </script>

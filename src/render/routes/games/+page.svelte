@@ -46,6 +46,8 @@
 
 	let localGame: Game | undefined = undefined;
 
+	$: console.log(createOpen);
+
 	async function getGameLocal(gameIdLocal: number) {
 		localGame = await getGame(gameIdLocal);
 		return localGame;
@@ -58,7 +60,6 @@
 	async function duplicateGame(currentId: number) {
 		if (currentId) {
 			let game = await getGame(currentId);
-			console.log(game);
 			let status = await createGame(game);
 			if (status.status.originalType.value === 'success') {
 				pushNotification({
@@ -159,7 +160,6 @@
 	async function duplicateAction(currentId: number) {
 		if (currentId) {
 			let action = await getAction(currentId);
-			console.log(action);
 			let status = await createAction(action);
 			if (status.status.originalType.value === 'success') {
 				pushNotification({
@@ -271,7 +271,11 @@
 							submitFunc={submitAction}
 						/>
 					</Column>
-					<Column />
+					<Column>
+						{#if game.description.originalType.value}
+							<span>Опис: {game.description.originalType.value}</span>
+						{/if}
+					</Column>
 				</Row>
 				<Row>
 					<div class="w-full h-full mt-8" bind:this={targetForActions}>

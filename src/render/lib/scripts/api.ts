@@ -1,23 +1,27 @@
 // @ts-ignore
 import { PaginationProps } from '$lib/scripts/pagination';
 import { pushNotification } from '$lib/utils/utils';
-import { settingsRenderer } from '$lib/utils/store';
+import { settingsRenderer, loaded } from '$lib/utils/store';
 
 let settings;
 var apiUrl = '';
 var apiVersion = '';
 
-settingsRenderer.subscribe((v: any) => {
-  settings = v;
-  if (settings) {
-    apiUrl = settings.apiUrl || '';
-    apiVersion = settings.apiVersion || '';
-  }
-  if (apiUrl === '') {
-    pushNotification({
-      title: 'Помилка!',
-      message: 'Налаштування не знайдено. Будь ласка, вкажіть IP адрес сервера в налаштуваннях.',
-      kind: 'error',
+loaded.subscribe((isLoaded: any) => {
+  if (isLoaded) {
+    settingsRenderer.subscribe((v: any) => {
+      settings = v;
+      if (settings) {
+        apiUrl = settings.apiUrl || '';
+        apiVersion = settings.apiVersion || '';
+        if (apiUrl === '') {
+          pushNotification({
+            title: 'Помилка!',
+            message: 'Налаштування не знайдено. Будь ласка, вкажіть IP адрес сервера в налаштуваннях.',
+            kind: 'error',
+          });
+        }
+      }
     });
   }
 });
@@ -52,7 +56,7 @@ export class ApiImpl implements Api {
 
   async post(url: string, data: any, headers: any = {}): Promise<any> {
     return new Promise((resolve, reject) => {
-      fetch(`${apiUrl}${apiVersion}${url}`, {
+      fetch(`http://${apiUrl}:8000${apiVersion}${url}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -68,7 +72,7 @@ export class ApiImpl implements Api {
 
   async put(url: string, data: any, headers: any = {}): Promise<any> {
     return new Promise((resolve, reject) => {
-      fetch(`${apiUrl}${apiVersion}${url}`, {
+      fetch(`http://${apiUrl}:8000${apiVersion}${url}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -84,7 +88,7 @@ export class ApiImpl implements Api {
 
   async delete(url: string, headers: any = {}): Promise<any> {
     return new Promise((resolve, reject) => {
-      fetch(`${apiUrl}${apiVersion}${url}`, {
+      fetch(`http://${apiUrl}:8000${apiVersion}${url}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',

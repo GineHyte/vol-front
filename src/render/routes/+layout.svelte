@@ -10,7 +10,7 @@
 		SkipToContent,
 		Content,
 	} from 'carbon-components-svelte';
-	import { settingsRenderer } from '$lib/utils/store';
+	import { settingsRenderer, loaded } from '$lib/utils/store';
 	import Notifications from '$lib/ui/Notifications.svelte';
 	import ModalCreate from '$lib/ui/ModalCreate.svelte';
 
@@ -21,6 +21,7 @@
 		ready = true;
 		window.electron.getSettings().then((settings: any) => {
 			settingsRenderer.set(settings);
+			loaded.set(true);
 		});
 	});
 

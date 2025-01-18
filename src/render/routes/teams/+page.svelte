@@ -26,7 +26,6 @@
 	async function duplicateTeam(currentId: number) {
 		if (currentId) {
 			let team = await getTeam(currentId);
-			console.log(team);
 			let status = await createTeam(team);
 			if (status.status.originalType.value === 'success') {
 				pushNotification({
