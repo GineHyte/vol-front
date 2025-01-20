@@ -14,5 +14,11 @@ contextBridge.exposeInMainWorld('electron', {
     console.log(data);
     ipcRenderer.send('set-window-state', data)
   },
+  checkUpdate: () => {
+    ipcRenderer.send('check-update')
+  },
+  downloadUpdate: () => {
+    ipcRenderer.send('download-update')
+  }
 });
 

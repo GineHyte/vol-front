@@ -25,6 +25,14 @@
 
 		settingsRenderer.set({ ...settings, apiUrl: apiUrl, apiVersion: apiVersion });
 	}
+
+	function checkUpdate() {
+		window.electron.checkUpdate();
+	}
+
+	function downloadUpdate() {
+		window.electron.downloadUpdate();
+	}
 </script>
 
 <TextInput
@@ -39,6 +47,6 @@
 	placeholder={settings.apiVersion}
 	class="mb-4"
 />
-<Button class="mb-4">Перевірити оновлення</Button>
+<Button class="mb-4" on:click={checkUpdate}>Перевірити оновлення</Button>
 
-<Button class="absolute bottom-4" on:click={saveSettings}>Зберегти</Button>
+<Button class="absolute bottom-4 left-4" on:click={saveSettings}>Зберегти</Button>

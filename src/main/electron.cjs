@@ -1,11 +1,12 @@
 const windowStateManager = require('electron-window-state');
-const { app, BrowserWindow, ipcMain, autoUpdater } = require('electron');
+const { app, BrowserWindow, ipcMain } = require('electron');
 const contextMenu = require('electron-context-menu');
 const isDev = require('electron-is-dev');
 const serve = require('electron-serve');
 const path = require('path');
 const settingsManager = require('electron-settings');
 const Publisher = require('./publisher.cjs');
+const { autoUpdater } = require('electron-updater');
 
 const port = 5173;
 const loadURL = serve({ directory: 'build' });
@@ -64,17 +65,6 @@ function createWindow() {
 
 }
 
-contextMenu({
-  showLookUpSelection: false,
-  showSearchWithGoogle: false,
-  showCopyImage: false,
-  prepend: (defaultActions, params, browserWindow) => [
-    {
-      label: 'Make App 💻',
-    },
-  ],
-});
-
 function loadDev(port) {
   mainWindow.loadURL(`http://localhost:${port}`).catch((e) => {
     console.log('Error loading URL, retrying', e);
@@ -114,10 +104,6 @@ app.on('window-all-closed', () => {
   app.quit();
 });
 
-ipcMain.on('to-main', (event, count) => {
-  return mainWindow.webContents.send('from-main', `next count is ${count + 1}`);
-});
-
 
 function ipcInit() {
   ipcMain.on('set-settings', (event, data) => {
@@ -155,10 +141,11 @@ function ipcInit() {
   });
 
   ipcMain.on('check-update', () => {
-    autoUpdater.checkForUpdates();
+    autoUpdater.checkForUpdatesAndNotify();
   });
 
   autoUpdater.on('update-available', (event, releaseNotes, releaseName) => {
+    console.log('update-available', releaseNotes, releaseName);
     ipcMain.emit('update-available', releaseNotes, releaseName);
   });
 
@@ -168,6 +155,14 @@ function ipcInit() {
 
   autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
     ipcMain.emit('update-downloaded', releaseNotes, releaseName);
+  });
+
+  autoUpdater.on('error', (error) => {
+    console.log('update-error', error);
+  });
+
+  autoUpdater.on('update-not-available', (error) => {
+    console.log('update-not-available', error);
   });
 }
 
