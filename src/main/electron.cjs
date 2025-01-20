@@ -16,10 +16,10 @@ try {
 }
 
 let mainWindow;
-var settings = {};
+var windowState;
 
 function createWindow() {
-  let windowState = windowStateManager({
+  windowState = windowStateManager({
     defaultWidth: 800,
     defaultHeight: 600,
   });
@@ -59,7 +59,7 @@ function createWindow() {
     windowState.saveState(mainWindow);
   });
 
-  return mainWindow; console.log("setSettings main: ", data);
+  return mainWindow;
 
 }
 
@@ -125,5 +125,28 @@ function ipcInit() {
 
   ipcMain.handle('get-settings', () => {
     return settingsManager.get('settings');
+  });
+
+  ipcMain.on('set-window-state', (event, data) => {
+    if (data.close) {
+      mainWindow.close();
+    }
+    if (data.minimize) {
+      mainWindow.minimize();
+    }
+    if (data.maximize) {
+      mainWindow.maximize();
+    }
+    if (data.maximize === false) {
+      mainWindow.unmaximize();
+    }
+  });
+
+  ipcMain.handle('get-window-state', () => {
+    let state = {
+      isMaximized: mainWindow.isMaximized(),
+      isFullScreen: mainWindow.isFullScreen(),
+    }
+    return state;
   });
 }

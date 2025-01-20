@@ -7,4 +7,12 @@ contextBridge.exposeInMainWorld('electron', {
   getSettings: () => {
     return ipcRenderer.invoke('get-settings')
   },
+  getWindowState: () => {
+    return ipcRenderer.invoke('get-window-state')
+  },
+  setWindowState: (data) => {
+    console.log(data);
+    ipcRenderer.send('set-window-state', data)
+  },
 });
+

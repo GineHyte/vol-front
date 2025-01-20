@@ -7,14 +7,25 @@
 		Header,
 		HeaderNav,
 		HeaderNavItem,
-		SkipToContent,
 		Content,
+		Button,
+		SideNav,
+		SideNavItems,
+		SideNavLink,
+		SideNavMenu,
+		SkipToContent,
+		SideNavMenuItem,
 	} from 'carbon-components-svelte';
+	import { Close, Minimize, Maximize, Subtract } from 'carbon-icons-svelte';
 	import { settingsRenderer, loaded } from '$lib/utils/store';
 	import Notifications from '$lib/ui/Notifications.svelte';
 	import ModalCreate from '$lib/ui/ModalCreate.svelte';
 
 	let isSideNavOpen = false;
+	let currentWindowState = {
+		isMaximized: false,
+		isFullScreen: false,
+	};
 
 	let ready = false;
 	onMount(() => {
@@ -24,6 +35,18 @@
 			loaded.set(true);
 		});
 	});
+
+	window.electron.getWindowState().then((windowState: any) => {
+		currentWindowState = windowState;
+	});
+
+	function setWindowState(data: any) {
+		console.log(data);
+		window.electron.setWindowState(data);
+		window.electron.getWindowState().then((windowState: any) => {
+			currentWindowState = windowState;
+		});
+	}
 
 	let routes = [
 		{
@@ -62,12 +85,50 @@
 	bind:isSideNavOpen
 	class="w-full"
 	style="-webkit-app-region: drag;"
+	persistentHamburgerMenu={true}
 >
+	<svelte:fragment slot="skip-to-content">
+		<SkipToContent />
+	</svelte:fragment>
 	<HeaderNav style="display:block">
-		{#each routes as route}
-			<HeaderNavItem href={route.path} text={route.title} />
-		{/each}
+		{#key currentWindowState}
+			<Button
+				icon={Subtract}
+				kind="secondary"
+				size="small"
+				iconDescription="Мінімізувати"
+				on:click={() => setWindowState({ minimize: true })}
+			/>
+			<Button
+				icon={currentWindowState.isMaximized || currentWindowState.isFullScreen
+					? Minimize
+					: Maximize}
+				kind="secondary"
+				size="small"
+				iconDescription="Свернути"
+				on:click={() =>
+					setWindowState({
+						maximize: !(
+							currentWindowState.isMaximized || currentWindowState.isFullScreen
+						),
+					})}
+			/>
+			<Button
+				icon={Close}
+				kind="danger"
+				size="small"
+				iconDescription="Закрити"
+				on:click={() => setWindowState({ close: true })}
+			/>
+		{/key}
 	</HeaderNav>
+	<SideNav bind:isOpen={isSideNavOpen}>
+		<SideNavItems>
+			{#each routes as route}
+				<SideNavLink href={route.path} text={route.title} />
+			{/each}
+		</SideNavItems>
+	</SideNav>
 </Header>
 
 <Content>
