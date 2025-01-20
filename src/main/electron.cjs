@@ -1,10 +1,11 @@
 const windowStateManager = require('electron-window-state');
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, autoUpdater } = require('electron');
 const contextMenu = require('electron-context-menu');
 const isDev = require('electron-is-dev');
 const serve = require('electron-serve');
 const path = require('path');
 const settingsManager = require('electron-settings');
+const Publisher = require('./publisher.cjs');
 
 const port = 5173;
 const loadURL = serve({ directory: 'build' });
@@ -110,7 +111,7 @@ app.on('activate', () => {
   }
 });
 app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') app.quit();
+  app.quit();
 });
 
 ipcMain.on('to-main', (event, count) => {
@@ -121,6 +122,9 @@ ipcMain.on('to-main', (event, count) => {
 function ipcInit() {
   ipcMain.on('set-settings', (event, data) => {
     settingsManager.set('settings', data);
+    if (data.apiUrl) {
+      autoUpdater.setFeedURL(`${data.apiUrl}:8000/update/${app.getVersion()}`);
+    }
   });
 
   ipcMain.handle('get-settings', () => {
@@ -149,4 +153,22 @@ function ipcInit() {
     }
     return state;
   });
+
+  ipcMain.on('check-update', () => {
+    autoUpdater.checkForUpdates();
+  });
+
+  autoUpdater.on('update-available', (event, releaseNotes, releaseName) => {
+    ipcMain.emit('update-available', releaseNotes, releaseName);
+  });
+
+  ipcMain.handle('download-update', () => {
+    return autoUpdater.downloadUpdate();
+  });
+
+  autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
+    ipcMain.emit('update-downloaded', releaseNotes, releaseName);
+  });
 }
+
+

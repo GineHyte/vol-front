@@ -29,6 +29,7 @@ let woptions = {
     name: "VolTechs",
     out: "./out/",
     overwrite: true,
+    publish: ["github"],
     // "all": true
 }
 

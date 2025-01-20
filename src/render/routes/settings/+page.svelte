@@ -2,7 +2,7 @@
 	import { Button, TextInput } from 'carbon-components-svelte';
 	import { pushNotification } from '$lib/utils/utils';
 	import { settingsRenderer } from '$lib/utils/store';
-
+	import { ProgressBar } from 'carbon-components-svelte';
 	let settings: any = {};
 	settingsRenderer.subscribe((v: any) => {
 		settings = v;
@@ -27,7 +27,18 @@
 	}
 </script>
 
-<TextInput labelText="IP адрес сервера" bind:value={apiUrl} placeholder={settings.apiUrl} />
-<TextInput labelText="Версія API" bind:value={apiVersion} placeholder={settings.apiVersion} />
+<TextInput
+	labelText="IP адрес сервера"
+	bind:value={apiUrl}
+	placeholder={settings.apiUrl}
+	class="mb-4"
+/>
+<TextInput
+	labelText="Версія API"
+	bind:value={apiVersion}
+	placeholder={settings.apiVersion}
+	class="mb-4"
+/>
+<Button class="mb-4">Перевірити оновлення</Button>
 
 <Button class="absolute bottom-4" on:click={saveSettings}>Зберегти</Button>
