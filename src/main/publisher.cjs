@@ -63,7 +63,7 @@ class Publisher extends HttpPublisher {
             "forge.config.js"
         ));
         const appInfo = this.context.packager.appInfo;
-        const configuration = packageJsonContent["SD-builder"] || {};
+        const configuration = packageJsonContent["sd-publisher"] || {};
         const hostname = configuration.hostname || "localhost";
         const protocol = configuration.protocol || "http";
         const port = configuration.port || (protocol === "https" ? 443 : 80);

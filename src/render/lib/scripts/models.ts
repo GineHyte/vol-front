@@ -2,18 +2,43 @@ import Field from '$lib/scripts/field'
 import Model from '$lib/scripts/model'
 import Datatype from '$lib/scripts/datatype'
 import { Relation } from '$lib/scripts/relation'
+import type { iPlayer } from '$lib/scripts/schemas'
 
+export class Player extends Model implements iPlayer {
+  serializationAlias: { [key: string]: string } = {}
+  id: number = 0
+  firstName: string = ''
+  lastName: string = ''
+  age: number = 0
+  weight: number = 0
+  height: number = 0
+  imageFileId: string = ''
+  teams: number[] = []
 
-export class Player extends Model {
-  id: Field = new Field('id', 'id', new Datatype('string'))
-  firstName: Field = new Field('firstName', 'first_name', new Datatype('string'), 'Ім\'я')
-  lastName: Field = new Field('lastName', 'last_name', new Datatype('string'), 'Прізвище')
-  age: Field = new Field('age', 'age', new Datatype('number'), 'Вік')
-  weight: Field = new Field('weight', 'weight', new Datatype('number'), 'Вага')
-  height: Field = new Field('height', 'height', new Datatype('number'), 'Зріст')
-  imageFileId: Field = new Field('imageFileId', 'image_file_id', new Datatype('string'), 'Посилання на зображення')
-  teams: Field = new Field('teams', 'teams', new Datatype('array'), 'Команди', new Relation('teams', 'Команди', PlayerTeam))
+  constructor() {
+    this.deserializationAlias = {
+      id: 'id',
+      firstName: 'first_name',
+      lastName: 'last_name',
+      age: 'age',
+      weight: 'weight',
+      height: 'height',
+      imageFileId: 'image_file_id',
+      teams: 'teams'
+    }
+  }
 }
+
+// export class Player extends Model {
+//   id: Field = new Field('id', 'id', new Datatype('string'))
+//   firstName: Field = new Field('firstName', 'first_name', new Datatype('string'), 'Ім\'я')
+//   lastName: Field = new Field('lastName', 'last_name', new Datatype('string'), 'Прізвище')
+//   age: Field = new Field('age', 'age', new Datatype('number'), 'Вік')
+//   weight: Field = new Field('weight', 'weight', new Datatype('number'), 'Вага')
+//   height: Field = new Field('height', 'height', new Datatype('number'), 'Зріст')
+//   imageFileId: Field = new Field('imageFileId', 'image_file_id', new Datatype('string'), 'Посилання на зображення')
+//   teams: Field = new Field('teams', 'teams', new Datatype('array'), 'Команди', new Relation('teams', 'Команди', PlayerTeam))
+// }
 
 export class Team extends Model {
   id: Field = new Field('id', 'id', new Datatype('number'))
