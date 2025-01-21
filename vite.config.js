@@ -1,9 +1,10 @@
 import { sveltekit } from '@sveltejs/kit/vite';
+import { optimizeImports } from "carbon-preprocess-svelte";
 import { defineConfig } from 'vite';
 import path from 'path';
 
 export default defineConfig({
-  plugins: [sveltekit()],
+  plugins: [ sveltekit(), optimizeImports()],
   base: '.',
   build: {
     target: 'esnext',

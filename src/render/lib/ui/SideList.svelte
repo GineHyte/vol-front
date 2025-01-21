@@ -17,7 +17,7 @@
 	export let title: string = '';
 	export let getFunc: (props: PaginationProps) => Promise<Pagination<Model>>;
 	export let selectFunc: (id: number) => void;
-	export let newFunc: () => Promise<void> | undefined;
+	export let newFunc: () => void;
 	export let headers: { key: string; value: string }[];
 	export let deleteFunc: (currentId: number) => Promise<void>;
 	export let duplicateFunc: (currentId: number) => Promise<void>;

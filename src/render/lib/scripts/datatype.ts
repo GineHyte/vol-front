@@ -1,10 +1,14 @@
 export default class Datatype {
   value: any;
   jsType: string;
+  ge: number;
+  le: number;
 
-  constructor(jsType: string | undefined, value: any = undefined) {
-    this.value = value;
+  constructor(jsType: string | undefined, ge: number = 0, le: number = 0, value: any = undefined) {
     this.jsType = jsType || typeof value;
+    this.ge = ge;
+    this.le = le;
+    this.value = value;
   }
 
   isNaN() {

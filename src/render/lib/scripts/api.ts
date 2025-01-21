@@ -1,30 +1,31 @@
 // @ts-ignore
 import { PaginationProps } from '$lib/scripts/pagination';
 import { pushNotification } from '$lib/utils/utils';
-import { settingsRenderer, loaded } from '$lib/utils/store';
+import { settingsRenderer } from '$lib/utils/store';
 
-let settings;
 var apiUrl = '';
 var apiVersion = '';
+var isLoaded = false;
 
-loaded.subscribe((isLoaded: any) => {
-  if (isLoaded) {
-    settingsRenderer.subscribe((v: any) => {
-      settings = v;
-      if (settings) {
-        apiUrl = settings.apiUrl || '';
-        apiVersion = settings.apiVersion || '';
-        if (apiUrl === '') {
-          pushNotification({
-            title: 'Помилка!',
-            message: 'Налаштування не знайдено. Будь ласка, вкажіть IP адрес сервера в налаштуваннях.',
-            kind: 'error',
-          });
-        }
-      }
-    });
+settingsRenderer.subscribe((settings: any) => {
+  isLoaded = settings.loaded;
+  if (isLoaded === true) {
+    console.log('settings', settings);
+    apiUrl = settings.apiUrl || '';
+    apiVersion = settings.apiVersion || '';
+    if (apiUrl === '') {
+      noIpNotification();
+    }
   }
 });
+
+function noIpNotification() {
+  pushNotification({
+    title: 'Помилка!',
+    message: 'Налаштування не знайдено. Будь ласка, вкажіть IP адрес сервера в налаштуваннях.',
+    kind: 'error',
+  });
+}
 
 interface Api {
   get(url: string, paginationProps: PaginationProps | null, headers: any): Promise<any>
@@ -35,6 +36,10 @@ interface Api {
 
 export class ApiImpl implements Api {
   async get(url: string, paginationProps: PaginationProps | null = null, headers: any = {}): Promise<any> {
+    if (!isLoaded) {
+      noIpNotification();
+      return;
+    }
     return new Promise((resolve, reject) => {
       let queryUrl = `http://${apiUrl}:8000${apiVersion}${url}`
       if (paginationProps !== null) {

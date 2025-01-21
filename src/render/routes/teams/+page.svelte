@@ -25,7 +25,7 @@
 
 	async function duplicateTeam(currentId: number) {
 		if (currentId) {
-			let team = await getTeam(currentId);
+			let team = (await getTeam(currentId)) as Team;
 			let status = await createTeam(team);
 			if (status.status.originalType.value === 'success') {
 				pushNotification({
@@ -100,9 +100,10 @@
 	async function getTeamPlayers(team: Team) {
 		let players: Pagination<Player>;
 		let playersData: any[] = [];
+		console.log(team);
 		if (team.players.originalType.value) {
 			for (const player of team.players.originalType.value) {
-				let playerData = await getPlayer(player.playerId.originalType.value);
+				let playerData = await getPlayer(player.player_id);
 				playersData.push(playerData);
 			}
 		}

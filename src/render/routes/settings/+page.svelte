@@ -21,6 +21,7 @@
 		window.electron.setSettings({
 			apiUrl: apiUrl,
 			apiVersion: apiVersion,
+			loaded: true,
 		});
 
 		settingsRenderer.set({ ...settings, apiUrl: apiUrl, apiVersion: apiVersion });

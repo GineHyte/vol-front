@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import {
 		DataTable,
 		DataTableSkeleton,
@@ -7,11 +6,11 @@
 		TileGroup,
 		RadioTile,
 	} from 'carbon-components-svelte';
-	import { getPlayers, getTeams, getGames } from '$lib/scripts/endpoints';
-	import { Pagination } from '$lib/scripts/pagination';
-	import Model from '$lib/scripts/model';
-	import { PaginationProps } from '$lib/scripts/pagination';
 	import { createEventDispatcher } from 'svelte';
+
+	import { getPlayers, getTeams, getGames, getTechs } from '$lib/scripts/endpoints';
+	import { Pagination } from '$lib/scripts/pagination';
+	import { PaginationProps } from '$lib/scripts/pagination';
 	import { Relation } from '$lib/scripts/relation';
 	import { Amplua } from '$lib/utils/utils';
 
@@ -30,10 +29,14 @@
 		getFunc = getTeams;
 	} else if (relation.jsRelation === 'games') {
 		getFunc = getGames;
+	} else if (relation.jsRelation === 'subtechs') {
+		getFunc = getTechs;
 	}
 
-	$: if (!open) dispatch('close');
-	$: playersAmpluaOpen = !open && selectedRelation.length !== 0;
+	$: if (!open) {
+		dispatch('close');
+		selectedRelation = [];
+	}
 </script>
 
 <Modal
@@ -44,7 +47,7 @@
 	primaryButtonDisabled={selectedRelation.length === 0}
 	on:submit={() => {
 		open = false;
-		if (relation.jsRelation === 'players') return;
+		if (selectedRelation.length === 0) return;
 		dispatch('submit', selectedRelation);
 	}}
 >
@@ -75,6 +78,7 @@
 		modalHeading={'Амплуа'}
 		on:submit={() => {
 			playersAmpluaOpen = false;
+			open = false;
 			dispatch('submit', [...selectedRelation, ...playersAmplua]);
 		}}
 	>

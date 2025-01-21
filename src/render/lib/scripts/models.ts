@@ -63,5 +63,28 @@ export class Subtech extends Model {
   id: Field = new Field('id', 'id', new Datatype('number'))
   name: Field = new Field('name', 'name', new Datatype('string'), 'Назва')
   description: Field = new Field('description', 'description', new Datatype('string'), 'Опис')
+  difficulty: Field = new Field('difficulty', 'difficulty', new Datatype('number', 1, 3), 'Складність')
   techId: Field = new Field('techId', 'tech_id', new Datatype('number'), 'Технічна дія', new Relation('techs', 'Техніка'))
+}
+
+
+export class Exercise extends Model {
+  id: Field = new Field('id', 'id', new Datatype('number'))
+  name: Field = new Field('name', 'name', new Datatype('string'), 'Назва')
+  description: Field = new Field('description', 'description', new Datatype('string'), 'Опис')
+  subtechId: Field = new Field('subtechId', 'subtech_id', new Datatype('number'), 'Субтехніка', new Relation('subtechs', 'Субтехніка'))
+  imageUrl: Field = new Field('imageUrl', 'image_url', new Datatype('string'), 'Посилання на зображення')
+  videoUrl: Field = new Field('videoUrl', 'video_url', new Datatype('string'), 'Посилання на відео')
+  difficulty: Field = new Field('difficulty', 'difficulty', new Datatype('number'), 'Складність')
+  exercisesForLearning: Field = new Field('exercisesForLearning', 'exercises_for_learning', new Datatype('boolean'), 'Для навчання')
+  exercisesForConsolidation: Field = new Field('exercisesForConsolidation', 'exercises_for_consolidation', new Datatype('boolean'), 'Для закріплення')
+  exercisesForImprovement: Field = new Field('exercisesForImprovement', 'exercises_for_improvement', new Datatype('boolean'), 'Для покращення')
+  simulationExercises: Field = new Field('simulationExercises', 'simulation_exercises', new Datatype('boolean'), 'Для симуляції')
+  exercisesWithTheBallOnYourOwn: Field = new Field('exercisesWithTheBallOnYourOwn', 'exercises_with_the_ball_on_your_own', new Datatype('boolean'), 'З м\'ячем у власних руках')
+  exercisesWithTheBallInPairs: Field = new Field('exercisesWithTheBallInPairs', 'exercises_with_the_ball_in_pairs', new Datatype('boolean'), 'З м\'ячем у парах')
+  exercisesWithTheBallInGroups: Field = new Field('exercisesWithTheBallInGroups', 'exercises_with_the_ball_in_groups', new Datatype('boolean'), 'З м\'ячем у групах')
+  exercisesInDifficultConditions: Field = new Field('exercisesInDifficultConditions', 'exercises_in_difficult_conditions', new Datatype('boolean'), 'У складних умовах')
+  fromZone: Field = new Field('fromZone', 'from_zone', new Datatype('number'), 'Зона від')
+  toZone: Field = new Field('toZone', 'to_zone', new Datatype('number'), 'Зона до')
+  timePerExercise: Field = new Field('timePerExercise', 'time_per_exercise', new Datatype('number'), 'Час на одну вправу')
 }

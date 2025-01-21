@@ -1,0 +1,130 @@
+<script lang="ts">
+	import {
+		SkeletonPlaceholder,
+		ImageLoader,
+		Content,
+		Grid,
+		DataTable,
+		DataTableSkeleton,
+		Row,
+		Column,
+		Toolbar,
+		ToolbarContent,
+		Button,
+		SkeletonText,
+	} from 'carbon-components-svelte';
+	import {
+		getExercises,
+		getExercise,
+		createExercise,
+		deleteExercise,
+	} from '$lib/scripts/endpoints';
+	import { Exercise } from '$lib/scripts/models';
+	import ModalCreate from '$lib/ui/ModalCreate.svelte';
+	import { pushNotification } from '$lib/utils/utils';
+
+	let playerId: number | undefined = undefined;
+	let createOpen = false;
+
+	function selectPlayer(id: number) {
+		playerId = id;
+	}
+
+	async function duplicatePlayer(currentId: number) {
+		if (currentId) {
+			let status = await createExercise((await getExercise(currentId)) as Exercise);
+			if (status.status.originalType.value === 'success') {
+				pushNotification({
+					title: 'Успіх!',
+					message: 'Гравець дубльований.',
+					kind: 'success',
+				});
+			} else {
+				pushNotification({
+					title: 'Помилка!',
+					message: 'Гравець не може бути дубльований.',
+					kind: 'error',
+				});
+			}
+		}
+	}
+
+	async function removePlayer(currentId: number) {
+		if (currentId) {
+			let status = await deleteExercise(currentId);
+			if (status.status.originalType.value === 'success') {
+				pushNotification({
+					title: 'Успіх!',
+					message: 'Гравець видалений.',
+					kind: 'success',
+				});
+			} else {
+				pushNotification({
+					title: 'Помилка!',
+					message: 'Гравець не може бути видалений.',
+					kind: 'error',
+				});
+			}
+		}
+	}
+
+	async function createExerciseRenderer(inputData: any) {
+		let exercise = new Exercise();
+		Object.keys(inputData).forEach((key) => {
+			// @ts-ignore
+			exercise[key as keyof Exercise].originalType.value = inputData[key];
+		});
+		let status = await createExercise(exercise);
+		if (status.status.originalType.value === 'success') {
+			pushNotification({
+				title: 'Успіх!',
+				message: 'Ви створили нову вправу.',
+				kind: 'success',
+			});
+		} else {
+			pushNotification({
+				title: 'Помилка!',
+				message: 'Вправа не може бути створена.',
+				kind: 'error',
+			});
+		}
+		createOpen = false;
+	}
+</script>
+
+<Content>
+	<Grid>
+		<Row>
+			<Column>
+				{#await getExercises()}
+					<DataTableSkeleton />
+				{:then exercises}
+					<DataTable headers={exercises.getHeaders()} rows={exercises.getRows()}>
+						<Toolbar>
+							<ToolbarContent>
+								<Button
+									on:click={() => {
+										createOpen = true;
+									}}
+									class="w-full"
+								>
+									+ Вправа
+								</Button>
+							</ToolbarContent>
+						</Toolbar>
+					</DataTable>
+				{/await}
+			</Column>
+		</Row>
+	</Grid>
+</Content>
+
+{#if createOpen}
+	<ModalCreate
+		title="Вправа"
+		model={new Exercise()}
+		handleSubmit={createExerciseRenderer}
+		bind:open={createOpen}
+		requiredFields={['name', 'description']}
+	/>
+{/if}

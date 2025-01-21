@@ -1,14 +1,4 @@
 <script lang="ts">
-	export let label = '';
-	export let title = '+ ';
-	export let model: Model;
-	export let requiredFields: string[] = ['all'];
-	export let handleSubmit: (e: Event) => Promise<void>;
-	export let open: boolean = false;
-	export let excludeFields: string[] = [];
-
-	import Model from '$lib/scripts/model';
-	import Field from '$lib/scripts/field';
 	import {
 		ComposedModal,
 		ModalHeader,
@@ -20,11 +10,23 @@
 		Button,
 		DatePicker,
 		TimePicker,
+		Checkbox,
 		DatePickerInput,
 	} from 'carbon-components-svelte';
+
 	import { getPlayer, getTeam } from '$lib/scripts/endpoints';
 	import { Amplua } from '$lib/utils/utils';
-	import ModalCreateRelation from './ModalCreateRelation.svelte';
+	import Model from '$lib/scripts/model';
+	import Field from '$lib/scripts/field';
+	import ModalCreateRelation from '$lib/ui/ModalCreateRelation.svelte';
+
+	export let label = '';
+	export let title = '+ ';
+	export let model: Model;
+	export let requiredFields: string[] = ['all'];
+	export let handleSubmit: (e: Event) => Promise<void>;
+	export let open: boolean = false;
+	export let excludeFields: string[] = [];
 
 	let data: any[] = [];
 	let inputData: any = {};
@@ -48,13 +50,11 @@
 			title: field.tableTitle,
 			key: field.deserializationAlias,
 			relation: field.relation,
+			ge: field.originalType.ge,
+			le: field.originalType.le,
 		};
 		data.push(item);
 	});
-
-	function handleDropdownInput(e: CustomEvent) {
-		inputData[e.detail.selectedItem.key] = e.detail.selectedId;
-	}
 
 	function handleInput(id: string) {
 		// workaround for Carbon Design System Custom Events
@@ -85,6 +85,7 @@
 	}
 
 	$: console.log(openRelations);
+	$: console.log(inputData);
 </script>
 
 {#if open}
@@ -104,6 +105,8 @@
 						id={item.key}
 						label={item.title}
 						value={0}
+						min={item.ge ? item.ge : undefined}
+						max={item.le ? item.le : undefined}
 						on:input={(_) => handleInput(item.key)}
 					/>
 				{:else if item.type === 'string'}
@@ -111,6 +114,12 @@
 						id={item.key}
 						labelText={item.title}
 						on:input={(_) => handleInput(item.key)}
+					/>
+				{:else if item.type === 'boolean'}
+					<Checkbox
+						id={item.key}
+						labelText={item.title}
+						on:change={(_) => handleInput(item.key)}
 					/>
 				{:else if item.type === 'datetime'}
 					<DatePicker

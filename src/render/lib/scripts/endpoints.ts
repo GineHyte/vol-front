@@ -1,5 +1,5 @@
 import { ApiImpl } from './api';
-import { Player, Team, Game, Status, Action, Tech, Subtech } from '$lib/scripts/models'
+import { Player, Team, Game, Status, Action, Tech, Subtech, Exercise } from '$lib/scripts/models'
 import { Pagination, PaginationProps } from '$lib/scripts/pagination'
 
 export function getPlayers(paginationProps: PaginationProps = new PaginationProps()): Promise<Pagination<Player>> {
@@ -58,9 +58,19 @@ export function deleteTeam(id: number): Promise<Status> {
     })
 }
 
-
-export function getGames(paginationProps: PaginationProps = new PaginationProps()): Promise<Pagination<Game>> {
-  return new ApiImpl().get('/games/', paginationProps)
+export function getGames(
+  paginationProps: PaginationProps = new PaginationProps(),
+  teamId: number | undefined = undefined,
+  playerId: number | undefined = undefined
+): Promise<Pagination<Game>> {
+  let query = '';
+  if (teamId) {
+    query += `&team_id=${teamId}`;
+  }
+  if (playerId) {
+    query += `&player_id=${playerId}`;
+  }
+  return new ApiImpl().get(`/games/?${query}`, paginationProps)
     .then((data: any) => {
       return new Pagination<Game>(data, Game)
     })
@@ -86,7 +96,6 @@ export function deleteGame(id: number): Promise<Status> {
       return new Status().deserialize(data) as Status
     })
 }
-
 
 export function getActions(gameId: number, paginationProps: PaginationProps = new PaginationProps()): Promise<Pagination<Action>> {
   return new ApiImpl().get(`/actions/?game_id=${gameId}`, paginationProps)
@@ -170,6 +179,34 @@ export function getAction(id: number): Promise<Action> {
 
 export function deleteAction(id: number): Promise<Status> {
   return new ApiImpl().delete(`/actions/${id}`)
+    .then((data: any) => {
+      return new Status().deserialize(data) as Status
+    })
+}
+
+export function getExercises(paginationProps: PaginationProps = new PaginationProps()): Promise<Pagination<Exercise>> {
+  return new ApiImpl().get('/exercises/', paginationProps)
+    .then((data: any) => {
+      return new Pagination<Exercise>(data, Exercise)
+    })
+}
+
+export function getExercise(id: number): Promise<Exercise> {
+  return new ApiImpl().get(`/exercises/${id}`)
+    .then((data: any) => {
+      return new Exercise().deserialize(data) as Exercise
+    })
+}
+
+export function createExercise(exercise: Exercise): Promise<Status> {
+  return new ApiImpl().post('/exercises/', exercise.serialize())
+    .then((data: any) => {
+      return new Status().deserialize(data) as Status
+    })
+}
+
+export function deleteExercise(id: number): Promise<Status> {
+  return new ApiImpl().delete(`/exercises/${id}`)
     .then((data: any) => {
       return new Status().deserialize(data) as Status
     })

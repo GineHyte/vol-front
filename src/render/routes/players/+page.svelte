@@ -8,8 +8,17 @@
 		Row,
 		Column,
 		SkeletonText,
+		DataTable,
+		DataTableSkeleton,
 	} from 'carbon-components-svelte';
-	import { getPlayers, getPlayer, createPlayer, deletePlayer } from '$lib/scripts/endpoints';
+	import {
+		getPlayers,
+		getPlayer,
+		createPlayer,
+		deletePlayer,
+		getGames,
+	} from '$lib/scripts/endpoints';
+	import { PaginationProps } from '$lib/scripts/pagination';
 	import { Player } from '$lib/scripts/models';
 	import ModalCreate from '$lib/ui/ModalCreate.svelte';
 	import { pushNotification } from '$lib/utils/utils';
@@ -116,13 +125,13 @@
 				{/await}
 			</Row>
 			<Row>
-				<!-- <Column>
-					{#await games.get()}
-						<DataTableSkeleton {headers} />
-					{:then}
-						<DataTable {headers} rows={games.rawData} />
+				<Column>
+					{#await getGames(new PaginationProps(), undefined, playerId)}
+						<DataTableSkeleton />
+					{:then games}
+						<DataTable headers={games.getHeaders()} rows={games.getRows()} />
 					{/await}
-				</Column> -->
+				</Column>
 			</Row>
 		</Grid>
 	</Content>
@@ -130,7 +139,7 @@
 
 {#if createOpen}
 	<ModalCreate
-		title="+ Гравець"
+		title="Гравець"
 		model={new Player()}
 		handleSubmit={createPlayerRenderer}
 		bind:open={createOpen}

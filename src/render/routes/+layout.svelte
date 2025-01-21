@@ -17,7 +17,7 @@
 		SideNavMenuItem,
 	} from 'carbon-components-svelte';
 	import { Close, Minimize, Maximize, Subtract } from 'carbon-icons-svelte';
-	import { settingsRenderer, loaded } from '$lib/utils/store';
+	import { settingsRenderer } from '$lib/utils/store';
 	import Notifications from '$lib/ui/Notifications.svelte';
 	import ModalCreate from '$lib/ui/ModalCreate.svelte';
 
@@ -31,8 +31,10 @@
 	onMount(() => {
 		ready = true;
 		window.electron.getSettings().then((settings: any) => {
-			settingsRenderer.set(settings);
-			loaded.set(true);
+			if (settings) {
+				settings.loaded = true;
+				settingsRenderer.set(settings);
+			}
 		});
 	});
 
@@ -125,7 +127,11 @@
 	<SideNav bind:isOpen={isSideNavOpen}>
 		<SideNavItems>
 			{#each routes as route}
-				<SideNavLink href={route.path} text={route.title} />
+				<SideNavLink
+					href={route.path}
+					text={route.title}
+					on:click={() => (isSideNavOpen = false)}
+				/>
 			{/each}
 		</SideNavItems>
 	</SideNav>

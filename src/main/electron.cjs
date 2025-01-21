@@ -1,15 +1,13 @@
 const windowStateManager = require('electron-window-state');
 const { app, BrowserWindow, ipcMain } = require('electron');
-const contextMenu = require('electron-context-menu');
-const isDev = require('electron-is-dev');
 const serve = require('electron-serve');
 const path = require('path');
 const settingsManager = require('electron-settings');
-const Publisher = require('./publisher.cjs');
 const { autoUpdater } = require('electron-updater');
 
 const port = 5173;
 const loadURL = serve({ directory: 'build' });
+const isDev = process.env.NODE_ENV === 'dev';
 
 try {
   require('electron-reloader')(module);
