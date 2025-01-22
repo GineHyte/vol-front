@@ -23,45 +23,45 @@
 	import ModalCreate from '$lib/ui/ModalCreate.svelte';
 	import { pushNotification } from '$lib/utils/utils';
 
-	let playerId: number | undefined = undefined;
+	let exerciseId: number | undefined = undefined;
 	let createOpen = false;
 
-	function selectPlayer(id: number) {
-		playerId = id;
+	function selectExercise(id: number) {
+		exerciseId = id;
 	}
 
-	async function duplicatePlayer(currentId: number) {
+	async function duplicateExercise(currentId: number) {
 		if (currentId) {
 			let status = await createExercise((await getExercise(currentId)) as Exercise);
 			if (status.status.originalType.value === 'success') {
 				pushNotification({
 					title: 'Успіх!',
-					message: 'Гравець дубльований.',
+					message: 'Вправа дубльована.',
 					kind: 'success',
 				});
 			} else {
 				pushNotification({
 					title: 'Помилка!',
-					message: 'Гравець не може бути дубльований.',
+					message: 'Вправа не може бути дубльована.',
 					kind: 'error',
 				});
 			}
 		}
 	}
 
-	async function removePlayer(currentId: number) {
+	async function removeExercise(currentId: number) {
 		if (currentId) {
 			let status = await deleteExercise(currentId);
 			if (status.status.originalType.value === 'success') {
 				pushNotification({
 					title: 'Успіх!',
-					message: 'Гравець видалений.',
+					message: 'Вправа видалена.',
 					kind: 'success',
 				});
 			} else {
 				pushNotification({
 					title: 'Помилка!',
-					message: 'Гравець не може бути видалений.',
+					message: 'Вправа не може бути видалена.',
 					kind: 'error',
 				});
 			}
