@@ -37,6 +37,8 @@
 		dispatch('close');
 		selectedRelation = [];
 	}
+
+	console.log('modal create relation open: ', open);
 </script>
 
 <Modal

@@ -84,8 +84,8 @@
 		return primaryButtonDisabled;
 	}
 
-	$: console.log(openRelations);
-	$: console.log(inputData);
+	$: console.log('openRelations: ', openRelations);
+	$: console.log('Modal Create Open: ', open);
 </script>
 
 {#if open}
