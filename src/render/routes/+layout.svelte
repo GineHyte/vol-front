@@ -43,7 +43,6 @@
 	});
 
 	function setWindowState(data: any) {
-		console.log(data);
 		window.electron.setWindowState(data);
 		window.electron.getWindowState().then((windowState: any) => {
 			currentWindowState = windowState;

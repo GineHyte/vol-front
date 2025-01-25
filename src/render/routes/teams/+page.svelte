@@ -100,7 +100,6 @@
 	async function getTeamPlayers(team: Team) {
 		let players: Pagination<Player>;
 		let playersData: any[] = [];
-		console.log(team);
 		if (team.players.originalType.value) {
 			for (const player of team.players.originalType.value) {
 				let playerData = await getPlayer(player.player_id);

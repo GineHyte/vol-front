@@ -81,11 +81,9 @@
 			}
 		});
 
+		console.log(primaryButtonDisabled, Object.keys(inputData), requiredFields);
 		return primaryButtonDisabled;
 	}
-
-	$: console.log('openRelations: ', openRelations);
-	$: console.log('Modal Create Open: ', open);
 </script>
 
 {#if open}
@@ -216,15 +214,15 @@
 				openRelations[item.key] = false;
 				open = true;
 			}}
-			on:submit={(selectedRelation) => {
+			on:submit={(e) => {
 				if (item.type === 'array') {
 					if (Array.isArray(inputData[item.key])) {
-						inputData[item.key] = [...inputData[item.key], selectedRelation.detail];
+						inputData[item.key] = [...inputData[item.key], e.detail];
 					} else {
-						inputData[item.key] = [selectedRelation.detail];
+						inputData[item.key] = [e.detail];
 					}
 				} else {
-					inputData[item.key] = selectedRelation.detail[0];
+					inputData[item.key] = e.detail[0];
 				}
 			}}
 		/>

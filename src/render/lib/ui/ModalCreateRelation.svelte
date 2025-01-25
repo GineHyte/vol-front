@@ -40,7 +40,6 @@
 				item.techId.originalType.jsType = 'string';
 				return item;
 			});
-			console.log(data.getRows());
 			return data;
 		};
 	}

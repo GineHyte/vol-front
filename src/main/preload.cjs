@@ -11,7 +11,6 @@ contextBridge.exposeInMainWorld('electron', {
     return ipcRenderer.invoke('get-window-state')
   },
   setWindowState: (data) => {
-    console.log(data);
     ipcRenderer.send('set-window-state', data)
   },
   checkUpdate: () => {

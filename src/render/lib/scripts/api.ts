@@ -10,7 +10,6 @@ var isLoaded = false;
 settingsRenderer.subscribe((settings: any) => {
   isLoaded = settings.loaded;
   if (isLoaded === true) {
-    console.log('settings', settings);
     apiUrl = settings.apiUrl || '';
     apiVersion = settings.apiVersion || '';
     if (apiUrl === '') {

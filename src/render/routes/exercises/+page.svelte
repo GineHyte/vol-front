@@ -99,7 +99,10 @@
 				{#await getExercises()}
 					<DataTableSkeleton />
 				{:then exercises}
-					<DataTable headers={exercises.getHeaders()} rows={exercises.getRows()}>
+					<DataTable
+						headers={exercises.getHeaders(['imageUrl', 'videoUrl'])}
+						rows={exercises.getRows()}
+					>
 						<Toolbar>
 							<ToolbarContent>
 								<Button
@@ -125,7 +128,7 @@
 		model={new Exercise()}
 		handleSubmit={createExerciseRenderer}
 		bind:open={createOpen}
-		requiredFields={['name', 'description', 'zoneFrom', 'zoneTo', 'difficulty']}
+		requiredFields={['name', 'description', 'difficulty', 'subtechId', 'timePerExercise']}
 		excludeFields={['imageUrl', 'videoUrl']}
 	/>
 {/if}

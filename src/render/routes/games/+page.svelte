@@ -46,8 +46,6 @@
 
 	let localGame: Game | undefined = undefined;
 
-	$: console.log('games createOpen: ', createOpen);
-
 	async function getGameLocal(gameIdLocal: number) {
 		localGame = await getGame(gameIdLocal);
 		return localGame;
