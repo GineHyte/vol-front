@@ -6,20 +6,21 @@
 		TileGroup,
 		RadioTile,
 	} from 'carbon-components-svelte';
-	import { createEventDispatcher } from 'svelte';
+	import { createEventDispatcher, onMount } from 'svelte';
 
-	import { getPlayers, getTeams, getGames, getTechs } from '$lib/scripts/endpoints';
+	import { getPlayers, getTeams, getGames, getSubtechs, getTech } from '$lib/scripts/endpoints';
 	import { Pagination } from '$lib/scripts/pagination';
-	import { PaginationProps } from '$lib/scripts/pagination';
 	import { Relation } from '$lib/scripts/relation';
 	import { Amplua } from '$lib/utils/utils';
+	import { deserialize } from '$app/forms';
+	import { Subtech } from '$lib/scripts/models';
 
 	export let relation: Relation;
 	export let selectedRelation: number[] = [];
 	export let open: boolean = false;
 
 	let dispatch = createEventDispatcher();
-	let getFunc: (paginationProps: PaginationProps) => Promise<Pagination<any>>;
+	let getFunc: () => Promise<Pagination<any>>;
 	let playersAmplua: string[] = [Amplua.Defender];
 	let playersAmpluaOpen: boolean = false;
 
@@ -30,15 +31,24 @@
 	} else if (relation.jsRelation === 'games') {
 		getFunc = getGames;
 	} else if (relation.jsRelation === 'subtechs') {
-		getFunc = getTechs;
+		getFunc = async () => {
+			let data = await getSubtechs();
+			data.items.map(async (item: Subtech) => {
+				item.techId.originalType.value = (
+					await getTech(item.techId.originalType.value)
+				).name.originalType.value;
+				item.techId.originalType.jsType = 'string';
+				return item;
+			});
+			console.log(data.getRows());
+			return data;
+		};
 	}
 
 	$: if (!open) {
 		dispatch('close');
 		selectedRelation = [];
 	}
-
-	console.log('modal create relation open: ', open);
 </script>
 
 <Modal
@@ -54,7 +64,7 @@
 	}}
 >
 	{#if getFunc}
-		{#await getFunc(new PaginationProps())}
+		{#await getFunc()}
 			<DataTableSkeleton />
 		{:then data}
 			<DataTable

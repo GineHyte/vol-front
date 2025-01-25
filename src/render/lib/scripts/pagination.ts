@@ -37,6 +37,13 @@ export class Pagination<T extends Model> {
     }
   }
 
+
+  // /**
+  // NOT IMPLEMENTED
+  //  * This function returns the rows for the DataTable component (Carbon Components)
+  //  * @param translateIdToField Parameter to translate all relations id to their names or other fields 
+  //  * @returns 
+  //  */
   getRows(): DataTableRow[] {
     const rows = this.items.map((item: T) => item.getTableData());
     return rows as DataTableRow[]

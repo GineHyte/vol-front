@@ -132,8 +132,13 @@ export function deleteTech(id: number): Promise<Status> {
     })
 }
 
-export function getSubtechs(techId: number | undefined, paginationProps: PaginationProps = new PaginationProps()): Promise<Pagination<Subtech>> {
-  return new ApiImpl().get(`/subtechs/?tech_id=${techId}`, paginationProps)
+export function getSubtechs(techId: number | undefined = undefined, paginationProps: PaginationProps = new PaginationProps()): Promise<Pagination<Subtech>> {
+  console.log('techId', techId);
+  let url = '/subtechs/';
+  if (techId) {
+    url += `tech_id=${techId}`;
+  }
+  return new ApiImpl().get(url, paginationProps)
     .then((data: any) => {
       return new Pagination<Subtech>(data, Subtech)
     })

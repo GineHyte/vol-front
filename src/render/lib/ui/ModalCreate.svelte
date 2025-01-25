@@ -14,7 +14,7 @@
 		DatePickerInput,
 	} from 'carbon-components-svelte';
 
-	import { getPlayer, getTeam } from '$lib/scripts/endpoints';
+	import { getPlayer, getSubtech, getTeam } from '$lib/scripts/endpoints';
 	import { Amplua } from '$lib/utils/utils';
 	import Model from '$lib/scripts/model';
 	import Field from '$lib/scripts/field';
@@ -169,6 +169,16 @@
 										{team.name.originalType.value}
 									</Tile>
 								{/await}
+							{:else if item.relation.jsRelation === 'subtechs'}
+								{#await getSubtech(inputData[item.key])}
+									<Tile>
+										{inputData[item.key]}
+									</Tile>
+								{:then subtech}
+									<Tile>
+										{subtech.name.originalType.value}
+									</Tile>
+								{/await}
 							{:else}
 								<Tile>
 									{inputData[item.key]}
@@ -180,7 +190,6 @@
 						class="mt-4"
 						on:click={() => {
 							openRelations[item.key] = true;
-							open = false;
 						}}
 					>
 						Вибрати {item.title}

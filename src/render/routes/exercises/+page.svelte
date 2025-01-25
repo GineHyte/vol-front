@@ -125,6 +125,7 @@
 		model={new Exercise()}
 		handleSubmit={createExerciseRenderer}
 		bind:open={createOpen}
-		requiredFields={['name', 'description']}
+		requiredFields={['name', 'description', 'zoneFrom', 'zoneTo', 'difficulty']}
+		excludeFields={['imageUrl', 'videoUrl']}
 	/>
 {/if}
