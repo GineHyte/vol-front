@@ -9,6 +9,7 @@
 		DataTable,
 		DataTableSkeleton,
 		Pagination,
+		Button,
 	} from 'carbon-components-svelte';
 	import {
 		getGames,
@@ -43,6 +44,7 @@
 	let actionsPage = 1;
 	let actionsPageSize = 10;
 	let targetForActions: any;
+	let actionOrder = 0;
 
 	let localGame: Game | undefined = undefined;
 
@@ -152,6 +154,7 @@
 		selectedSide = Side.NOTSET;
 		selectedPlayer = -1;
 		zoneEnabled = 0;
+		actionOrder = 0;
 		actionTableUpdate = !actionTableUpdate;
 	}
 
@@ -194,6 +197,10 @@
 		}
 	}
 
+	async function goBack() {
+		actionOrder -= 1;
+	}
+
 	$: if (selectedImpact !== '') {
 		zoneEnabled = selectedSide;
 	}
@@ -209,8 +216,8 @@
 			{:then game}
 				<Row>
 					<Column>
-						{#if selectedPlayer > 0}
-							{#if selectedTech < 0}
+						{#key actionOrder}
+							{#if actionOrder === 1}
 								{#await getTechs()}
 									<DataTableSkeleton />
 								{:then techs}
@@ -220,13 +227,18 @@
 										rows={techs.getRows()}
 									>
 										<svelte:fragment slot="cell" let:cell let:row>
-											<button on:click={() => (selectedTech = row.id)}>
+											<button
+												on:click={() => {
+													actionOrder = 2;
+													selectedTech = row.id;
+												}}
+											>
 												{cell.value}
 											</button>
 										</svelte:fragment>
 									</DataTable>
 								{/await}
-							{:else if selectedSubtech < 0}
+							{:else if actionOrder === 2}
 								{#await getSubtechs(selectedTech)}
 									<DataTableSkeleton />
 								{:then subtechs}
@@ -236,13 +248,18 @@
 										rows={subtechs.getRows()}
 									>
 										<svelte:fragment slot="cell" let:cell let:row>
-											<button on:click={() => (selectedSubtech = row.id)}>
+											<button
+												on:click={() => {
+													actionOrder = 3;
+													selectedSubtech = row.id;
+												}}
+											>
 												{cell.value}
 											</button>
 										</svelte:fragment>
 									</DataTable>
 								{/await}
-							{:else if selectedImpact === ''}
+							{:else if actionOrder === 3}
 								<DataTable
 									headers={[{ key: 'impact', value: 'Якісний показник гри' }]}
 									rows={Object.entries(Impact).map(([key, value]) => ({
@@ -251,17 +268,23 @@
 									}))}
 								>
 									<svelte:fragment slot="cell" let:cell let:row>
-										<button on:click={() => (selectedImpact = row.id)}>
+										<button
+											on:click={() => {
+												actionOrder = 4;
+												selectedImpact = row.id;
+											}}
+										>
 											{cell.value}
 										</button>
 									</svelte:fragment>
 								</DataTable>
 							{/if}
-						{/if}
+						{/key}
 					</Column>
 					<Column>
 						<Field
 							{game}
+							bind:actionOrder
 							bind:selectedZones
 							bind:selectedSide
 							bind:selectedPlayer
@@ -269,10 +292,11 @@
 							submitFunc={submitAction}
 						/>
 					</Column>
-					<Column>
+					<Column class="relative">
 						{#if game.description.originalType.value}
 							<span>Опис: {game.description.originalType.value}</span>
 						{/if}
+						<Button class="absolute bottom-4 left-4" on:click={goBack}>Назад</Button>
 					</Column>
 				</Row>
 				<Row>

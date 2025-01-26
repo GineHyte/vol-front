@@ -1,11 +1,5 @@
 <script lang="ts">
-	import {
-		Column,
-		Grid,
-		Row,
-		ExpandableTile,
-		SkeletonPlaceholder,
-	} from 'carbon-components-svelte';
+	import { ExpandableTile } from 'carbon-components-svelte';
 	import { Game, Player, Team } from '$lib/scripts/models';
 	import { getGame, getTeam, getPlayers } from '$lib/scripts/endpoints';
 	import PlayerElement from './Player.svelte';
@@ -18,6 +12,7 @@
 	export let selectedPlayer: number = -1;
 	export let zoneEnabled: number = 0; // 0 - false, 1 - left, 2 - right
 	export let submitFunc: () => Promise<void>;
+	export let actionOrder: number = 0;
 
 	let teamALocal: Team | undefined = undefined;
 	let teamBLocal: Team | undefined = undefined;
@@ -35,7 +30,7 @@
 	let isPlayersEnabled = true;
 
 	$: {
-		isPlayersEnabled = selectedPlayer < 0;
+		isPlayersEnabled = actionOrder === 0;
 	}
 </script>
 
@@ -55,6 +50,7 @@
 						zoneEnabled = Side.RIGHT;
 						if (selectedZones.length === 2) {
 							zoneEnabled = 0;
+							actionOrder = 5;
 							await submitFunc();
 						}
 					}}
@@ -68,6 +64,7 @@
 						zoneEnabled = Side.LEFT;
 						if (selectedZones.length === 2) {
 							zoneEnabled = 0;
+							actionOrder = 5;
 							await submitFunc();
 						}
 					}}
@@ -88,6 +85,7 @@
 										selectedPlayer =
 											team.players.originalType.value[0].player_id;
 										selectedSide = Side.LEFT;
+										actionOrder = 1;
 									}}
 								/>
 							{/if}
@@ -100,6 +98,7 @@
 										selectedPlayer =
 											team.players.originalType.value[1].player_id;
 										selectedSide = Side.LEFT;
+										actionOrder = 1;
 									}}
 								/>
 							{/if}
@@ -121,6 +120,7 @@
 										selectedPlayer =
 											team.players.originalType.value[0].player_id;
 										selectedSide = Side.RIGHT;
+										actionOrder = 1;
 									}}
 								/>
 							{/if}
@@ -133,6 +133,7 @@
 										selectedPlayer =
 											team.players.originalType.value[1].player_id;
 										selectedSide = Side.RIGHT;
+										actionOrder = 1;
 									}}
 								/>
 							{/if}
