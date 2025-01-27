@@ -3,7 +3,7 @@ const { app, BrowserWindow, ipcMain } = require('electron');
 const serve = require('electron-serve');
 const path = require('path');
 const settingsManager = require('electron-settings');
-const { autoUpdater } = require('electron-updater');
+// const { autoUpdater } = require('electron-updater');
 
 const port = 5173;
 const loadURL = serve({ directory: 'build' });
@@ -106,9 +106,9 @@ app.on('window-all-closed', () => {
 function ipcInit() {
   ipcMain.on('set-settings', (event, data) => {
     settingsManager.set('settings', data);
-    if (data.apiUrl) {
-      autoUpdater.setFeedURL(`${data.apiUrl}:8000/update/${app.getVersion()}`);
-    }
+    // if (data.apiUrl) {
+    //   autoUpdater.setFeedURL(`${data.apiUrl}:8000/update/${app.getVersion()}`);
+    // }
   });
 
   ipcMain.handle('get-settings', () => {
@@ -138,30 +138,30 @@ function ipcInit() {
     return state;
   });
 
-  ipcMain.on('check-update', () => {
-    autoUpdater.checkForUpdatesAndNotify();
-  });
+  // ipcMain.on('check-update', () => {
+  //   autoUpdater.checkForUpdatesAndNotify();
+  // });
 
-  autoUpdater.on('update-available', (event, releaseNotes, releaseName) => {
-    console.log('update-available', releaseNotes, releaseName);
-    ipcMain.emit('update-available', releaseNotes, releaseName);
-  });
+  // autoUpdater.on('update-available', (event, releaseNotes, releaseName) => {
+  //   console.log('update-available', releaseNotes, releaseName);
+  //   ipcMain.emit('update-available', releaseNotes, releaseName);
+  // });
 
-  ipcMain.handle('download-update', () => {
-    return autoUpdater.downloadUpdate();
-  });
+  // ipcMain.handle('download-update', () => {
+  //   return autoUpdater.downloadUpdate();
+  // });
 
-  autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
-    ipcMain.emit('update-downloaded', releaseNotes, releaseName);
-  });
+  // autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
+  //   ipcMain.emit('update-downloaded', releaseNotes, releaseName);
+  // });
 
-  autoUpdater.on('error', (error) => {
-    console.log('update-error', error);
-  });
+  // autoUpdater.on('error', (error) => {
+  //   console.log('update-error', error);
+  // });
 
-  autoUpdater.on('update-not-available', (error) => {
-    console.log('update-not-available', error);
-  });
+  // autoUpdater.on('update-not-available', (error) => {
+  //   console.log('update-not-available', error);
+  // });
 }
 
 
