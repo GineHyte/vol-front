@@ -12,6 +12,12 @@ settingsRenderer.subscribe((settings: any) => {
   if (isLoaded === true) {
     apiUrl = settings.apiUrl || '';
     apiVersion = settings.apiVersion || '';
+    const isDev = apiUrl.includes('localhost');
+    if (isDev) {
+      apiUrl = "http://" + apiUrl;
+    } else {
+      apiUrl = "https://" + apiUrl;
+    }
     if (apiUrl === '') {
       noIpNotification();
     }
@@ -36,11 +42,10 @@ interface Api {
 export class ApiImpl implements Api {
   async get(url: string, paginationProps: PaginationProps | null = null, headers: any = {}): Promise<any> {
     if (!isLoaded) {
-      noIpNotification();
       return;
     }
     return new Promise((resolve, reject) => {
-      let queryUrl = `https://${apiUrl}${apiVersion}${url}`
+      let queryUrl = `${apiUrl}${apiVersion}${url}`
       if (paginationProps !== null) {
         queryUrl += `${queryUrl.includes('?') ? '&' : '?'}page=${paginationProps.page}&size=${paginationProps.size}`
       }
@@ -60,7 +65,7 @@ export class ApiImpl implements Api {
 
   async post(url: string, data: any, headers: any = {}): Promise<any> {
     return new Promise((resolve, reject) => {
-      fetch(`https://${apiUrl}${apiVersion}${url}`, {
+      fetch(`${apiUrl}${apiVersion}${url}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -76,7 +81,7 @@ export class ApiImpl implements Api {
 
   async put(url: string, data: any, headers: any = {}): Promise<any> {
     return new Promise((resolve, reject) => {
-      fetch(`https://${apiUrl}${apiVersion}${url}`, {
+      fetch(`${apiUrl}${apiVersion}${url}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -92,7 +97,7 @@ export class ApiImpl implements Api {
 
   async delete(url: string, headers: any = {}): Promise<any> {
     return new Promise((resolve, reject) => {
-      fetch(`https://${apiUrl}${apiVersion}${url}`, {
+      fetch(`${apiUrl}${apiVersion}${url}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',

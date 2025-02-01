@@ -9,19 +9,12 @@ export default class Model {
     for (const key in this) {
       if (!(this[key] instanceof Field)) { continue }
       const field = this[key] as Field
-      data[field.deserializationAlias] = field.originalType.value
+      data[key] = field.originalType.value
     }
     return data
   }
 
   deserialize(data: any): Model {
-    if (Object.keys(this.serializationMap).length === 0) {
-      for (const key in this) {
-        if (!(this[key] instanceof Field)) { continue }
-        const field = this[key] as Field
-        this.serializationMap[field.sereliazationAlias] = field.deserializationAlias
-      }
-    }
     for (const key in data) {
       const field = this[this.serializationMap[key] as keyof this] as Field
       if (!field) { continue }
@@ -65,8 +58,23 @@ export default class Model {
     for (const key in this) {
       if (!(this[key] instanceof Field) || (key == "id")) { continue }
       const field = this[key] as Field
-      headers.push({ key: field.deserializationAlias, value: field.tableTitle })
+      headers.push({ key: key, value: field.tableTitle })
     }
     return headers
   }
+
+  constructor() {
+    for (const key in this) {
+      if (!(this[key] instanceof Field)) { continue }
+      const field = this[key] as Field
+      this.serializationMap[field.sereliazationAlias] = key
+      field.deserializationAlias = key
+      Object.defineProperty(this, key, {
+        get() { return field.originalType.value },
+        set(val: any) { field.originalType.value = val },
+      })
+    }
+    console.log(this)
+  }
+
 }

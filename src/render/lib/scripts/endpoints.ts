@@ -5,6 +5,7 @@ import { Pagination, PaginationProps } from '$lib/scripts/pagination'
 export function getPlayers(paginationProps: PaginationProps = new PaginationProps()): Promise<Pagination<Player>> {
   return new ApiImpl().get('/players/', paginationProps)
     .then((data: any) => {
+      console.log(data)
       return new Pagination<Player>(data, Player)
     })
 }

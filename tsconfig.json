@@ -29,7 +29,8 @@
 			"@/*": ["src/*"],
 			"$lib/*": ["src/render/lib/*"],
 			"$lib": ["src/render/lib"]
-		}
+		},
+		"experimentalDecorators": true,
 	},
 	"include": ["src/**/*.d.ts", "src/**/*.ts", "src/**/*.svelte"]
 }
