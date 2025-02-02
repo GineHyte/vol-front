@@ -6,55 +6,32 @@
 		ModalFooter,
 		NumberInput,
 		TextInput,
-		Tile,
-		Button,
 		DatePicker,
 		TimePicker,
 		Checkbox,
 		DatePickerInput,
 	} from 'carbon-components-svelte';
 
-	import { getPlayer, getSubtech, getTeam } from '$lib/scripts/endpoints';
-	import { Amplua } from '$lib/utils/utils';
 	import Model from '$lib/scripts/model';
 	import Field from '$lib/scripts/field';
 	import ModalCreateRelation from '$lib/ui/ModalCreateRelation.svelte';
 
-	export let label = '';
 	export let title = '+ ';
 	export let model: Model;
 	export let requiredFields: string[] = ['all'];
 	export let handleSubmit: (e: Event) => Promise<void>;
 	export let open: boolean = false;
-	export let excludeFields: string[] = [];
+	export let exclude: string[] = [];
 
-	let data: any[] = [];
 	let inputData: any = {};
-	let openRelations: { [key: string]: boolean } = {};
 	title = '+ ' + title;
+	exclude.push('id');
 
 	if (requiredFields.includes('all')) {
 		requiredFields = Object.keys(model).filter((key) => {
 			return model[key as keyof Model] instanceof Field && key !== 'id';
 		});
 	}
-
-	Object.keys(model).forEach((key) => {
-		if (!(model[key as keyof Model] instanceof Field) || key === 'id') {
-			return;
-		}
-		// @ts-ignore
-		const field = model[key as keyof Model] as Field;
-		let item = {
-			type: field.originalType.jsType,
-			title: field.tableTitle,
-			key: field.deserializationAlias,
-			relation: field.relation,
-			ge: field.originalType.ge,
-			le: field.originalType.le,
-		};
-		data.push(item);
-	});
 
 	function handleInput(id: string) {
 		// workaround for Carbon Design System Custom Events
@@ -72,7 +49,7 @@
 		inputData[id] = date.value + ' ' + time.value;
 	}
 
-	async function getPrimaryButtonDisabled() {
+	function getPrimaryButtonDisabled() {
 		let primaryButtonDisabled = false;
 
 		requiredFields.forEach((field) => {
@@ -81,7 +58,6 @@
 			}
 		});
 
-		console.log(primaryButtonDisabled, Object.keys(inputData), requiredFields);
 		return primaryButtonDisabled;
 	}
 </script>
@@ -97,14 +73,12 @@
 	>
 		<ModalHeader {title} />
 		<ModalBody hasForm>
-			{#each data.filter((item) => !excludeFields.includes(item.key)) as item}
-				{#if item.type === 'number' && !item.relation}
+			{#each model.getCreationArray(exclude) as item}
+				{#if item.type === 'number'}
 					<NumberInput
 						id={item.key}
 						label={item.title}
 						value={0}
-						min={item.ge ? item.ge : undefined}
-						max={item.le ? item.le : undefined}
 						on:input={(_) => handleInput(item.key)}
 					/>
 				{:else if item.type === 'string'}
@@ -137,94 +111,15 @@
 						on:change={(_) => handleDatePicker(item.key)}
 					/>
 				{/if}
-				{#if item.relation}
-					{#if inputData[item.key]}
-						{#if item.type === 'array'}
-							{#each inputData[item.key] as relation}
-								{#if label === 'team'}
-									{#await getPlayer(relation[0])}
-										<Tile>
-											{relation[0]}
-										</Tile>
-									{:then player}
-										<Tile>
-											{player.firstName.originalType.value}
-											{player.lastName.originalType.value}
-											{Amplua[relation[1]]}
-										</Tile>
-									{/await}
-								{/if}
-							{/each}
-						{:else}
-							<!-- not an array -->
-							{#if item.relation.jsRelation === 'teams'}
-								{#await getTeam(inputData[item.key])}
-									<Tile>
-										{inputData[item.key]}
-									</Tile>
-								{:then team}
-									<Tile>
-										{team.name.originalType.value}
-									</Tile>
-								{/await}
-							{:else if item.relation.jsRelation === 'subtechs'}
-								{#await getSubtech(inputData[item.key])}
-									<Tile>
-										{inputData[item.key]}
-									</Tile>
-								{:then subtech}
-									<Tile>
-										{subtech.name.originalType.value}
-									</Tile>
-								{/await}
-							{:else}
-								<Tile>
-									{inputData[item.key]}
-								</Tile>
-							{/if}
-						{/if}
-					{/if}
-					<Button
-						class="mt-4"
-						on:click={() => {
-							openRelations[item.key] = true;
-						}}
-					>
-						Вибрати {item.title}
-					</Button>
-				{/if}
 			{/each}
+			<slot name="createRelationField" />
 		</ModalBody>
 		{#key inputData}
-			{#await getPrimaryButtonDisabled()}
-				<ModalFooter primaryButtonText="Готово" primaryButtonDisabled={true} />
-			{:then primaryButtonDisabled}
-				<ModalFooter primaryButtonText="Готово" {primaryButtonDisabled} />
-			{/await}
+			<ModalFooter
+				primaryButtonText="Готово"
+				primaryButtonDisabled={getPrimaryButtonDisabled()}
+			/>
 		{/key}
 	</ComposedModal>
 {/if}
-{#each data as item}
-	{#if item.relation}
-		<ModalCreateRelation
-			relation={item.relation}
-			selectedRelation={inputData[item.key] || []}
-			open={openRelations[item.key] || false}
-			on:close={() => {
-				openRelations[item.key] = false;
-				open = true;
-			}}
-			on:submit={(e) => {
-				if (item.type === 'array') {
-					if (Array.isArray(inputData[item.key])) {
-						inputData[item.key] = [...inputData[item.key], e.detail];
-					} else {
-						inputData[item.key] = [e.detail];
-					}
-				} else {
-					inputData[item.key] = e.detail[0];
-				}
-			}}
-		/>
-	{/if}
-{/each}
+<slot name="modalCreateRelation" />

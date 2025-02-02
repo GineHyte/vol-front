@@ -1,23 +1,29 @@
 import Datatype from "$lib/scripts/datatype"
-import { Relation } from "$lib/scripts/relation"
 
 export default class Field {
   sereliazationAlias: string
-  originalType: Datatype
+  __datatype: Datatype
+  value: any;
   tableTitle: string;
-  relation: Relation | null;
+  relation: boolean;
   deserializationAlias: string;
 
   constructor(
     sereliazationAlias: string,
-    originalType: Datatype,
+    datatype: Datatype,
     tableTitle: string = '',
-    relation: Relation | null = null
+    value: any = undefined,
+    relation: boolean = false
   ) {
     this.deserializationAlias = '';
     this.sereliazationAlias = sereliazationAlias
-    this.originalType = originalType
+    this.__datatype = datatype
+    this.value = value
     this.tableTitle = tableTitle
     this.relation = relation
+  }
+
+  get datatype() {
+    return this.__datatype.__type
   }
 }

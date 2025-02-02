@@ -1,6 +1,6 @@
 <script>
 	import { ToastNotification } from 'carbon-components-svelte';
-	import { notifications } from '$lib/utils/store';
+	import { notifications } from '@/render/lib/utils/store';
 
 	const DEFAULT_TIMEOUT = 3_000;
 

@@ -1,23 +1,21 @@
-export default class Datatype {
-  value: any;
-  jsType: string;
-  ge: number;
-  le: number;
+import Model from '$lib/scripts/model'
 
-  constructor(jsType: string | undefined, ge: number = 0, le: number = 0, value: any = undefined) {
-    this.jsType = jsType || typeof value;
-    this.ge = ge;
-    this.le = le;
-    this.value = value;
+export default class Datatype {
+  __type: string | Model | Model[];
+
+  constructor(type: string | Model | Model[]) {
+    this.__type = type;
   }
 
-  isNaN() {
-    if (this.jsType == 'number') {
-      return isNaN(this.value)
-    } else if (this.jsType == 'string') {
-      return this.value == ''
-    } else if (this.jsType == 'array') {
-      return !this.value || this.value?.length == 0 || this.value.every((item: any) => item.isNaN())
+  isNaN(value: any): boolean {
+    if (this.__type == 'number') {
+      return isNaN(value)
+    } else if (this.__type == 'string') {
+      return value == ''
+    } else if (this.__type == 'array') {
+      return !value || value?.length == 0 || value.every((item: any) => item.isNaN())
+    } else if (this.__type instanceof Model) {
+      return value.isNaN()
     }
     return false
   }

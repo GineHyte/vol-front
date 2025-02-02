@@ -129,6 +129,6 @@
 		handleSubmit={createExerciseRenderer}
 		bind:open={createOpen}
 		requiredFields={['name', 'description', 'difficulty', 'subtechId', 'timePerExercise']}
-		excludeFields={['imageUrl', 'videoUrl']}
+		exclude={['imageUrl', 'videoUrl']}
 	/>
 {/if}

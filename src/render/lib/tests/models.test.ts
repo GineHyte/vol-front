@@ -18,7 +18,7 @@ test('player has fields', () => {
   expect(player.age).toBe(undefined);
   expect(player.weight).toBe(undefined);
   expect(player.height).toBe(undefined);
-  expect(player.imageFileId).toBe(undefined);
+  expect(player.imageFile).toBe(undefined);
   expect(player.teams).toBe(undefined);
 });
 
@@ -59,7 +59,6 @@ test('table data', () => {
   player.deserialize(data);
   const tableData = player.__tableData;
   expect(tableData).toEqual(
-    [
       {
         'id': 1,
         'firstName': 'John',
@@ -67,7 +66,25 @@ test('table data', () => {
         'age': 25,
         'weight': 80,
         'height': 180,
+        'imageFileId': undefined,
+        'teams': undefined
       }
-    ]
   );
 });
+
+
+test('serialize', () => {
+  const data = {
+    'id': 1,
+    'first_name': 'John',
+    'last_name': 'Doe',
+    'age': 25,
+    'weight': 80,
+    'height': 180,
+  }
+  player.deserialize(data);
+  const serialized = player.serialize();
+  console.log(serialized);
+  expect(serialized).toEqual(data);
+}
+);

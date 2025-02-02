@@ -142,7 +142,7 @@
 
 	async function createSubtechRenderer(inputData: any) {
 		let subtech = new Subtech();
-		subtech.techId.originalType.value = techId;
+		subtech.techId.datatype.value = techId;
 		subtech.deserialize(inputData);
 		let status = await createSubtech(subtech);
 		if (status.status.originalType.value === 'success') {
@@ -240,7 +240,7 @@
 	handleSubmit={createSubtechRenderer}
 	bind:open={createSubtechOpen}
 	requiredFields={['name', 'description']}
-	excludeFields={['techId']}
+	exclude={['techId']}
 />
 
 {#key createOpen}

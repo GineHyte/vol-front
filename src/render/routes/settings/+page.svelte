@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Button, TextInput } from 'carbon-components-svelte';
 	import { pushNotification } from '$lib/utils/utils';
-	import { settingsRenderer, versionRenderer } from '$lib/utils/store';
+	import { settingsRenderer, versionRenderer } from '@/render/lib/utils/store';
 	import { ProgressBar } from 'carbon-components-svelte';
 
 	let settings: any = {};

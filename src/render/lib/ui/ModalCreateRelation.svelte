@@ -34,10 +34,10 @@
 		getFunc = async () => {
 			let data = await getSubtechs();
 			data.items.map(async (item: Subtech) => {
-				item.techId.originalType.value = (
-					await getTech(item.techId.originalType.value)
+				item.techId.datatype.value = (
+					await getTech(item.techId.datatype.value)
 				).name.originalType.value;
-				item.techId.originalType.jsType = 'string';
+				item.techId.datatype.type = 'string';
 				return item;
 			});
 			return data;

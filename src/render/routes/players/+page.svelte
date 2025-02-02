@@ -25,70 +25,56 @@
 
 	let playerId: number | undefined = undefined;
 	let createOpen = false;
+	let sideListUpdater: boolean = false;
 
 	function selectPlayer(id: number) {
 		playerId = id;
 	}
 
+	function updateSideList() {
+		sideListUpdater = !sideListUpdater;
+	}
+
 	async function duplicatePlayer(currentId: number) {
 		if (currentId) {
 			let status = await createPlayer(await getPlayer(currentId));
-			if (status.status.originalType.value === 'success') {
-				pushNotification({
-					title: 'Успіх!',
-					message: 'Гравець дубльований.',
-					kind: 'success',
-				});
+			if (status.status === 'success') {
+				pushNotification('duplicatePlayerSuccess');
 			} else {
-				pushNotification({
-					title: 'Помилка!',
-					message: 'Гравець не може бути дубльований.',
-					kind: 'error',
-				});
+				pushNotification('duplicatePlayerError');
 			}
 		}
+		updateSideList();
 	}
 
 	async function removePlayer(currentId: number) {
 		if (currentId) {
+			console.log(currentId);
 			let status = await deletePlayer(currentId);
-			if (status.status.originalType.value === 'success') {
-				pushNotification({
-					title: 'Успіх!',
-					message: 'Гравець видалений.',
-					kind: 'success',
-				});
+			console.log(status);
+			if (status.status === 'success') {
+				pushNotification('removePlayerSuccess');
 			} else {
-				pushNotification({
-					title: 'Помилка!',
-					message: 'Гравець не може бути видалений.',
-					kind: 'error',
-				});
+				pushNotification('removePlayerError');
 			}
 		}
+		updateSideList();
 	}
 
 	async function createPlayerRenderer(inputData: any) {
 		let player = new Player();
 		Object.keys(inputData).forEach((key) => {
 			// @ts-ignore
-			player[key as keyof Player].originalType.value = inputData[key];
+			player[key as keyof Player] = inputData[key];
 		});
 		let status = await createPlayer(player);
-		if (status.status.originalType.value === 'success') {
-			pushNotification({
-				title: 'Успіх!',
-				message: 'Ви створили нового гравця.',
-				kind: 'success',
-			});
+		if (status.status === 'success') {
+			pushNotification('createPlayerSuccess');
 		} else {
-			pushNotification({
-				title: 'Помилка!',
-				message: 'Гравець не може бути створений.',
-				kind: 'error',
-			});
+			pushNotification('createPlayerError');
 		}
 		createOpen = false;
+		updateSideList();
 	}
 </script>
 
@@ -144,10 +130,13 @@
 		handleSubmit={createPlayerRenderer}
 		bind:open={createOpen}
 		requiredFields={['age', 'firstName', 'lastName']}
-		excludeFields={['teams', 'imageFileId']}
-	/>
+		exclude={['teams', 'imageFileId']}
+	>
+		<svelte:fragment slot="createRelationField" />
+		<svelte:fragment slot="modalCreateRelation" />
+	</ModalCreate>
 {/if}
-{#key createOpen}
+{#key sideListUpdater}
 	<SideList
 		bind:currentId={playerId}
 		title="Гравець"

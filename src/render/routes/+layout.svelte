@@ -17,7 +17,7 @@
 		SideNavMenuItem,
 	} from 'carbon-components-svelte';
 	import { Close, Minimize, Maximize, Subtract, WintryMix } from 'carbon-icons-svelte';
-	import { settingsRenderer, versionRenderer } from '$lib/utils/store';
+	import { settingsRenderer, versionRenderer } from '@/render/lib/utils/store';
 	import Notifications from '$lib/ui/Notifications.svelte';
 	import ModalCreate from '$lib/ui/ModalCreate.svelte';
 
