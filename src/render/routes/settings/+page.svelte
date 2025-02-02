@@ -1,8 +1,9 @@
 <script lang="ts">
 	import { Button, TextInput } from 'carbon-components-svelte';
 	import { pushNotification } from '$lib/utils/utils';
-	import { settingsRenderer } from '$lib/utils/store';
+	import { settingsRenderer, versionRenderer } from '$lib/utils/store';
 	import { ProgressBar } from 'carbon-components-svelte';
+
 	let settings: any = {};
 	settingsRenderer.subscribe((v: any) => {
 		settings = v;
@@ -42,12 +43,13 @@
 	placeholder={settings.apiUrl}
 	class="mb-4"
 />
-<TextInput
+<!-- <TextInput
 	labelText="Версія API"
 	bind:value={apiVersion}
 	placeholder={settings.apiVersion}
 	class="mb-4"
-/>
-<Button class="mb-4" on:click={checkUpdate}>Перевірити оновлення</Button>
+/> -->
+<!-- <Button class="mb-4" on:click={checkUpdate}>Перевірити оновлення</Button> -->
+<p>Версія: {$versionRenderer}</p>
 
 <Button class="absolute bottom-4 left-4" on:click={saveSettings}>Зберегти</Button>

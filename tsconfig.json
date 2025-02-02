@@ -5,7 +5,7 @@
 		"target": "es2020",
 		"moduleResolution": "node",
 		"strict": true,
-		"types": ["vite/client", "node"],
+		"types": ["vite/client", "node", "jest"],
 		"typeRoots": ["node_modules/@types"],
 		"lib": ["ESNext", "DOM"],
 		/**

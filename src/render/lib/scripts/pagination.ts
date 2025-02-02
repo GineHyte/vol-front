@@ -45,7 +45,7 @@ export class Pagination<T extends Model> {
   //  * @returns 
   //  */
   getRows(): DataTableRow[] {
-    const rows = this.items.map((item: T) => item.getTableData());
+    const rows = this.items.map((item: T) => item.__tableData);
     return rows as DataTableRow[]
   }
 

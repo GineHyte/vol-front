@@ -16,8 +16,8 @@
 		SkipToContent,
 		SideNavMenuItem,
 	} from 'carbon-components-svelte';
-	import { Close, Minimize, Maximize, Subtract } from 'carbon-icons-svelte';
-	import { settingsRenderer } from '$lib/utils/store';
+	import { Close, Minimize, Maximize, Subtract, WintryMix } from 'carbon-icons-svelte';
+	import { settingsRenderer, versionRenderer } from '$lib/utils/store';
 	import Notifications from '$lib/ui/Notifications.svelte';
 	import ModalCreate from '$lib/ui/ModalCreate.svelte';
 
@@ -35,6 +35,9 @@
 				settings.loaded = true;
 				settingsRenderer.set(settings);
 			}
+		});
+		window.electron.getVersion().then((version: any) => {
+			versionRenderer.set(version);
 		});
 	});
 

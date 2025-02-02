@@ -111,6 +111,10 @@ function ipcInit() {
     // }
   });
 
+  ipcMain.handle('get-version', () => {
+    return app.getVersion();
+  });
+
   ipcMain.handle('get-settings', () => {
     return settingsManager.get('settings');
   });

@@ -1,5 +1,4 @@
 import Datatype from "$lib/scripts/datatype"
-import Model from "$lib/scripts/model"
 import { Relation } from "$lib/scripts/relation"
 
 export default class Field {

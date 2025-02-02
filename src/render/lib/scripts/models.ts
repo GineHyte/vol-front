@@ -11,27 +11,27 @@ let Datetime = new Datatype('datetime')
 let Array = new Datatype('array')
 
 export class Player extends Model {
-  id!: Field
-  firstName!: Field
-  lastName!: Field
-  age!: Field
-  weight!: Field
-  height!: Field
-  imageFileId!: Field
-  teams!: Field
+  id: any
+  firstName: any
+  lastName: any
+  age: any
+  weight: any
+  height: any
+  imageFileId: any
+  teams: any
 
-  constructor() { 
+  constructor() {
     super()
-
-    this.id = new Field('id', String)
-    this.firstName = new Field('first_name', String, 'Ім\'я')
-    this.lastName = new Field('last_name', String, 'Прізвище')
-    this.age = new Field('age', Number, 'Вік')
-    this.weight = new Field('weight', Number, 'Вага')
-    this.height = new Field('height', Number, 'Зріст')
-    this.imageFileId = new Field('image_file_id', String, 'Посилання на зображення')
-    this.teams = new Field('teams', Array, 'Команди', new Relation('teams', 'Команди', PlayerTeam))
-   }
+    this.id = new Field('id', new Datatype('number'))
+    this.firstName = new Field('first_name', new Datatype('string'), 'Ім\'я')
+    this.lastName = new Field('last_name', new Datatype('string'), 'Прізвище')
+    this.age = new Field('age', new Datatype('number'), 'Вік')
+    this.weight = new Field('weight', new Datatype('number'), 'Вага')
+    this.height = new Field('height', new Datatype('number'), 'Зріст')
+    this.imageFileId = new Field('image_file_id', new Datatype('string'), 'Посилання на зображення')
+    this.teams = new Field('teams', new Datatype('array'), 'Команди', new Relation('teams', 'Команди', PlayerTeam))
+    return this.proxify()
+  }
 }
 
 export class Team extends Model {

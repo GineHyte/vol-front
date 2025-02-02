@@ -18,6 +18,9 @@ contextBridge.exposeInMainWorld('electron', {
   },
   downloadUpdate: () => {
     ipcRenderer.send('download-update')
-  }
+  },
+  getVersion: () => {
+    return ipcRenderer.invoke('get-version')
+  },
 });
 
