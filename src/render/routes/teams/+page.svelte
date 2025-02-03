@@ -8,6 +8,7 @@
 		Row,
 		Column,
 		DataTable,
+		Button,
 		SkeletonText,
 	} from 'carbon-components-svelte';
 	import { getTeams, getTeam, getPlayer, createTeam, deleteTeam } from '$lib/scripts/endpoints';
@@ -15,9 +16,12 @@
 	import ModalCreate from '$lib/ui/ModalCreate.svelte';
 	import { pushNotification } from '$lib/utils/utils';
 	import { Pagination } from '$lib/scripts/pagination';
+	import ModalCreateRelation from '@/render/lib/ui/ModalCreateRelation.svelte';
 
 	let teamId: number | undefined = undefined;
 	let createOpen = false;
+	let selectPlayerOpen = false;
+	let selectedPlayers: number[] = [];
 
 	function selectTeam(id: number) {
 		teamId = id;
@@ -27,18 +31,10 @@
 		if (currentId) {
 			let team = (await getTeam(currentId)) as Team;
 			let status = await createTeam(team);
-			if (status.status.originalType.value === 'success') {
-				pushNotification({
-					title: 'Успіх!',
-					message: 'Команда дубльована.',
-					kind: 'success',
-				});
+			if (status.status === 'success') {
+				pushNotification('duplicateTeamSuccess');
 			} else {
-				pushNotification({
-					title: 'Помилка!',
-					message: 'Команда не може бути дубльована.',
-					kind: 'error',
-				});
+				pushNotification('duplicateTeamError');
 			}
 		}
 	}
@@ -46,18 +42,10 @@
 	async function removeTeam(currentId: number) {
 		if (currentId) {
 			let status = await deleteTeam(currentId);
-			if (status.status.originalType.value === 'success') {
-				pushNotification({
-					title: 'Успіх!',
-					message: 'Команда видалена.',
-					kind: 'success',
-				});
+			if (status.status === 'success') {
+				pushNotification('removeTeamSuccess');
 			} else {
-				pushNotification({
-					title: 'Помилка!',
-					message: 'Команда не може бути видалена.',
-					kind: 'error',
-				});
+				pushNotification('removeTeamError');
 			}
 		}
 	}
@@ -69,30 +57,22 @@
 				let players: PlayerTeam[] = [];
 				for (const player of inputData[key]) {
 					let playerTeam = new PlayerTeam();
-					playerTeam.playerId.originalType.value = player[0];
-					playerTeam.teamId.originalType.value = team.id.originalType.value;
-					playerTeam.amplua.originalType.value = player[1];
+					playerTeam.player = player[0];
+					playerTeam.team = team.id;
+					playerTeam.amplua = player[1];
 					players.push(playerTeam);
 				}
-				team.players.originalType.value = players;
+				team.players = players;
 			} else {
 				// @ts-ignore
-				team[key as keyof Team].originalType.value = inputData[key];
+				team[key as keyof Team] = inputData[key];
 			}
 		});
 		let status = await createTeam(team);
-		if (status.status.originalType.value === 'success') {
-			pushNotification({
-				title: 'Успіх!',
-				message: 'Ви створили нову команду.',
-				kind: 'success',
-			});
+		if (status.status === 'success') {
+			pushNotification('createTeamSuccess');
 		} else {
-			pushNotification({
-				title: 'Помилка!',
-				message: 'Команда не може бути створена.',
-				kind: 'error',
-			});
+			pushNotification('createTeamError');
 		}
 		createOpen = false;
 	}
@@ -100,8 +80,8 @@
 	async function getTeamPlayers(team: Team) {
 		let players: Pagination<Player>;
 		let playersData: any[] = [];
-		if (team.players.originalType.value) {
-			for (const player of team.players.originalType.value) {
+		if (team.players) {
+			for (const player of team.players) {
 				let playerData = await getPlayer(player.player_id);
 				playersData.push(playerData);
 			}
@@ -132,7 +112,7 @@
 						<ImageLoader class="size-96" ratio="4x3" fadeIn alt="Team`s photo" />
 					</Column>
 					<Column>
-						<p>Назва: {team.name.originalType.value}</p>
+						<p>Назва: {team.name}</p>
 					</Column>
 				</Row>
 				{#await getTeamPlayers(team)}
@@ -149,13 +129,33 @@
 {/if}
 
 <ModalCreate
-	label="team"
 	title="Команда"
 	model={new Team()}
 	handleSubmit={createTeamRenderer}
 	bind:open={createOpen}
 	requiredFields={['name', 'players']}
-/>
+>
+	<svelte:fragment slot="createRelationField">
+		<Button
+			class="mt-4"
+			on:click={() => {
+				selectPlayerOpen = true;
+			}}
+		>
+			Додати гравця
+		</Button>
+	</svelte:fragment>
+	<svelte:fragment slot="modalCreateRelation">
+		<ModalCreateRelation
+			title="Гравець"
+			getFunc={getTeams}
+			bind:open={selectPlayerOpen}
+			on:submit={(e) => {
+				selectedPlayers = e.detail;
+			}}
+		/>
+	</svelte:fragment>
+</ModalCreate>
 
 {#key createOpen}
 	<SideList

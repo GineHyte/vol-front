@@ -1,9 +1,9 @@
 import Model from '$lib/scripts/model'
 
 export default class Datatype {
-  __type: string | Model | Model[];
+  __type: string | { new(): Model } | { new(): Model }[];
 
-  constructor(type: string | Model | Model[]) {
+  constructor(type: string | { new(): Model } | { new(): Model }[]) {
     this.__type = type;
   }
 

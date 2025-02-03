@@ -29,5 +29,40 @@ const NOTIFICATIONS = {
         message: 'Гравець не може бути створений.',
         kind: 'error',
     },
+    "settingsSaveSuccess": {
+        title: 'Успіх!',
+        message: 'Налаштування збережено.',
+        kind: 'success',
+    },
+    "duplicateTeamSuccess": {
+        title: 'Успіх!',
+        message: 'Команда дубльована.',
+        kind: 'success',
+    },
+    "duplicateTeamError": {
+        title: 'Помилка!',
+        message: 'Команда не може бути дубльована.',
+        kind: 'error',
+    },
+    "removeTeamSuccess": {
+        title: 'Успіх!',
+        message: 'Команда видалена.',
+        kind: 'success',
+    },
+    "removeTeamError": {
+        title: 'Помилка!',
+        message: 'Команда не може бути видалена.',
+        kind: 'error',
+    },
+    "createTeamSuccess": {
+        title: 'Успіх!',
+        message: 'Ви створили нову команду.',
+        kind: 'success',
+    },
+    "createTeamError": {
+        title: 'Помилка!',
+        message: 'Команда не може бути створена.',
+        kind: 'error',
+    },
 }
 export default NOTIFICATIONS;

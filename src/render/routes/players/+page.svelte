@@ -94,18 +94,14 @@
 						<ImageLoader class="size-96" ratio="4x3" fadeIn alt="Player`s photo" />
 					</Column>
 					<Column>
-						<p>Ім'я: {player.firstName.originalType.value}</p>
-						<p>Прізвище: {player.lastName.originalType.value}</p>
-						<p>Вік: {player.age.originalType.value}</p>
+						<p>Ім'я: {player.firstName}</p>
+						<p>Прізвище: {player.lastName}</p>
+						<p>Вік: {player.age}</p>
 						<p>
-							Зріст: {player.height.originalType.value
-								? player.height.originalType.value
-								: ''}
+							Зріст: {player.height ? player.height : ''}
 						</p>
 						<p>
-							Вага: {player.weight.originalType.value
-								? player.weight.originalType.value
-								: ''}
+							Вага: {player.weight ? player.weight : ''}
 						</p>
 					</Column>
 				{/await}

@@ -1,4 +1,5 @@
 import Field from "$lib/scripts/field"
+import { object_without_properties } from "svelte/internal"
 
 export default class Model {
   __serializationMap: { [index: string]: string } = {}
@@ -25,31 +26,29 @@ export default class Model {
       let dkey = this.__serializationMap[key]
       if (!dkey) { continue }
       if (data[key] == null) { continue }
-      console.log('key', key, 'dkey', dkey)
-      if (typeof data[key] === 'object' || Array.isArray(data[key])) {
-        let _dkey = ("__" + dkey) as keyof this 
+      if (Array.isArray(data[key])) {
+        let _dkey = ("__" + dkey) as keyof this
         const field = this[_dkey] as Field
-        let isModel = field.datatype instanceof Model
-        if (field.datatype instanceof Array) {
-          if (isModel) {
-            // @ts-ignore
-            this[dkey as keyof this] = data[key].map((item: any) => field.datatype[0].deserialize(item))
-          } else {
-            // @ts-ignore
-            this[dkey as keyof this] = data[key]
-          }
-        } else {
-          if (isModel) {
-            // @ts-ignore
-            this[dkey as keyof this] = field.datatype.deserialize(data[key])
-          }
+        if (Array.isArray(field.datatype)) {
+          // @ts-ignore
+          this[dkey as keyof this] = data[key].map((item: any) => {
+            const constructor = (field.datatype as { new (): Model }[])[0] as { new(): Model }
+            return new constructor().deserialize(item)
+          });
+          continue
         }
-      } else {
-        // @ts-ignore
-        this[dkey as keyof this] = data[key]
+      } else if (data[key] instanceof Object) {
+        let _dkey = ("__" + dkey) as keyof this
+        const field = this[_dkey] as Field
+        if (field.datatype instanceof Object) {
+          const constructor = field.datatype as { new(): Model }
+          // @ts-ignore
+          this[dkey as keyof this] = (new constructor()).deserialize(data[key])
+          continue
+        }
       }
+      this[dkey as keyof this] = data[key]
     }
-    console.log('deserialized', this)
     return this
   }
 
@@ -99,8 +98,7 @@ export default class Model {
     return new Proxy(this, {
       get(target, p, receiver) {
         p = p.toString()
-        console.log('get ', p, target)
-        if (!p.startsWith("__") && typeof target[p as keyof Model] !== 'function') {
+        if (target.__fields.includes(p)) {
           // @ts-ignore
           return (target[("__" + p) as keyof Model] as Field).value
         } else {
@@ -109,7 +107,6 @@ export default class Model {
       },
       set(target, p, value, receiver) {
         p = p.toString()
-        console.log('set ', p)
         if (!p.startsWith("__")) {
           // @ts-ignore
           (target[("__" + p) as keyof Model] as Field).value = value

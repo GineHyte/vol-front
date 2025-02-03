@@ -21,7 +21,7 @@ export class NameWithId extends Model {
   }
 }
 
-let NameWithIdType = new Datatype(new NameWithId()) 
+let NameWithIdType = new Datatype(NameWithId) 
 
 export class PlayerTeam extends Model {
   player: any
@@ -59,7 +59,7 @@ export class Player extends Model {
     this.weight = new Field('weight', Number, 'Вага')
     this.height = new Field('height', Number, 'Зріст')
     this.imageFile = new Field('image_file', String, 'Посилання на зображення')
-    this.teams = new Field('teams', new Datatype([new PlayerTeam()]) , 'Команди')
+    this.teams = new Field('teams', new Datatype([PlayerTeam]) , 'Команди')
     return this.proxify()
   }
 }

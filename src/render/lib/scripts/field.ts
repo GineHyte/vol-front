@@ -1,4 +1,5 @@
 import Datatype from "$lib/scripts/datatype"
+import Model from "$lib/scripts/model"
 
 export default class Field {
   sereliazationAlias: string
@@ -13,14 +14,13 @@ export default class Field {
     datatype: Datatype,
     tableTitle: string = '',
     value: any = undefined,
-    relation: boolean = false
   ) {
     this.deserializationAlias = '';
     this.sereliazationAlias = sereliazationAlias
     this.__datatype = datatype
     this.value = value
     this.tableTitle = tableTitle
-    this.relation = relation
+    this.relation = (this.datatype instanceof Model)
   }
 
   get datatype() {

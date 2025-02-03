@@ -13,11 +13,7 @@
 	let apiVersion = '';
 
 	function saveSettings(e: Event) {
-		pushNotification({
-			title: 'Успіх!',
-			message: 'Налаштування збережено.',
-			kind: 'success',
-		});
+		pushNotification('settingsSaveSuccess');
 
 		window.electron.setSettings({
 			apiUrl: apiUrl,
@@ -42,6 +38,7 @@
 	bind:value={apiUrl}
 	placeholder={settings.apiUrl}
 	class="mb-4"
+	on:focus={(e) => (e.target.value = e.target.placeholder)}
 />
 <!-- <TextInput
 	labelText="Версія API"
