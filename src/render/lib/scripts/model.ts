@@ -1,5 +1,4 @@
 import Field from "$lib/scripts/field"
-import { object_without_properties } from "svelte/internal"
 
 export default class Model {
   __serializationMap: { [index: string]: string } = {}
@@ -13,7 +12,8 @@ export default class Model {
     if (this.__pTableData.length > 0) { return this.__pTableData }
     let data: { [index: string]: any } = {}
     this.__fields.forEach(key => {
-      data[key] = this[key as keyof this]
+      let value = this[key as keyof this]
+      data[key] = value || ""
     });
     this.__pTableData = data
     return data
@@ -66,7 +66,7 @@ export default class Model {
     return Object.keys(this.__deserializationMap).map(key => {
       let _key = ("__" + key) as keyof this
       const field = this[_key] as Field
-      return { key: field.tableTitle, value: key }
+      return { key: key, value: field.tableTitle }
     })
   }
 

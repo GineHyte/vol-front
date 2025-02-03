@@ -1,19 +1,20 @@
 <script lang="ts">
 	import { DataTable, DataTableSkeleton, Modal } from 'carbon-components-svelte';
 	import { createEventDispatcher } from 'svelte';
-
 	import { Pagination } from '$lib/scripts/pagination';
 
 	export let open: boolean = false;
 	export let title: string = '';
+	export let excludeHeaders: string[] = [];
 	export let getFunc: () => Promise<Pagination<any>>;
+	export let alreadySelectedIds: number[] = [];
 
 	let dispatch = createEventDispatcher();
-	let selectedRelation: number[] = [];
+	let localSelectedRow: { [key: string]: any } = {};
 
 	$: if (!open) {
 		dispatch('close');
-		selectedRelation = [];
+		localSelectedRow = {};
 	}
 </script>
 
@@ -22,21 +23,25 @@
 	bind:open
 	primaryButtonText="Готово"
 	modalHeading={title}
-	primaryButtonDisabled={selectedRelation.length === 0}
+	primaryButtonDisabled={localSelectedRow.id === undefined}
 	on:submit={() => {
-		dispatch('submit', selectedRelation);
+		dispatch('submit', localSelectedRow);
 	}}
 >
 	{#await getFunc()}
 		<DataTableSkeleton />
-	{:then data}
+	{:then model}
 		<DataTable
-			bind:selectedRowIds={selectedRelation}
-			headers={data.getHeaders()}
-			rows={data.getRows()}
-			on:click:row={(e) => {
-				selectedRelation = [e.detail.id];
+			radio={true}
+			nonSelectableRowIds={alreadySelectedIds}
+			headers={model.getHeaders(excludeHeaders)}
+			rows={model.getRows()}
+			on:click:row--select={(e) => {
+				localSelectedRow = e.detail.row;
+				dispatch('select', e.detail.row);
 			}}
 		/>
 	{/await}
 </Modal>
+
+<slot name="modalUnderSelect" />

@@ -8,19 +8,30 @@
 		Row,
 		Column,
 		DataTable,
+		Tile,
 		Button,
 		SkeletonText,
 	} from 'carbon-components-svelte';
-	import { getTeams, getTeam, getPlayer, createTeam, deleteTeam } from '$lib/scripts/endpoints';
+	import {
+		getTeams,
+		getTeam,
+		getPlayer,
+		createTeam,
+		deleteTeam,
+		getPlayers,
+	} from '$lib/scripts/endpoints';
 	import { Team, PlayerTeam, Player } from '$lib/scripts/models';
 	import ModalCreate from '$lib/ui/ModalCreate.svelte';
 	import { pushNotification } from '$lib/utils/utils';
 	import { Pagination } from '$lib/scripts/pagination';
-	import ModalCreateRelation from '@/render/lib/ui/ModalCreateRelation.svelte';
+	import ModalCreateRelation from '$lib/ui/ModalCreateRelation.svelte';
+	import ModalUnderSelect from '$lib/ui/ModalUnderSelect.svelte';
+	import { Amplua } from '$lib/utils/utils';
 
 	let teamId: number | undefined = undefined;
 	let createOpen = false;
 	let selectPlayerOpen = false;
+	let selectPlayerAmpluaOpen = false;
 	let selectedPlayers: number[] = [];
 
 	function selectTeam(id: number) {
@@ -136,6 +147,9 @@
 	requiredFields={['name', 'players']}
 >
 	<svelte:fragment slot="createRelationField">
+		{#each selectedPlayers as selectedPlayer}
+			<Tile>{selectedPlayer.firstName}</Tile>
+		{/each}
 		<Button
 			class="mt-4"
 			on:click={() => {
@@ -148,12 +162,28 @@
 	<svelte:fragment slot="modalCreateRelation">
 		<ModalCreateRelation
 			title="Гравець"
-			getFunc={getTeams}
+			getFunc={getPlayers}
 			bind:open={selectPlayerOpen}
 			on:submit={(e) => {
-				selectedPlayers = e.detail;
+				selectedPlayers = [...selectedPlayers, e.detail];
+				selectPlayerOpen = false;
 			}}
-		/>
+			alreadySelectedIds={selectedPlayers.map((player) => player.id)}
+			excludeHeaders={['teams', 'imageFile', 'id']}
+			backPropagateFields={['id', 'firstName', 'lastName']}
+		>
+			<svelte:fragment slot="modalUnderSelect">
+				<ModalUnderSelect
+					title="Амплуа"
+					options={[]}
+					bind:open={selectPlayerOpen}
+					on:submit={(e) => {
+						selectedPlayers = [...selectedPlayers, e.detail];
+						selectPlayerOpen = false;
+					}}
+				/>
+			</svelte:fragment>
+		</ModalCreateRelation>
 	</svelte:fragment>
 </ModalCreate>
 
