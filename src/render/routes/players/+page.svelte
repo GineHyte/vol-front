@@ -59,6 +59,7 @@
 			}
 		}
 		updateSideList();
+		playerId = undefined;
 	}
 
 	async function createPlayerRenderer(inputData: any) {
@@ -97,12 +98,8 @@
 						<p>Ім'я: {player.firstName}</p>
 						<p>Прізвище: {player.lastName}</p>
 						<p>Вік: {player.age}</p>
-						<p>
-							Зріст: {player.height ? player.height : ''}
-						</p>
-						<p>
-							Вага: {player.weight ? player.weight : ''}
-						</p>
+						<p>Зріст: {player.height ? player.height : ''}</p>
+						<p>Вага: {player.weight ? player.weight : ''}</p>
 					</Column>
 				{/await}
 			</Row>
@@ -126,7 +123,7 @@
 		handleSubmit={createPlayerRenderer}
 		bind:open={createOpen}
 		requiredFields={['age', 'firstName', 'lastName']}
-		exclude={['teams', 'imageFileId']}
+		exclude={['teams', 'imageFile']}
 	>
 		<svelte:fragment slot="createRelationField" />
 		<svelte:fragment slot="modalCreateRelation" />

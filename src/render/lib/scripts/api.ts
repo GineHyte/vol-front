@@ -19,18 +19,10 @@ settingsRenderer.subscribe((settings: any) => {
       apiUrl = "https://" + apiUrl;
     }
     if (apiUrl === '') {
-      noIpNotification();
+      pushNotification("settingsServerIPError");
     }
   }
 });
-
-function noIpNotification() {
-  pushNotification({
-    title: 'Помилка!',
-    message: 'Налаштування не знайдено. Будь ласка, вкажіть IP адрес сервера в налаштуваннях.',
-    kind: 'error',
-  });
-}
 
 interface Api {
   get(url: string, paginationProps: PaginationProps | null, headers: any): Promise<any>
@@ -57,9 +49,9 @@ export class ApiImpl implements Api {
         }
       }
       )
-        .then((response: any) => response.json())
+        .then((response: any) => { if (response.status !== 200) { this.__errorHandler(response) }; return response.json() })
         .then((data: any) => resolve(data))
-        .catch((error: any) => reject(error))
+        .catch((error: Error) => { this.__errorHandler(error) })
     })
   }
 
@@ -73,9 +65,9 @@ export class ApiImpl implements Api {
         },
         body: JSON.stringify(data)
       })
-        .then((response: any) => response.json())
+        .then((response: any) => { if (response.status !== 200) { this.__errorHandler(response) }; return response.json() })
         .then((data: any) => resolve(data))
-        .catch((error: any) => reject(error))
+        .catch((error: Error) => { this.__errorHandler(error); return reject(error) })
     })
   }
 
@@ -89,9 +81,9 @@ export class ApiImpl implements Api {
         },
         body: JSON.stringify(data)
       })
-        .then((response: any) => response.json())
+        .then((response: any) => { if (response.status !== 200) { this.__errorHandler(response) }; return response.json() })
         .then((data: any) => resolve(data))
-        .catch((error: any) => reject(error))
+        .catch((error: Error) => { this.__errorHandler(error); return reject(error) })
     })
   }
 
@@ -104,9 +96,29 @@ export class ApiImpl implements Api {
           ...headers
         },
       })
-        .then((response: any) => response.json())
+        .then((response: Response) => { if (response.status !== 200) { this.__errorHandler(response) }; return response.json() })
         .then((data: any) => resolve(data))
-        .catch((error: any) => reject(error))
+        .catch((error: Error) => { this.__errorHandler(error); return reject(error) })
     })
+  }
+
+  private __errorHandler(resp: Response | Error) {
+    if (resp instanceof Response) {
+      console.log('response error', resp);
+      pushNotification('apiError', {
+        body: JSON.stringify(resp.body),
+        status: resp.status.toString(),
+        statusText: resp.statusText,
+        url: resp.url
+      });
+    } else {
+      console.log('error', resp);
+      pushNotification('apiError', {
+        body: resp.message,
+        status: '500',
+        statusText: 'Internal Server Error',
+        url: 'Unknown'
+      });
+    }
   }
 }

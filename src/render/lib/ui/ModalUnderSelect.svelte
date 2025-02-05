@@ -4,7 +4,7 @@
 
 	export let open: boolean = false;
 	export let title: string = '';
-	export let options: { [key: string]: string }[] = [];
+	export let options: { [key: string]: any }[] = [];
 
 	let dispatch = createEventDispatcher();
 	let selectedOption: string = '';

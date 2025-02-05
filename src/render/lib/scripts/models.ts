@@ -2,7 +2,6 @@ import Field from '$lib/scripts/field'
 import Model from '$lib/scripts/model'
 import Datatype from '$lib/scripts/datatype'
 
-
 let Number = new Datatype('number')
 let String = new Datatype('string')
 let Boolean = new Datatype('boolean')
@@ -12,7 +11,7 @@ let Array = new Datatype('array')
 export class NameWithId extends Model {
   id: any
   name: any
-  
+
   constructor() {
     super()
     this.id = new Field('id', Number)
@@ -21,20 +20,20 @@ export class NameWithId extends Model {
   }
 }
 
-let NameWithIdType = new Datatype(NameWithId) 
+let NameWithIdType = new Datatype(NameWithId)
 
 export class PlayerTeam extends Model {
   player: any
   team: any
   amplua: any
 
-  constructor() { 
+  constructor() {
     super()
-  
-    this.player = new Field('player', NameWithIdType, 'Гравець')
-    this.team = new Field('team', NameWithIdType, 'Команда')
+
+    this.player = new Field('player', NameWithIdType, 'Гравець', ['name'])
+    this.team = new Field('team', NameWithIdType, 'Команда', ['name'])
     this.amplua = new Field('amplua', String, 'Амплуа')
-  
+
     return this.proxify()
   }
 }
@@ -59,7 +58,7 @@ export class Player extends Model {
     this.weight = new Field('weight', Number, 'Вага')
     this.height = new Field('height', Number, 'Зріст')
     this.imageFile = new Field('image_file', String, 'Посилання на зображення')
-    this.teams = new Field('teams', new Datatype([PlayerTeam]) , 'Команди')
+    this.teams = new Field('teams', new Datatype([PlayerTeam]), 'Команди')
     return this.proxify()
   }
 }
@@ -70,12 +69,12 @@ export class Team extends Model {
   players: any
 
 
-  constructor() { 
+  constructor() {
     super()
-  
+
     this.id = new Field('id', Number)
     this.name = new Field('name', String, 'Назва')
-    this.players = new Field('players', Array, 'Гравці')
+    this.players = new Field('players', new Datatype([PlayerTeam]), 'Гравці')
 
     return this.proxify()
   }
@@ -89,10 +88,10 @@ export class Game extends Model {
   toDatetime: any
   teamA: any
   teamB: any
-  
-  constructor() { 
+
+  constructor() {
     super()
-  
+
     this.id = new Field('id', Number)
     this.name = new Field('name', String, 'Назва')
     this.description = new Field('description', String, 'Опис')
@@ -109,9 +108,9 @@ export class Status extends Model {
   status: any
   detail: any
 
-  constructor() { 
+  constructor() {
     super()
-  
+
     this.status = new Field('status', String, 'Статус')
     this.detail = new Field('detail', String, 'Деталі')
 
@@ -132,8 +131,8 @@ export class Action extends Model {
   to_zone: any
   impact: any
 
-  constructor() { 
-    super() 
+  constructor() {
+    super()
 
     this.id = new Field('id', Number)
     this.game = new Field('game', Number, 'Гра')
@@ -145,7 +144,7 @@ export class Action extends Model {
     this.impact = new Field('impact', String, 'Якісний показник гри')
 
     return this.proxify()
-   }
+  }
 }
 
 export class Tech extends Model {
@@ -153,9 +152,9 @@ export class Tech extends Model {
   name: any
   description: any
 
-  constructor() { 
+  constructor() {
     super()
-    
+
     this.id = new Field('id', Number)
     this.name = new Field('name', String, 'Назва')
     this.description = new Field('description', String, 'Опис')
@@ -165,21 +164,21 @@ export class Tech extends Model {
 }
 
 export class Subtech extends Model {
-  id: Field = new Field('id', Number)
-  name: Field = new Field('name', String, 'Назва')
-  description: Field = new Field('description', String, 'Опис')
-  difficulty: Field = new Field('difficulty', Number, 'Складність')
-  tech: Field = new Field('tech', Number, 'Технічна дія')
+  id: any
+  name: any
+  description: any
+  difficulty: any
+  tech: any
 
-  constructor() { 
+  constructor() {
     super()
 
     this.id = new Field('id', Number)
     this.name = new Field('name', String, 'Назва')
     this.description = new Field('description', String, 'Опис')
     this.difficulty = new Field('difficulty', Number, 'Складність')
-    this.tech = new Field('tech', Number, 'Технічна дія')
-  
+    this.tech = new Field('tech', NameWithIdType, 'Технічна дія', ['name'])
+
     return this.proxify()
   }
 }
@@ -206,7 +205,7 @@ export class Exercise extends Model {
   toZone: any
   timePerExercise: any
 
-  constructor() { 
+  constructor() {
     super()
 
     this.id = new Field('id', Number)
@@ -228,7 +227,7 @@ export class Exercise extends Model {
     this.fromZone = new Field('from_zone', Number, 'Зона від')
     this.toZone = new Field('to_zone', Number, 'Зона до')
     this.timePerExercise = new Field('time_per_exercise', Number, 'Час на одну вправу')
-    
+
     return this.proxify()
   }
 }

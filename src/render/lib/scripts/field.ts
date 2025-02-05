@@ -8,17 +8,20 @@ export default class Field {
   tableTitle: string;
   relation: boolean;
   deserializationAlias: string;
+  tableAlias: string[];
 
   constructor(
     sereliazationAlias: string,
     datatype: Datatype,
     tableTitle: string = '',
+    tableAlias: string[] = [],
     value: any = undefined,
   ) {
     this.deserializationAlias = '';
     this.sereliazationAlias = sereliazationAlias
     this.__datatype = datatype
     this.value = value
+    this.tableAlias = tableAlias
     this.tableTitle = tableTitle
     this.relation = (this.datatype instanceof Model)
   }

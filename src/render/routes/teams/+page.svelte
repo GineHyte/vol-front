@@ -32,10 +32,16 @@
 	let createOpen = false;
 	let selectPlayerOpen = false;
 	let selectPlayerAmpluaOpen = false;
-	let selectedPlayers: number[] = [];
+	let selectedPlayers: { [key: string]: any }[] = [];
+	let selectionPlayerObject: { [key: string]: any } = {};
+	let sideListUpdater: boolean = false;
 
 	function selectTeam(id: number) {
 		teamId = id;
+	}
+
+	function updateSideList() {
+		sideListUpdater = !sideListUpdater;
 	}
 
 	async function duplicateTeam(currentId: number) {
@@ -48,6 +54,7 @@
 				pushNotification('duplicateTeamError');
 			}
 		}
+		updateSideList();
 	}
 
 	async function removeTeam(currentId: number) {
@@ -59,25 +66,20 @@
 				pushNotification('removeTeamError');
 			}
 		}
+		teamId = undefined;
+		updateSideList();
 	}
 
 	async function createTeamRenderer(inputData: any) {
 		let team = new Team();
 		Object.keys(inputData).forEach((key) => {
-			if (key === 'players') {
-				let players: PlayerTeam[] = [];
-				for (const player of inputData[key]) {
-					let playerTeam = new PlayerTeam();
-					playerTeam.player = player[0];
-					playerTeam.team = team.id;
-					playerTeam.amplua = player[1];
-					players.push(playerTeam);
-				}
-				team.players = players;
-			} else {
-				// @ts-ignore
-				team[key as keyof Team] = inputData[key];
-			}
+			team[key as keyof Team] = inputData[key];
+		});
+		selectedPlayers.forEach((selectedPlayer) => {
+			let playerTeam = new PlayerTeam();
+			playerTeam.player = selectedPlayer.id;
+			playerTeam.amplua = selectedPlayer.amplua;
+			team.players = [...(team.players || []), playerTeam];
 		});
 		let status = await createTeam(team);
 		if (status.status === 'success') {
@@ -86,22 +88,7 @@
 			pushNotification('createTeamError');
 		}
 		createOpen = false;
-	}
-
-	async function getTeamPlayers(team: Team) {
-		let players: Pagination<Player>;
-		let playersData: any[] = [];
-		if (team.players) {
-			for (const player of team.players) {
-				let playerData = await getPlayer(player.player_id);
-				playersData.push(playerData);
-			}
-		}
-		players = new Pagination(
-			{ page: 1, size: 10, pages: 1, total: playersData.length, items: playersData },
-			Player,
-		);
-		return players;
+		updateSideList();
 	}
 </script>
 
@@ -126,14 +113,10 @@
 						<p>Назва: {team.name}</p>
 					</Column>
 				</Row>
-				{#await getTeamPlayers(team)}
-					<p>Loading...</p>
-				{:then players}
-					<DataTable
-						headers={players.getHeaders(['teams', 'imageFileId'])}
-						rows={players.getRows()}
-					/>
-				{/await}
+				<DataTable
+					headers={(team.players[0] || new PlayerTeam()).getHeaders()}
+					rows={team.players.map((playerTeam) => playerTeam.__tableData)}
+				/>
 			{/await}
 		</Grid>
 	</Content>
@@ -144,12 +127,17 @@
 	model={new Team()}
 	handleSubmit={createTeamRenderer}
 	bind:open={createOpen}
-	requiredFields={['name', 'players']}
+	requiredFields={['name']}
 >
 	<svelte:fragment slot="createRelationField">
-		{#each selectedPlayers as selectedPlayer}
-			<Tile>{selectedPlayer.firstName}</Tile>
-		{/each}
+		{#key selectedPlayers}
+			{#each selectedPlayers as selectedPlayer}
+				<Tile>
+					{selectedPlayer.firstName}
+					{selectedPlayer.lastName} - {Amplua[selectedPlayer.amplua]}
+				</Tile>
+			{/each}
+		{/key}
 		<Button
 			class="mt-4"
 			on:click={() => {
@@ -165,21 +153,25 @@
 			getFunc={getPlayers}
 			bind:open={selectPlayerOpen}
 			on:submit={(e) => {
-				selectedPlayers = [...selectedPlayers, e.detail];
+				selectionPlayerObject = e.detail;
 				selectPlayerOpen = false;
+				selectPlayerAmpluaOpen = true;
 			}}
-			alreadySelectedIds={selectedPlayers.map((player) => player.id)}
+			alreadySelectedIds={selectedPlayers.map((selectedPlayer) => selectedPlayer.id)}
 			excludeHeaders={['teams', 'imageFile', 'id']}
-			backPropagateFields={['id', 'firstName', 'lastName']}
 		>
 			<svelte:fragment slot="modalUnderSelect">
 				<ModalUnderSelect
 					title="Амплуа"
-					options={[]}
-					bind:open={selectPlayerOpen}
+					options={Object.keys(Amplua).map((key) => {
+						return { key: key, value: Amplua[key] };
+					})}
+					bind:open={selectPlayerAmpluaOpen}
 					on:submit={(e) => {
-						selectedPlayers = [...selectedPlayers, e.detail];
-						selectPlayerOpen = false;
+						selectionPlayerObject.amplua = e.detail;
+						selectedPlayers = [...selectedPlayers, selectionPlayerObject];
+						selectPlayerAmpluaOpen = false;
+						console.log(selectedPlayers);
 					}}
 				/>
 			</svelte:fragment>
@@ -187,7 +179,7 @@
 	</svelte:fragment>
 </ModalCreate>
 
-{#key createOpen}
+{#key sideListUpdater}
 	<SideList
 		bind:currentId={teamId}
 		title="Команда"

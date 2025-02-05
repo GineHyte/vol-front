@@ -1,11 +1,16 @@
 import { notifications, settingsRenderer } from '$lib/utils/store';
-import NOTIFICATIONS from './notification';
+import getNotification from './notification';
 
-export function pushNotification(notification: string) {
+export function pushNotification(notification: string, params: { [key: string]: string } = {}) {
   let notificationsLocal;
   let unsubscribe = notifications.subscribe((v) => { notificationsLocal = v; });
+  console.log("pushNotification", notification, params);
   // @ts-ignore
-  notifications.set([...notificationsLocal, NOTIFICATIONS[notification]]);
+  console.log("before pushNotification", notificationsLocal);
+  // @ts-ignore
+  notifications.set([...notificationsLocal, getNotification(notification, params)]);
+  // @ts-ignore
+  console.log("after pushNotification", notificationsLocal);
   unsubscribe();
 }
 

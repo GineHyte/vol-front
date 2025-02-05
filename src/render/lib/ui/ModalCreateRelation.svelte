@@ -38,7 +38,6 @@
 			rows={model.getRows()}
 			on:click:row--select={(e) => {
 				localSelectedRow = e.detail.row;
-				dispatch('select', e.detail.row);
 			}}
 		/>
 	{/await}

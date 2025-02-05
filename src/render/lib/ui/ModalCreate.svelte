@@ -14,7 +14,7 @@
 
 	import Model from '$lib/scripts/model';
 	import Field from '$lib/scripts/field';
-	import ModalCreateRelation from '$lib/ui/ModalCreateRelation.svelte';
+	import { createEventDispatcher } from 'svelte';
 
 	export let title = '+ ';
 	export let model: Model;
@@ -24,6 +24,7 @@
 	export let exclude: string[] = [];
 
 	let inputData: any = {};
+	const dispatch = createEventDispatcher();
 	title = '+ ' + title;
 	exclude.push('id');
 
@@ -69,6 +70,10 @@
 		on:submit={async () => {
 			await handleSubmit(inputData);
 			inputData = {};
+		}}
+		on:close={() => {
+			inputData = {};
+			dispatch('close');
 		}}
 	>
 		<ModalHeader {title} />

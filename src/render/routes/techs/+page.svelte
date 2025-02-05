@@ -29,6 +29,7 @@
 	import { pushNotification } from '$lib/utils/utils';
 	import { PaginationProps } from '$lib/scripts/pagination';
 	import ContextMenuSideList from '$lib/ui/ContextMenuSideList.svelte';
+	import { error } from '@sveltejs/kit';
 
 	let techId: number | undefined = undefined;
 	let createOpen = false;
@@ -46,18 +47,10 @@
 		if (currentId) {
 			let tech = await getTech(currentId);
 			let status = await createTech(tech);
-			if (status.status.originalType.value === 'success') {
-				pushNotification({
-					title: 'Успіх!',
-					message: 'Техніка дубльована.',
-					kind: 'success',
-				});
+			if (status.status === 'success') {
+				pushNotification('duplicateTechSuccess');
 			} else {
-				pushNotification({
-					title: 'Помилка!',
-					message: 'Техніка не може бути дубльована.',
-					kind: 'error',
-				});
+				pushNotification('duplicateTechError');
 			}
 		}
 	}
@@ -66,18 +59,10 @@
 		if (currentId) {
 			let subtech = await getSubtech(currentId);
 			let status = await createSubtech(subtech);
-			if (status.status.originalType.value === 'success') {
-				pushNotification({
-					title: 'Успіх!',
-					message: 'Підтехніка дубльована.',
-					kind: 'success',
-				});
+			if (status.status === 'success') {
+				pushNotification('duplicateSubtechSuccess');
 			} else {
-				pushNotification({
-					title: 'Помилка!',
-					message: 'Підтехніка не може бути дубльована.',
-					kind: 'error',
-				});
+				pushNotification('duplicateSubtechError');
 			}
 		}
 	}
@@ -85,37 +70,23 @@
 	async function removeTech(currentId: number) {
 		if (currentId) {
 			let status = await deleteTech(currentId);
-			if (status.status.originalType.value === 'success') {
-				pushNotification({
-					title: 'Успіх!',
-					message: 'Техніка видалена.',
-					kind: 'success',
-				});
+			if (status.status === 'success') {
+				pushNotification('removeTechSuccess');
 			} else {
-				pushNotification({
-					title: 'Помилка!',
-					message: 'Техніка не може бути видалена.',
-					kind: 'error',
-				});
+				pushNotification('removeTechError');
 			}
 		}
+		techId = undefined;
 	}
 
 	async function removeSubtech(currentId: number) {
+		let a = 1000 / 0;
 		if (currentId) {
 			let status = await deleteSubtech(currentId);
-			if (status.status.originalType.value === 'success') {
-				pushNotification({
-					title: 'Успіх!',
-					message: 'Підтехніка видалена.',
-					kind: 'success',
-				});
+			if (status.status === 'success') {
+				pushNotification('removeSubtechSuccess');
 			} else {
-				pushNotification({
-					title: 'Помилка!',
-					message: 'Підтехніка не може бути видалена.',
-					kind: 'error',
-				});
+				pushNotification('removeSubtechError');
 			}
 		}
 	}
@@ -124,39 +95,23 @@
 		let tech = new Tech();
 		tech.deserialize(inputData);
 		let status = await createTech(tech);
-		if (status.status.originalType.value === 'success') {
-			pushNotification({
-				title: 'Успіх!',
-				message: 'Ви створили нову техніку.',
-				kind: 'success',
-			});
+		if (status.status === 'success') {
+			pushNotification('createTechSuccess');
 		} else {
-			pushNotification({
-				title: 'Помилка!',
-				message: 'Техніка не може бути створена.',
-				kind: 'error',
-			});
+			pushNotification('createTechError');
 		}
 		createOpen = false;
 	}
 
 	async function createSubtechRenderer(inputData: any) {
 		let subtech = new Subtech();
-		subtech.techId.datatype.value = techId;
+		subtech.tech = techId;
 		subtech.deserialize(inputData);
 		let status = await createSubtech(subtech);
-		if (status.status.originalType.value === 'success') {
-			pushNotification({
-				title: 'Успіх!',
-				message: 'Ви створили нову підтехніку.',
-				kind: 'success',
-			});
+		if (status.status === 'success') {
+			pushNotification('createSubtechSuccess');
 		} else {
-			pushNotification({
-				title: 'Помилка!',
-				message: 'Підтехніка не може бути створена.',
-				kind: 'error',
-			});
+			pushNotification('createSubtechError', { errorDetail: JSON.stringify(status.detail) });
 		}
 		createSubtechOpen = false;
 	}
@@ -174,7 +129,7 @@
 			{:then tech}
 				<Row>
 					<Column>
-						<p>Назва: {tech.name.originalType.value}</p>
+						<p>Назва: {tech.name}</p>
 					</Column>
 					<div class="h-[12rem]" />
 					<div class="w-full h-full mt-8" bind:this={targetForSubtechs}>
@@ -184,7 +139,7 @@
 							{:then subtechs}
 								<DataTable
 									sortable
-									headers={subtechs.getHeaders()}
+									headers={subtechs.getHeaders(['id'])}
 									rows={subtechs.getRows()}
 								>
 									<svelte:fragment slot="cell" let:cell let:row>
@@ -225,22 +180,20 @@
 {/if}
 
 <ModalCreate
-	label="tech"
 	title="Техніка"
 	model={new Tech()}
 	handleSubmit={createTechRenderer}
 	bind:open={createOpen}
-	requiredFields={['name', 'description']}
+	requiredFields={['name']}
 />
 
 <ModalCreate
-	label="subtech"
 	title="Підтехніка"
 	model={new Subtech()}
 	handleSubmit={createSubtechRenderer}
 	bind:open={createSubtechOpen}
-	requiredFields={['name', 'description']}
-	exclude={['techId']}
+	requiredFields={['name']}
+	exclude={['tech']}
 />
 
 {#key createOpen}

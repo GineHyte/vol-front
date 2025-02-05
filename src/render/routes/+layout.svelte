@@ -20,6 +20,7 @@
 	import { settingsRenderer, versionRenderer } from '@/render/lib/utils/store';
 	import Notifications from '$lib/ui/Notifications.svelte';
 	import ModalCreate from '$lib/ui/ModalCreate.svelte';
+	import { pushNotification } from '../lib/utils/utils';
 
 	let isSideNavOpen = false;
 	let currentWindowState = {
@@ -39,6 +40,15 @@
 		window.electron.getVersion().then((version: any) => {
 			versionRenderer.set(version);
 		});
+		window.onerror = (message, source, lineno, colno, error) => {
+			pushNotification('error', {
+				message: message.toString(),
+				source: source || '',
+				lineno: lineno?.toString() || '',
+				colno: colno?.toString() || '',
+				error: error?.toString() || '',
+			});
+		};
 	});
 
 	window.electron.getWindowState().then((windowState: any) => {

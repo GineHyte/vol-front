@@ -1,25 +1,36 @@
 <script>
 	import { ToastNotification } from 'carbon-components-svelte';
-	import { notifications } from '@/render/lib/utils/store';
+	import { notifications } from '$lib/utils/store';
+	import { onMount } from 'svelte';
 
 	const DEFAULT_TIMEOUT = 3_000;
+	let notificationsLocal = [];
 
-	$: $notifications,
-		() => {
-			setTimeout(() => {
-				notifications.set($notifications.slice(1, -1));
-			}, 3100);
-		};
+	onMount(() => {
+		notifications.subscribe((value) => {
+			if (value.length === 0) return;
+			notificationsLocal = value;
+			console.log(value);
+			setTimeout(
+				() => {
+					notifications.set(value.slice(1, -1));
+				},
+				value.timeout ? value.timeout : DEFAULT_TIMEOUT,
+			);
+		});
+	});
 </script>
 
 <div class="absolute right-0 bottom-0">
-	{#each $notifications as not}
-		<ToastNotification
-			timeout={not.timeout ? not.timeout : DEFAULT_TIMEOUT}
-			kind={not.kind}
-			title={not.title}
-			subtitle={not.message}
-		/>
-		<!-- caption={not.caption ? not.caption : new Date().toLocaleString()} -->
-	{/each}
+	{#key notificationsLocal}
+		{#each notificationsLocal as not}
+			<ToastNotification
+				timeout={not.timeout ? not.timeout : DEFAULT_TIMEOUT}
+				kind={not.kind}
+				title={not.title}
+				subtitle={not.message}
+			/>
+			<!-- caption={not.caption ? not.caption : new Date().toLocaleString()} -->
+		{/each}
+	{/key}
 </div>
