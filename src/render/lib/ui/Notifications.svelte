@@ -24,7 +24,10 @@
 	{#key notificationsLocal}
 		{#each notificationsLocal as not}
 			<ToastNotification
-				timeout={not.timeout ? not.timeout : DEFAULT_TIMEOUT}
+				on:close={() => {
+					notifications.set([]);
+				}}
+				timeout={not.timeout > 0 ? not.timeout : DEFAULT_TIMEOUT}
 				kind={not.kind}
 				title={not.title}
 				subtitle={not.message}

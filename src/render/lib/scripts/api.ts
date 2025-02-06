@@ -10,16 +10,17 @@ var isLoaded = false;
 settingsRenderer.subscribe((settings: any) => {
   isLoaded = settings.loaded;
   if (isLoaded === true) {
-    apiUrl = settings.apiUrl || '';
+    apiUrl = settings.apiUrl.trim() || '';
     apiVersion = settings.apiVersion || '';
     const isDev = apiUrl.includes('localhost');
+    console.log(settings);
+    if (apiUrl === '') {
+      pushNotification("settingsServerIPError");
+    }
     if (isDev) {
       apiUrl = "http://" + apiUrl;
     } else {
       apiUrl = "https://" + apiUrl;
-    }
-    if (apiUrl === '') {
-      pushNotification("settingsServerIPError");
     }
   }
 });

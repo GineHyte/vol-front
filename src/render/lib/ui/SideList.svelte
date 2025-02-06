@@ -32,7 +32,7 @@
 <div class="absolute right-0 top-24 w-44" bind:this={target}>
 	{#key [page, tableUpdate]}
 		{#await getFunc(new PaginationProps(page, pageSize))}
-			<DataTableSkeleton />
+			<DataTableSkeleton columns={1} />
 		{:then model}
 			<DataTable size="compact" {headers} rows={model.getRows()}>
 				<svelte:fragment slot="cell" let:cell let:row>
