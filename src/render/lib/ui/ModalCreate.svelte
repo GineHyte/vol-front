@@ -10,6 +10,7 @@
 		TimePicker,
 		Checkbox,
 		DatePickerInput,
+		TextArea,
 	} from 'carbon-components-svelte';
 
 	import Model from '$lib/scripts/model';
@@ -88,6 +89,12 @@
 					/>
 				{:else if item.type === 'string'}
 					<TextInput
+						id={item.key}
+						labelText={item.title}
+						on:input={(_) => handleInput(item.key)}
+					/>
+				{:else if item.type === 'bigstring'}
+					<TextArea
 						id={item.key}
 						labelText={item.title}
 						on:input={(_) => handleInput(item.key)}

@@ -10,6 +10,7 @@
 		DataTableSkeleton,
 		Pagination,
 		Button,
+		Tile,
 	} from 'carbon-components-svelte';
 	import {
 		getGames,
@@ -19,6 +20,7 @@
 		getActions,
 		getAction,
 		getSubtechs,
+		getTeams,
 		getTechs,
 		createAction,
 		deleteAction,
@@ -30,6 +32,7 @@
 	import Field from '$lib/games/Field.svelte';
 	import ContextMenuSideList from '$lib/ui/ContextMenuSideList.svelte';
 	import { Impact, Side } from '$lib/utils/utils';
+	import ModalCreateRelation from '$lib/ui/ModalCreateRelation.svelte';
 
 	let gameId: number | undefined = undefined;
 	let createOpen = false;
@@ -45,6 +48,10 @@
 	let actionsPageSize = 10;
 	let targetForActions: any;
 	let actionOrder = 0;
+	let teamA = 0;
+	let teamB = 0;
+	let selectTeamAOpen = false;
+	let selectTeamBOpen = false;
 
 	let localGame: Game | undefined = undefined;
 
@@ -61,18 +68,10 @@
 		if (currentId) {
 			let game = await getGame(currentId);
 			let status = await createGame(game);
-			if (status.status.originalType.value === 'success') {
-				pushNotification({
-					title: 'Успіх!',
-					message: 'Гра дубльована.',
-					kind: 'success',
-				});
+			if (status.status === 'success') {
+				pushNotification('duplicateGameSuccess');
 			} else {
-				pushNotification({
-					title: 'Помилка!',
-					message: 'Гра не може бути дубльована.',
-					kind: 'error',
-				});
+				pushNotification('duplicateGameError');
 			}
 		}
 	}
@@ -80,18 +79,10 @@
 	async function removeGame(currentId: number) {
 		if (currentId) {
 			let status = await deleteGame(currentId);
-			if (status.status.originalType.value === 'success') {
-				pushNotification({
-					title: 'Успіх!',
-					message: 'Гра видалена.',
-					kind: 'success',
-				});
+			if (status.status === 'success') {
+				pushNotification('removeGameSuccess');
 			} else {
-				pushNotification({
-					title: 'Помилка!',
-					message: 'Гра не може бути видалена.',
-					kind: 'error',
-				});
+				pushNotification('removeGameError');
 			}
 		}
 	}
@@ -100,51 +91,34 @@
 		let game = new Game();
 		Object.keys(inputData).forEach((key) => {
 			// @ts-ignore
-			game[key as keyof Game].originalType.value = inputData[key];
+			game[key as keyof Game] = inputData[key];
 		});
+		game.teamA = teamA.id;
+		game.teamB = teamB.id;
 		let status = await createGame(game);
-		if (status.status.originalType.value === 'success') {
-			pushNotification({
-				title: 'Успіх!',
-				message: 'Ви створили нову гру.',
-				kind: 'success',
-			});
+		if (status.status === 'success') {
+			pushNotification('createGameSuccess');
 		} else {
-			pushNotification({
-				title: 'Помилка!',
-				message: 'Гра не може бути створена.',
-				kind: 'error',
-			});
+			pushNotification('createGameError');
 		}
 		createOpen = false;
 	}
 
 	async function submitAction() {
 		let action = new Action();
-		action.game.originalType.value = gameId;
-		action.team.originalType.value =
-			selectedSide === Side.LEFT
-				? localGame?.teamA.originalType.value
-				: localGame?.teamB.originalType.value;
-		action.player.originalType.value = selectedPlayer;
-		action.subtech.originalType.value = selectedSubtech;
-		action.from_zone.originalType.value = selectedZones[0];
-		action.to_zone.originalType.value = selectedZones[1];
-		action.impact.originalType.value = selectedImpact;
+		action.game = gameId;
+		action.team = selectedSide === Side.LEFT ? localGame?.teamA : localGame?.teamB;
+		action.player = selectedPlayer;
+		action.subtech = selectedSubtech;
+		action.from_zone = selectedZones[0];
+		action.to_zone = selectedZones[1];
+		action.impact = selectedImpact;
 
 		let status = await createAction(action);
-		if (status.status.originalType.value === 'success') {
-			pushNotification({
-				title: 'Успіх!',
-				message: 'Дія створена.',
-				kind: 'success',
-			});
+		if (status.status === 'success') {
+			pushNotification('createActionSuccess');
 		} else {
-			pushNotification({
-				title: 'Помилка!',
-				message: 'Дія не може бути створена.',
-				kind: 'error',
-			});
+			pushNotification('createActionError');
 		}
 
 		selectedTech = -1;
@@ -162,18 +136,10 @@
 		if (currentId) {
 			let action = await getAction(currentId);
 			let status = await createAction(action);
-			if (status.status.originalType.value === 'success') {
-				pushNotification({
-					title: 'Успіх!',
-					message: 'Дія дубльована.',
-					kind: 'success',
-				});
+			if (status.status === 'success') {
+				pushNotification('duplicateActionSuccess');
 			} else {
-				pushNotification({
-					title: 'Помилка!',
-					message: 'Дія не може бути дубльована.',
-					kind: 'error',
-				});
+				pushNotification('duplicateActionError');
 			}
 		}
 	}
@@ -181,18 +147,10 @@
 	async function removeAction(currentId: number) {
 		if (currentId) {
 			let status = await deleteAction(currentId);
-			if (status.status.originalType.value === 'success') {
-				pushNotification({
-					title: 'Успіх!',
-					message: 'Дія видалена.',
-					kind: 'success',
-				});
+			if (status.status === 'success') {
+				pushNotification('removeActionSuccess');
 			} else {
-				pushNotification({
-					title: 'Помилка!',
-					message: 'Гра не може бути видалена.',
-					kind: 'error',
-				});
+				pushNotification('removeActionError');
 			}
 		}
 	}
@@ -293,10 +251,14 @@
 						/>
 					</Column>
 					<Column class="relative">
-						{#if game.description.originalType.value}
-							<span>Опис: {game.description.originalType.value}</span>
+						{#if game.description}
+							<span>Опис: {game.description}</span>
 						{/if}
-						<Button class="absolute bottom-4 left-4" on:click={goBack}>Назад</Button>
+						{#if actionOrder > 0}
+							<Button class="absolute bottom-4 left-4" on:click={goBack}>
+								Назад
+							</Button>
+						{/if}
 					</Column>
 				</Row>
 				<Row>
@@ -307,7 +269,7 @@
 							{:then actions}
 								<DataTable
 									sortable
-									headers={actions.getHeaders()}
+									headers={actions.getHeaders(['id'])}
 									rows={actions.getRows()}
 								>
 									<svelte:fragment slot="cell" let:cell let:row>
@@ -338,13 +300,65 @@
 {/if}
 
 <ModalCreate
-	label="game"
 	title="Гра"
 	model={new Game()}
 	handleSubmit={createGameRenderer}
 	bind:open={createOpen}
-	requiredFields={['name', 'teamA', 'teamB']}
-/>
+	requiredFields={['name']}
+>
+	<svelte:fragment slot="createRelationField">
+		{#if teamA}
+			<Tile>
+				Команда А: {teamA.name}
+			</Tile>
+		{/if}
+		{#if teamB}
+			<Tile>
+				Команда Б: {teamB.name}
+			</Tile>
+		{/if}
+		<Button
+			class="mt-4"
+			on:click={() => {
+				selectTeamAOpen = true;
+			}}
+		>
+			Вибрати команду А
+		</Button>
+		<Button
+			class="mt-4"
+			on:click={() => {
+				selectTeamBOpen = true;
+			}}
+		>
+			Вибрати команду Б
+		</Button>
+	</svelte:fragment>
+	<svelte:fragment slot="modalCreateRelation">
+		<ModalCreateRelation
+			title="КомандаА"
+			getFunc={getTeams}
+			bind:open={selectTeamAOpen}
+			on:submit={(e) => {
+				teamA = e.detail;
+				selectTeamAOpen = false;
+			}}
+			alreadySelectedIds={[teamA.id, teamB.id]}
+			excludeHeaders={['players', 'id']}
+		/>
+		<ModalCreateRelation
+			title="Гравець"
+			getFunc={getTeams}
+			bind:open={selectTeamBOpen}
+			on:submit={(e) => {
+				teamB = e.detail;
+				selectTeamBOpen = false;
+			}}
+			alreadySelectedIds={[teamA.id, teamB.id]}
+			excludeHeaders={['players', 'id']}
+		/>
+	</svelte:fragment>
+</ModalCreate>
 
 {#key createOpen}
 	<SideList

@@ -58,6 +58,7 @@
 	async function duplicateSubtech(currentId: number) {
 		if (currentId) {
 			let subtech = await getSubtech(currentId);
+			subtech.tech = subtech.tech.id;
 			let status = await createSubtech(subtech);
 			if (status.status === 'success') {
 				pushNotification('duplicateSubtechSuccess');

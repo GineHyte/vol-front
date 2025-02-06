@@ -135,6 +135,96 @@ const NOTIFICATIONS = {
         message: 'Помилка в комунікації з сервером: {status} - {statusText}\n{url}\n{body}',
         kind: 'error',
     },
+    "duplicateGameSuccess": {
+        title: 'Успіх!',
+        message: 'Гра дубльована.',
+        kind: 'success',
+    },
+    "duplicateGameError": {
+        title: 'Помилка!',
+        message: 'Гра не може бути дубльована.',
+        kind: 'error',
+    },
+    "removeGameSuccess": {
+        title: 'Успіх!',
+        message: 'Гра видалена.',
+        kind: 'success',
+    },
+    "removeGameError": {
+        title: 'Помилка!',
+        message: 'Гра не може бути видалена.',
+        kind: 'error',
+    },
+    "createGameSuccess": {
+        title: 'Успіх!',
+        message: 'Ви створили нову гру.',
+        kind: 'success',
+    },
+    "createGameError": {
+        title: 'Помилка!',
+        message: 'Гра не може бути створена.',
+        kind: 'error',
+    },
+    "duplicateActionSuccess": {
+        title: 'Успіх!',
+        message: 'Дія дубльована.',
+        kind: 'success',
+    },
+    "duplicateActionError": {
+        title: 'Помилка!',
+        message: 'Дія не може бути дубльована.',
+        kind: 'error',
+    },
+    "removeActionSuccess": {
+        title: 'Успіх!',
+        message: 'Дія видалена.',
+        kind: 'success',
+    },
+    "removeActionError": {
+        title: 'Помилка!',
+        message: 'Дія не може бути видалена.',
+        kind: 'error',
+    },
+    "createActionSuccess": {
+        title: 'Успіх!',
+        message: 'Ви створили нову дію.',
+        kind: 'success',
+    },
+    "createActionError": {
+        title: 'Помилка!',
+        message: 'Дія не може бути створена.',
+        kind: 'error',
+    },
+    "duplicateExerciseSuccess": {
+        title: 'Успіх!',
+        message: 'Вправа дубльована.',
+        kind: 'success',
+    },
+    "duplicateExerciseError": {
+        title: 'Помилка!',
+        message: 'Вправа не може бути дубльована.',
+        kind: 'error',
+    },
+    "removeExerciseSuccess": {
+        title: 'Успіх!',
+        message: 'Вправа видалена.',
+        kind: 'success',
+    },
+    "removeExerciseError": {
+        title: 'Помилка!',
+        message: 'Вправа не може бути видалена.',
+        kind: 'error',
+    },
+    "createExerciseSuccess": {
+        title: 'Успіх!',
+        message: 'Ви створили нову вправу.',
+        kind: 'success',
+    },
+    "createExerciseError": {
+        title: 'Помилка!',
+        message: 'Вправа не може бути створена.',
+        kind: 'error',
+    },
 }
 
 export default function getNotification(name: string, params: { [key: string]: string } = {}) {

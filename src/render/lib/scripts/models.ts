@@ -1,12 +1,14 @@
 import Field from '$lib/scripts/field'
 import Model from '$lib/scripts/model'
 import Datatype from '$lib/scripts/datatype'
+import { Amplua, Impact } from '$lib/utils/utils'
 
 let Number = new Datatype('number')
 let String = new Datatype('string')
 let Boolean = new Datatype('boolean')
 let Datetime = new Datatype('datetime')
 let Array = new Datatype('array')
+let BigString = new Datatype('bigstring')
 
 export class NameWithId extends Model {
   id: any
@@ -32,7 +34,7 @@ export class PlayerTeam extends Model {
 
     this.player = new Field('player', NameWithIdType, 'Гравець', ['name'])
     this.team = new Field('team', NameWithIdType, 'Команда', ['name'])
-    this.amplua = new Field('amplua', String, 'Амплуа')
+    this.amplua = new Field('amplua', String, 'Амплуа', [], Amplua)
 
     return this.proxify()
   }
@@ -94,11 +96,11 @@ export class Game extends Model {
 
     this.id = new Field('id', Number)
     this.name = new Field('name', String, 'Назва')
-    this.description = new Field('description', String, 'Опис')
+    this.description = new Field('description', BigString, 'Опис')
     this.fromDatetime = new Field('from_datetime', Datetime, 'Дата початку')
     this.toDatetime = new Field('to_datetime', Datetime, 'Дата закінчення')
-    this.teamA = new Field('team_a', Number, 'Команда А')
-    this.teamB = new Field('team_b', Number, 'Команда Б')
+    this.teamA = new Field('team_a', NameWithIdType, 'Команда А', ['name'])
+    this.teamB = new Field('team_b', NameWithIdType, 'Команда Б', ['name'])
 
     return this.proxify()
   }
@@ -135,13 +137,13 @@ export class Action extends Model {
     super()
 
     this.id = new Field('id', Number)
-    this.game = new Field('game', Number, 'Гра')
-    this.team = new Field('team', Number, 'Команда')
-    this.player = new Field('player', Number, 'Гравець')
-    this.subtech = new Field('subtech', Number, 'Субтехніка')
+    this.game = new Field('game', NameWithIdType, 'Гра', ['name'])
+    this.team = new Field('team', NameWithIdType, 'Команда', ['name'])
+    this.player = new Field('player', NameWithIdType, 'Гравець', ['name'])
+    this.subtech = new Field('subtech', NameWithIdType, 'Субтехніка', ['name'])
     this.from_zone = new Field('from_zone', Number, 'Зона від')
     this.to_zone = new Field('to_zone', Number, 'Зона до')
-    this.impact = new Field('impact', String, 'Якісний показник гри')
+    this.impact = new Field('impact', String, 'Якісний показник гри', [], Impact)
 
     return this.proxify()
   }
@@ -157,7 +159,7 @@ export class Tech extends Model {
 
     this.id = new Field('id', Number)
     this.name = new Field('name', String, 'Назва')
-    this.description = new Field('description', String, 'Опис')
+    this.description = new Field('description', BigString, 'Опис')
 
     return this.proxify()
   }
@@ -175,7 +177,7 @@ export class Subtech extends Model {
 
     this.id = new Field('id', Number)
     this.name = new Field('name', String, 'Назва')
-    this.description = new Field('description', String, 'Опис')
+    this.description = new Field('description', BigString, 'Опис')
     this.difficulty = new Field('difficulty', Number, 'Складність')
     this.tech = new Field('tech', NameWithIdType, 'Технічна дія', ['name'])
 
@@ -210,9 +212,9 @@ export class Exercise extends Model {
 
     this.id = new Field('id', Number)
     this.name = new Field('name', String, 'Назва')
-    this.description = new Field('description', String, 'Опис')
-    this.subtech = new Field('subtech', Number, 'Субтехніка')
-    this.tech = new Field('tech', Number, 'Техніка')
+    this.description = new Field('description', BigString, 'Опис')
+    this.subtech = new Field('subtech', NameWithIdType, 'Субтехніка', ['name'])
+    this.tech = new Field('tech', NameWithIdType, 'Техніка', ['name'])
     this.imageUrl = new Field('image_url', String, 'Посилання на зображення')
     this.videoUrl = new Field('video_url', String, 'Посилання на відео')
     this.difficulty = new Field('difficulty', Number, 'Складність')

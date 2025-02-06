@@ -9,12 +9,14 @@ export default class Field {
   relation: boolean;
   deserializationAlias: string;
   tableAlias: string[];
+  tableMapping: {};
 
   constructor(
     sereliazationAlias: string,
     datatype: Datatype,
     tableTitle: string = '',
     tableAlias: string[] = [],
+    tableMapping: {} = {},
     value: any = undefined,
   ) {
     this.deserializationAlias = '';
@@ -23,6 +25,7 @@ export default class Field {
     this.value = value
     this.tableAlias = tableAlias
     this.tableTitle = tableTitle
+    this.tableMapping = tableMapping
     this.relation = (this.datatype instanceof Model)
   }
 

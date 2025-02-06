@@ -51,8 +51,8 @@ export class Pagination<T extends Model> {
 
   getHeaders(exclude: string[] = []): DataTableHeader[] | undefined {
     if (this.items.length == 0) { return [{ key: 'noData', empty: true, value: 'Немає Даних' }] }
-    const headers = this.items[0].getHeaders();
-    return headers.filter((header: any) => !exclude.includes(header.key)) as DataTableHeader[]
+    const headers = this.items[0].getHeaders(exclude) as DataTableHeader[];
+    return headers
   }
 
   private deserialize<U extends Model>(data: any, type: { new(): U; }): U {

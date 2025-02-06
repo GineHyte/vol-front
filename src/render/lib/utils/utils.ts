@@ -23,7 +23,7 @@ export function getTime() {
   return ('0' + now.getHours()).slice(-2) + ':' + ('0' + now.getMinutes()).slice(-2);
 }
 
-export const Amplua = {
+export const Amplua: {} = {
   "Defender": "Захисник",
   "Attacker": "Нападник",
   "Universal": "Універсальний",
@@ -35,7 +35,7 @@ export enum Side {
   NOTSET = 0,
 }
 
-export const Impact = {
+export const Impact: {} = {
   "Efficiency": "Ефективність",
   "Mistake": "Помилка",
   "Score": "Вигране очко",

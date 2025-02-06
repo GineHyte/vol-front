@@ -114,7 +114,7 @@
 					</Column>
 				</Row>
 				<DataTable
-					headers={(team.players[0] || new PlayerTeam()).getHeaders()}
+					headers={(team.players[0] || new PlayerTeam()).getHeaders(['team'])}
 					rows={team.players.map((playerTeam) => playerTeam.__tableData)}
 				/>
 			{/await}

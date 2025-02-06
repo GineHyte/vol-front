@@ -17,6 +17,9 @@ export default class Model {
       let value = field.value
       if (value == undefined) { data[dkey] = "-"; return }
       field.tableAlias.forEach(alias => { value = value[alias] });
+      if (field.tableMapping) {
+        value = (field.tableMapping as { [key: string]: any })[value] || value
+      }
       data[dkey] = value || "-"
     });
     this.__pTableData = data
@@ -54,7 +57,7 @@ export default class Model {
     return this
   }
 
-  serialize(exclude: string[] = []): { [index: string]: any } {
+  serialize(): { [index: string]: any } {
     let data: { [index: string]: any } = {}
     this.__fields.forEach((dkey) => {
       let skey = this.__deserializationMap[dkey]
@@ -75,12 +78,12 @@ export default class Model {
     return data
   }
 
-  getHeaders(): { [key: string]: any }[] {
-    return Object.keys(this.__deserializationMap).map(key => {
-      let _key = ("__" + key) as keyof this
+  getHeaders(exclude: string[] = []): { [key: string]: any }[] {
+    return Object.keys(this.__deserializationMap).map(dkey => {
+      let _key = ("__" + dkey) as keyof this
       const field = this[_key] as Field
-      return { key: key, value: field.tableTitle }
-    })
+      return { key: dkey, value: field.tableTitle }
+    }).filter(header => !exclude.includes(header.key))
   }
 
   getCreationArray(exclude: string[] = []): { [key: string]: any }[] {

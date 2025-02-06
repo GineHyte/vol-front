@@ -19,7 +19,7 @@
 
 	async function getTeamLocal(teamId: number) {
 		let team = await getTeam(teamId);
-		if (game.teamA.originalType.value === team.id.originalType.value) {
+		if (game.teamA === team.id) {
 			teamALocal = team;
 		} else {
 			teamBLocal = team;
@@ -37,8 +37,8 @@
 {#if game}
 	<div>
 		<div class="w-full flex justify-around">
-			<span>{teamALocal?.name.originalType.value}</span>
-			<span>{teamBLocal?.name.originalType.value}</span>
+			<span>{teamALocal?.name}</span>
+			<span>{teamBLocal?.name}</span>
 		</div>
 		<div class="flex w-[36rem] h-[18rem] bg-amber-600 relative">
 			{#if zoneEnabled}
@@ -73,30 +73,28 @@
 			{#if isPlayersEnabled}
 				<div class="relative w-full">
 					{#if game.teamA}
-						{#await getTeamLocal(game.teamA.originalType.value)}
+						{#await getTeamLocal(game.teamA)}
 							teamA
 						{:then team}
-							{#if team.players.originalType.value[0]}
+							{#if team.players[0]}
 								<PlayerElement
 									top="50"
 									left="160"
-									title={Amplua[team.players.originalType.value[0].amplua][0]}
+									title={Amplua[team.players[0].amplua][0]}
 									on:select={() => {
-										selectedPlayer =
-											team.players.originalType.value[0].player_id;
+										selectedPlayer = team.players[0].player.id;
 										selectedSide = Side.LEFT;
 										actionOrder = 1;
 									}}
 								/>
 							{/if}
-							{#if team.players.originalType.value[1]}
+							{#if team.players[1]}
 								<PlayerElement
 									top="170"
 									left="90"
-									title={Amplua[team.players.originalType.value[1].amplua][0]}
+									title={Amplua[team.players[1].amplua][0]}
 									on:select={() => {
-										selectedPlayer =
-											team.players.originalType.value[1].player_id;
+										selectedPlayer = team.players[1].player.id;
 										selectedSide = Side.LEFT;
 										actionOrder = 1;
 									}}
@@ -108,30 +106,28 @@
 				<div class="h-full w-[1px] bg-black" />
 				<div class="relative w-full">
 					{#if game.teamB}
-						{#await getTeamLocal(game.teamB.originalType.value)}
+						{#await getTeamLocal(game.teamB)}
 							teamB
 						{:then team}
-							{#if team.players.originalType.value[0]}
+							{#if team.players[0]}
 								<PlayerElement
 									top="170"
 									left="90"
-									title={Amplua[team.players.originalType.value[0].amplua][0]}
+									title={Amplua[team.players[0].amplua][0]}
 									on:select={() => {
-										selectedPlayer =
-											team.players.originalType.value[0].player_id;
+										selectedPlayer = team.players[0].player.id;
 										selectedSide = Side.RIGHT;
 										actionOrder = 1;
 									}}
 								/>
 							{/if}
-							{#if team.players.originalType.value[1]}
+							{#if team.players[1]}
 								<PlayerElement
 									top="50"
 									left="160"
-									title={Amplua[team.players.originalType.value[1].amplua][0]}
+									title={Amplua[team.players[1].amplua][0]}
 									on:select={() => {
-										selectedPlayer =
-											team.players.originalType.value[1].player_id;
+										selectedPlayer = team.players[1].player.id;
 										selectedSide = Side.RIGHT;
 										actionOrder = 1;
 									}}
