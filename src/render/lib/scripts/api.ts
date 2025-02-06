@@ -104,7 +104,6 @@ export class ApiImpl implements Api {
 
   private __errorHandler(resp: Response | Error) {
     if (resp instanceof Response) {
-      console.log('response error', resp);
       pushNotification('apiError', {
         body: JSON.stringify(resp.body),
         status: resp.status.toString(),
@@ -112,7 +111,6 @@ export class ApiImpl implements Api {
         url: resp.url
       });
     } else {
-      console.log('error', resp);
       pushNotification('apiError', {
         body: resp.message,
         status: '500',

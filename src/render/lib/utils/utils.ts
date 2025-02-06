@@ -4,13 +4,8 @@ import getNotification from './notification';
 export function pushNotification(notification: string, params: { [key: string]: string } = {}) {
   let notificationsLocal;
   let unsubscribe = notifications.subscribe((v) => { notificationsLocal = v; });
-  console.log("pushNotification", notification, params);
-  // @ts-ignore
-  console.log("before pushNotification", notificationsLocal);
   // @ts-ignore
   notifications.set([...notificationsLocal, getNotification(notification, params)]);
-  // @ts-ignore
-  console.log("after pushNotification", notificationsLocal);
   unsubscribe();
 }
 
@@ -42,3 +37,8 @@ export const Impact: {} = {
   "Fail": "Брак",
 }
 
+
+export const TrueFalse: {} = {
+  "true": "Так",
+  "false": "Ні",
+}

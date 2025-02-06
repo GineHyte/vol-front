@@ -1,4 +1,4 @@
-import {Player, Team} from '../scripts/models';
+import { Player, Team } from '../scripts/models';
 
 var player: Player;
 player = new Player();
@@ -59,16 +59,16 @@ test('table data', () => {
   player.deserialize(data);
   const tableData = player.__tableData;
   expect(tableData).toEqual(
-      {
-        'id': 1,
-        'firstName': 'John',
-        'lastName': 'Doe',
-        'age': 25,
-        'weight': 80,
-        'height': 180,
-        'imageFileId': undefined,
-        'teams': undefined
-      }
+    {
+      'id': 1,
+      'firstName': 'John',
+      'lastName': 'Doe',
+      'age': 25,
+      'weight': 80,
+      'height': 180,
+      'imageFileId': undefined,
+      'teams': undefined
+    }
   );
 });
 
@@ -87,9 +87,7 @@ test('serialize', () => {
     ]
   }
   team.deserialize(data);
-  console.log(team);
   const serialized = team.serialize();
-  console.log(serialized)
   // expect(serialized).toEqual(data);
 }
 );

@@ -1,7 +1,7 @@
 import Field from '$lib/scripts/field'
 import Model from '$lib/scripts/model'
 import Datatype from '$lib/scripts/datatype'
-import { Amplua, Impact } from '$lib/utils/utils'
+import { Amplua, Impact, TrueFalse } from '$lib/utils/utils'
 
 let Number = new Datatype('number')
 let String = new Datatype('string')
@@ -116,8 +116,6 @@ export class Status extends Model {
     this.status = new Field('status', String, 'Статус')
     this.detail = new Field('detail', String, 'Деталі')
 
-    console.log("Status created")
-
     return this.proxify()
   }
 }
@@ -213,19 +211,19 @@ export class Exercise extends Model {
     this.id = new Field('id', Number)
     this.name = new Field('name', String, 'Назва')
     this.description = new Field('description', BigString, 'Опис')
-    this.subtech = new Field('subtech', NameWithIdType, 'Субтехніка', ['name'])
     this.tech = new Field('tech', NameWithIdType, 'Техніка', ['name'])
+    this.subtech = new Field('subtech', NameWithIdType, 'Субтехніка', ['name'])
     this.imageUrl = new Field('image_url', String, 'Посилання на зображення')
     this.videoUrl = new Field('video_url', String, 'Посилання на відео')
     this.difficulty = new Field('difficulty', Number, 'Складність')
-    this.exercisesForLearning = new Field('exercises_for_learning', Boolean, 'Для навчання')
-    this.exercisesForConsolidation = new Field('exercises_for_consolidation', Boolean, 'Для закріплення')
-    this.exercisesForImprovement = new Field('exercises_for_improvement', Boolean, 'Для покращення')
-    this.simulationExercises = new Field('simulation_exercises', Boolean, 'Для симуляції')
-    this.exercisesWithTheBallOnYourOwn = new Field('exercises_with_the_ball_on_your_own', Boolean, 'З м\'ячем у власних руках')
-    this.exercisesWithTheBallInPairs = new Field('exercises_with_the_ball_in_pairs', Boolean, 'З м\'ячем у парах')
-    this.exercisesWithTheBallInGroups = new Field('exercises_with_the_ball_in_groups', Boolean, 'З м\'ячем у групах')
-    this.exercisesInDifficultConditions = new Field('exercises_in_difficult_conditions', Boolean, 'У складних умовах')
+    this.exercisesForLearning = new Field('exercises_for_learning', Boolean, 'Для навчання', [], TrueFalse)
+    this.exercisesForConsolidation = new Field('exercises_for_consolidation', Boolean, 'Для закріплення', [], TrueFalse)
+    this.exercisesForImprovement = new Field('exercises_for_improvement', Boolean, 'Для покращення', [], TrueFalse)
+    this.simulationExercises = new Field('simulation_exercises', Boolean, 'Для симуляції', [], TrueFalse)
+    this.exercisesWithTheBallOnYourOwn = new Field('exercises_with_the_ball_on_your_own', Boolean, 'З м\'ячем у власних руках', [], TrueFalse)
+    this.exercisesWithTheBallInPairs = new Field('exercises_with_the_ball_in_pairs', Boolean, 'З м\'ячем у парах', [], TrueFalse)
+    this.exercisesWithTheBallInGroups = new Field('exercises_with_the_ball_in_groups', Boolean, 'З м\'ячем у групах', [], TrueFalse)
+    this.exercisesInDifficultConditions = new Field('exercises_in_difficult_conditions', Boolean, 'У складних умовах', [], TrueFalse)
     this.fromZone = new Field('from_zone', Number, 'Зона від')
     this.toZone = new Field('to_zone', Number, 'Зона до')
     this.timePerExercise = new Field('time_per_exercise', Number, 'Час на одну вправу')

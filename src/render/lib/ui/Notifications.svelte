@@ -10,7 +10,6 @@
 		notifications.subscribe((value) => {
 			if (value.length === 0) return;
 			notificationsLocal = value;
-			console.log(value);
 			setTimeout(
 				() => {
 					notifications.set(value.slice(1, -1));

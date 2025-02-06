@@ -171,7 +171,6 @@
 						selectionPlayerObject.amplua = e.detail;
 						selectedPlayers = [...selectedPlayers, selectionPlayerObject];
 						selectPlayerAmpluaOpen = false;
-						console.log(selectedPlayers);
 					}}
 				/>
 			</svelte:fragment>

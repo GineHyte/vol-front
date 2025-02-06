@@ -27,6 +27,7 @@
 	import { pushNotification } from '$lib/utils/utils';
 	import ModalCreateRelation from '$lib/ui/ModalCreateRelation.svelte';
 	import ContextMenuSideList from '$lib/ui/ContextMenuSideList.svelte';
+	import { PaginationProps } from '@/render/lib/scripts/pagination';
 
 	let exerciseId: number | undefined = undefined;
 	let createOpen = false;
@@ -62,11 +63,10 @@
 	async function removeExercise(currentId: number) {
 		let status = await deleteExercise(currentId);
 		if (currentId) {
-			console.log(currentId);
 			if (status.status === 'success') {
-				pushNotification('deleteExerciseSuccess');
+				pushNotification('removeExerciseSuccess');
 			} else {
-				pushNotification('deleteExerciseError');
+				pushNotification('removeExerciseError');
 			}
 		}
 	}
@@ -91,16 +91,23 @@
 </script>
 
 <Content>
-	<Grid>
+	<Grid fullWidth>
 		<Row>
 			<Column>
 				<div bind:this={targetForExercises}>
 					{#key tableUpdater}
-						{#await getExercises()}
+						{#await getExercises(new PaginationProps(1, 100))}
 							<DataTableSkeleton />
 						{:then exercises}
 							<DataTable
-								headers={exercises.getHeaders(['imageUrl', 'videoUrl'])}
+								headers={exercises.getHeaders([
+									'imageUrl',
+									'videoUrl',
+									'id',
+									'description',
+									'fromZone',
+									'toZone',
+								])}
 								rows={exercises.getRows()}
 							>
 								<svelte:fragment slot="cell" let:cell let:row>
@@ -176,7 +183,6 @@
 				bind:open={selectionTechOpen}
 				on:submit={(e) => {
 					selectedTech = e.detail;
-					console.log(selectedTech);
 					selectionTechOpen = false;
 					selectionSubtechOpen = true;
 				}}

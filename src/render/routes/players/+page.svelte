@@ -49,9 +49,7 @@
 
 	async function removePlayer(currentId: number) {
 		if (currentId) {
-			console.log(currentId);
 			let status = await deletePlayer(currentId);
-			console.log(status);
 			if (status.status === 'success') {
 				pushNotification('removePlayerSuccess');
 			} else {

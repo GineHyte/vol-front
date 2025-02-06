@@ -45,6 +45,12 @@
 		}
 	}
 
+	function handleCheckbox(id: string) {
+		let target = document.getElementById(id) as HTMLInputElement;
+		let value = target.checked;
+		inputData[id] = value;
+	}
+
 	function handleDatePicker(id: string) {
 		let date = document.getElementById(id + 'date') as HTMLInputElement;
 		let time = document.getElementById(id + 'time') as HTMLInputElement;
@@ -103,7 +109,7 @@
 					<Checkbox
 						id={item.key}
 						labelText={item.title}
-						on:change={(_) => handleInput(item.key)}
+						on:change={(_) => handleCheckbox(item.key)}
 					/>
 				{:else if item.type === 'datetime'}
 					<DatePicker
