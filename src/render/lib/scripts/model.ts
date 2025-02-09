@@ -93,7 +93,7 @@ export default class Model {
       if (exclude.includes(dkey)) { return }
       let _dkey = ("__" + dkey) as keyof this
       const field = this[_dkey] as Field
-      data.push({ key: dkey, type: field.datatype, title: field.tableTitle, relation: field.relation })
+      data.push({ key: dkey, type: field.datatype, title: field.tableTitle, relation: field.relation, value: field.value })
     });
     this.__pCreationArray = data
     return data

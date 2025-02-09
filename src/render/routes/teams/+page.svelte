@@ -88,6 +88,7 @@
 			pushNotification('createTeamError');
 		}
 		createOpen = false;
+		selectedPlayers = [];
 		updateSideList();
 	}
 </script>
@@ -115,7 +116,11 @@
 				</Row>
 				<DataTable
 					headers={(team.players[0] || new PlayerTeam()).getHeaders(['team'])}
-					rows={team.players.map((playerTeam) => playerTeam.__tableData)}
+					rows={team.players.map((playerTeam, i) => {
+						let tableData = playerTeam.__tableData;
+						tableData.id = i;
+						return tableData;
+					})}
 				/>
 			{/await}
 		</Grid>

@@ -33,6 +33,7 @@
 	import ContextMenuSideList from '$lib/ui/ContextMenuSideList.svelte';
 	import { Impact, Side } from '$lib/utils/utils';
 	import ModalCreateRelation from '$lib/ui/ModalCreateRelation.svelte';
+	import CreateGame from '@/render/routes/games/CreateGame.svelte';
 
 	let gameId: number | undefined = undefined;
 	let createOpen = false;
@@ -299,67 +300,7 @@
 	</Content>
 {/if}
 
-<ModalCreate
-	title="Гра"
-	model={new Game()}
-	handleSubmit={createGameRenderer}
-	bind:open={createOpen}
-	requiredFields={['name']}
->
-	<svelte:fragment slot="createRelationField">
-		{#if teamA}
-			<Tile>
-				Команда А: {teamA.name}
-			</Tile>
-		{/if}
-		{#if teamB}
-			<Tile>
-				Команда Б: {teamB.name}
-			</Tile>
-		{/if}
-		<Button
-			class="mt-4"
-			on:click={() => {
-				selectTeamAOpen = true;
-			}}
-		>
-			Вибрати команду А
-		</Button>
-		<Button
-			class="mt-4"
-			on:click={() => {
-				selectTeamBOpen = true;
-			}}
-		>
-			Вибрати команду Б
-		</Button>
-	</svelte:fragment>
-	<svelte:fragment slot="modalCreateRelation">
-		<ModalCreateRelation
-			title="КомандаА"
-			getFunc={getTeams}
-			bind:open={selectTeamAOpen}
-			on:submit={(e) => {
-				teamA = e.detail;
-				selectTeamAOpen = false;
-			}}
-			alreadySelectedIds={[teamA.id, teamB.id]}
-			excludeHeaders={['players', 'id']}
-		/>
-		<ModalCreateRelation
-			title="Гравець"
-			getFunc={getTeams}
-			bind:open={selectTeamBOpen}
-			on:submit={(e) => {
-				teamB = e.detail;
-				selectTeamBOpen = false;
-			}}
-			alreadySelectedIds={[teamA.id, teamB.id]}
-			excludeHeaders={['players', 'id']}
-		/>
-	</svelte:fragment>
-</ModalCreate>
-
+<CreateGame bind:createOpen bind:teamA bind:teamB on:submit={createGameRenderer} />``
 {#key createOpen}
 	<SideList
 		bind:currentId={gameId}
