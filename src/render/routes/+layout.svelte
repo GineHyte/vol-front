@@ -16,7 +16,7 @@
 		SkipToContent,
 		SideNavMenuItem,
 	} from 'carbon-components-svelte';
-	import { Close, Minimize, Maximize, Subtract, WintryMix } from 'carbon-icons-svelte';
+	import { Close, Minimize, Maximize, Subtract, LightFilled, Light } from 'carbon-icons-svelte';
 	import { settingsRenderer, versionRenderer } from '@/render/lib/utils/store';
 	import Notifications from '$lib/ui/Notifications.svelte';
 	import ModalCreate from '$lib/ui/ModalCreate.svelte';
@@ -27,6 +27,7 @@
 		isMaximized: false,
 		isFullScreen: false,
 	};
+	let theme = 'g100'; // "white" | "g10" | "g80" | "g90" | "g100"
 
 	let ready = false;
 	onMount(() => {
@@ -92,6 +93,8 @@
 			path: '/settings',
 		},
 	];
+
+	$: document.documentElement.setAttribute('theme', theme);
 </script>
 
 <Header
@@ -105,6 +108,14 @@
 		<SkipToContent />
 	</svelte:fragment>
 	<HeaderNav style="display:block">
+		<Button
+			kind={theme === 'g100' ? 'ghost' : 'secondary'}
+			on:click={() => {
+				theme = theme === 'g100' ? 'white' : 'g100';
+			}}
+			iconDescription="Тема"
+			icon={theme === 'g100' ? LightFilled : Light}
+		/>
 		{#key currentWindowState}
 			<Button
 				icon={Subtract}
