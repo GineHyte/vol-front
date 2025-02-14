@@ -1,21 +1,37 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import { DataTable, DataTableSkeleton, Modal } from 'carbon-components-svelte';
 	import { createEventDispatcher } from 'svelte';
 	import { Pagination } from '$lib/scripts/pagination';
 
-	export let open: boolean = false;
-	export let title: string = '';
-	export let excludeHeaders: string[] = [];
-	export let getFunc: () => Promise<Pagination<any>>;
-	export let alreadySelectedIds: number[] = [];
+	interface Props {
+		open?: boolean;
+		title?: string;
+		excludeHeaders?: string[];
+		getFunc: () => Promise<Pagination<any>>;
+		alreadySelectedIds?: number[];
+		modalUnderSelect?: import('svelte').Snippet;
+	}
+
+	let {
+		open = $bindable(false),
+		title = '',
+		excludeHeaders = [],
+		getFunc,
+		alreadySelectedIds = [],
+		modalUnderSelect
+	}: Props = $props();
 
 	let dispatch = createEventDispatcher();
-	let localSelectedRow: { [key: string]: any } = {};
+	let localSelectedRow: { [key: string]: any } = $state({});
 
-	$: if (!open) {
-		dispatch('close');
-		localSelectedRow = {};
-	}
+	run(() => {
+		if (!open) {
+			dispatch('close');
+			localSelectedRow = {};
+		}
+	});
 </script>
 
 <Modal
@@ -43,4 +59,4 @@
 	{/await}
 </Modal>
 
-<slot name="modalUnderSelect" />
+{@render modalUnderSelect?.()}

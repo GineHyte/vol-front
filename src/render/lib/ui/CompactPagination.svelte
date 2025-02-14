@@ -1,9 +1,13 @@
-<script>
+<script lang="ts">
 	import { Button, Grid, Row, Column } from 'carbon-components-svelte';
 	import { CaretLeft, CaretRight } from 'carbon-icons-svelte';
 
-	export let page = 1;
-	export let total = 1;
+	interface Props {
+		page?: number;
+		total?: number;
+	}
+
+	let { page = $bindable(1), total = 1 }: Props = $props();
 </script>
 
 <div class="w-full flex justify-between items-center">

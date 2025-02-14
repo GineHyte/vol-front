@@ -1,9 +1,13 @@
-<script>
+<script lang="ts">
 	import { Button, Modal, DataTable, DataTableSkeleton } from 'carbon-components-svelte';
 	import { Player, Players } from '$lib/scripts/players.js';
 
-	export let player; // bind player here to choose it from the list
-	export let open = false; // bind open to open the modal
+	interface Props {
+		player: any; // bind player here to choose it from the list
+		open?: boolean; // bind open to open the modal
+	}
+
+	let { player = $bindable(), open = $bindable(false) }: Props = $props();
 
 	let players = new Players();
 

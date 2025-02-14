@@ -17,14 +17,29 @@
 	import Field from '$lib/scripts/field';
 	import { createEventDispatcher } from 'svelte';
 
-	export let title = '+ ';
-	export let model: Model;
-	export let requiredFields: string[] = ['all'];
-	export let handleSubmit: (e: Event) => Promise<void>;
-	export let open: boolean = false;
-	export let exclude: string[] = [];
+	interface Props {
+		title?: string;
+		model: Model;
+		requiredFields?: string[];
+		handleSubmit: (e: Event) => Promise<void>;
+		open?: boolean;
+		exclude?: string[];
+		createRelationField?: import('svelte').Snippet;
+		modalCreateRelation?: import('svelte').Snippet;
+	}
 
-	let inputData: any = {};
+	let {
+		title = $bindable('+ '),
+		model,
+		requiredFields = $bindable(['all']),
+		handleSubmit,
+		open = $bindable(false),
+		exclude = [],
+		createRelationField,
+		modalCreateRelation
+	}: Props = $props();
+
+	let inputData: any = $state({});
 	const dispatch = createEventDispatcher();
 	title = '+ ' + title;
 	exclude.push('id');
@@ -130,7 +145,7 @@
 					/>
 				{/if}
 			{/each}
-			<slot name="createRelationField" />
+			{@render createRelationField?.()}
 		</ModalBody>
 		{#key inputData}
 			<ModalFooter
@@ -140,4 +155,4 @@
 		{/key}
 	</ComposedModal>
 {/if}
-<slot name="modalCreateRelation" />
+{@render modalCreateRelation?.()}

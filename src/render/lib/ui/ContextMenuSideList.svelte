@@ -1,13 +1,14 @@
 <script lang="ts">
 	import { ContextMenu, ContextMenuOption } from 'carbon-components-svelte';
-	import { createEventDispatcher } from 'svelte';
+	interface Props {
+		[key: string]: any
+	}
 
-	export let target: readonly (HTMLElement | null)[] | null = null;
-	export let deleteFunc: (currentId: number) => Promise<void>;
-	export let duplicateFunc: (currentId: number) => Promise<void>;
+	let { ...props }: Props = $props();
 
-	let currentId: number | null = null;
-	let dispatch = createEventDispatcher();
+	let { target, deleteFunc, duplicateFunc, editFunc, update: updateFunc } = props;
+
+	let currentId: number | null = $state(null);
 </script>
 
 {#if target !== null}
@@ -25,7 +26,7 @@
 			labelText="Видалити"
 			on:click={async () => {
 				if (currentId) await deleteFunc(currentId);
-				dispatch('update');
+				updateFunc();
 			}}
 		/>
 		<ContextMenuOption
@@ -33,7 +34,15 @@
 			labelText="Дублювати"
 			on:click={async () => {
 				if (currentId) await duplicateFunc(currentId);
-				dispatch('update');
+				updateFunc();
+			}}
+		/>
+		<ContextMenuOption
+			indented
+			labelText="Редагувати"
+			on:click={async () => {
+				if (currentId) await editFunc(currentId);
+				updateFunc();
 			}}
 		/>
 	</ContextMenu>

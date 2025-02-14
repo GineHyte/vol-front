@@ -23,9 +23,9 @@
 	import ModalCreate from '$lib/ui/ModalCreate.svelte';
 	import { pushNotification } from '$lib/utils/utils';
 
-	let playerId: number | undefined = undefined;
-	let createOpen = false;
-	let sideListUpdater: boolean = false;
+	let playerId: number | undefined = $state(undefined);
+	let createOpen = $state(false);
+	let sideListUpdater: boolean = $state(false);
 
 	function selectPlayer(id: number) {
 		playerId = id;
@@ -123,8 +123,12 @@
 		requiredFields={['age', 'firstName', 'lastName']}
 		exclude={['teams', 'imageFile']}
 	>
-		<svelte:fragment slot="createRelationField" />
-		<svelte:fragment slot="modalCreateRelation" />
+		{#snippet createRelationField()}
+				<svelte:fragment  />
+			{/snippet}
+		{#snippet modalCreateRelation()}
+				<svelte:fragment  />
+			{/snippet}
 	</ModalCreate>
 {/if}
 {#key sideListUpdater}

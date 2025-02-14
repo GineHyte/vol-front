@@ -4,12 +4,12 @@
 	import { settingsRenderer, versionRenderer } from '@/render/lib/utils/store';
 	import { ProgressBar } from 'carbon-components-svelte';
 
-	let settings: any = {};
+	let settings: any = $state({});
 	settingsRenderer.subscribe((v: any) => {
 		settings = v;
 	});
 
-	let apiUrl = '';
+	let apiUrl = $state('');
 	let apiVersion = '';
 
 	function saveSettings(e: Event) {

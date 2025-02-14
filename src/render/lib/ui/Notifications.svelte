@@ -4,7 +4,7 @@
 	import { onMount } from 'svelte';
 
 	const DEFAULT_TIMEOUT = 3_000;
-	let notificationsLocal = [];
+	let notificationsLocal = $state([]);
 
 	onMount(() => {
 		notifications.subscribe((value) => {

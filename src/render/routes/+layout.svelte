@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import { onMount } from 'svelte';
 	import 'carbon-components-svelte/css/all.css';
 	import '$lib/_global.css';
@@ -21,15 +23,20 @@
 	import Notifications from '$lib/ui/Notifications.svelte';
 	import ModalCreate from '$lib/ui/ModalCreate.svelte';
 	import { pushNotification } from '../lib/utils/utils';
+	interface Props {
+		children?: import('svelte').Snippet;
+	}
 
-	let isSideNavOpen = false;
-	let currentWindowState = {
+	let { children }: Props = $props();
+
+	let isSideNavOpen = $state(false);
+	let currentWindowState = $state({
 		isMaximized: false,
 		isFullScreen: false,
-	};
-	let theme = 'g100'; // "white" | "g10" | "g80" | "g90" | "g100"
+	});
+	let theme = $state('g100'); // "white" | "g10" | "g80" | "g90" | "g100"
 
-	let ready = false;
+	let ready = $state(false);
 	onMount(() => {
 		ready = true;
 		window.electron.getSettings().then((settings: any) => {
@@ -94,7 +101,9 @@
 		},
 	];
 
-	$: document.documentElement.setAttribute('theme', theme);
+	run(() => {
+		document.documentElement.setAttribute('theme', theme);
+	});
 </script>
 
 <Header
@@ -104,6 +113,7 @@
 	style="-webkit-app-region: drag;"
 	persistentHamburgerMenu={true}
 >
+	<!-- @migration-task: migrate this slot by hand, `skip-to-content` is an invalid identifier -->
 	<svelte:fragment slot="skip-to-content">
 		<SkipToContent />
 	</svelte:fragment>
@@ -162,7 +172,7 @@
 
 <Content>
 	{#if ready}
-		<slot />
+		{@render children?.()}
 	{/if}
 </Content>
 

@@ -31,13 +31,13 @@
 	import ContextMenuSideList from '$lib/ui/ContextMenuSideList.svelte';
 	import { error } from '@sveltejs/kit';
 
-	let techId: number | undefined = undefined;
-	let createOpen = false;
-	let createSubtechOpen = false;
-	let subtechPage = 1;
-	let subtechPageSize = 5;
-	let targetForSubtechs: any;
-	let subtechTableUpdate = false;
+	let techId: number | undefined = $state(undefined);
+	let createOpen = $state(false);
+	let createSubtechOpen = $state(false);
+	let subtechPage = $state(1);
+	let subtechPageSize = $state(5);
+	let targetForSubtechs: any = $state();
+	let subtechTableUpdate = $state(false);
 
 	function selectTech(id: number) {
 		techId = id;
@@ -132,7 +132,7 @@
 					<Column>
 						<p>Назва: {tech.name}</p>
 					</Column>
-					<div class="h-[12rem]" />
+					<div class="h-[12rem]"></div>
 					<div class="w-full h-full mt-8" bind:this={targetForSubtechs}>
 						{#key [subtechTableUpdate, createSubtechOpen]}
 							{#await getSubtechs(techId, new PaginationProps(subtechPage, subtechPageSize))}
@@ -143,11 +143,13 @@
 									headers={subtechs.getHeaders(['id'])}
 									rows={subtechs.getRows()}
 								>
-									<svelte:fragment slot="cell" let:cell let:row>
-										<div class="w-full h-full" id={row.id}>
-											{cell.value}
-										</div>
-									</svelte:fragment>
+									{#snippet cell({ cell, row })}
+																	
+											<div class="w-full h-full" id={row.id}>
+												{cell.value}
+											</div>
+										
+																	{/snippet}
 									<Toolbar>
 										<ToolbarContent class="w-full">
 											<Button

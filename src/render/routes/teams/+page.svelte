@@ -28,13 +28,13 @@
 	import ModalUnderSelect from '$lib/ui/ModalUnderSelect.svelte';
 	import { Amplua } from '$lib/utils/utils';
 
-	let teamId: number | undefined = undefined;
-	let createOpen = false;
-	let selectPlayerOpen = false;
-	let selectPlayerAmpluaOpen = false;
-	let selectedPlayers: { [key: string]: any }[] = [];
-	let selectionPlayerObject: { [key: string]: any } = {};
-	let sideListUpdater: boolean = false;
+	let teamId: number | undefined = $state(undefined);
+	let createOpen = $state(false);
+	let selectPlayerOpen = $state(false);
+	let selectPlayerAmpluaOpen = $state(false);
+	let selectedPlayers: { [key: string]: any }[] = $state([]);
+	let selectionPlayerObject: { [key: string]: any } = $state({});
+	let sideListUpdater: boolean = $state(false);
 
 	function selectTeam(id: number) {
 		teamId = id;
@@ -134,53 +134,59 @@
 	bind:open={createOpen}
 	requiredFields={['name']}
 >
-	<svelte:fragment slot="createRelationField">
-		{#key selectedPlayers}
-			{#each selectedPlayers as selectedPlayer}
-				<Tile>
-					{selectedPlayer.firstName}
-					{selectedPlayer.lastName} - {Amplua[selectedPlayer.amplua]}
-				</Tile>
-			{/each}
-		{/key}
-		<Button
-			class="mt-4"
-			on:click={() => {
-				selectPlayerOpen = true;
-			}}
-		>
-			Додати гравця
-		</Button>
-	</svelte:fragment>
-	<svelte:fragment slot="modalCreateRelation">
-		<ModalCreateRelation
-			title="Гравець"
-			getFunc={getPlayers}
-			bind:open={selectPlayerOpen}
-			on:submit={(e) => {
-				selectionPlayerObject = e.detail;
-				selectPlayerOpen = false;
-				selectPlayerAmpluaOpen = true;
-			}}
-			alreadySelectedIds={selectedPlayers.map((selectedPlayer) => selectedPlayer.id)}
-			excludeHeaders={['teams', 'imageFile', 'id']}
-		>
-			<svelte:fragment slot="modalUnderSelect">
-				<ModalUnderSelect
-					title="Амплуа"
-					options={Object.keys(Amplua).map((key) => {
-						return { key: key, value: Amplua[key] };
-					})}
-					bind:open={selectPlayerAmpluaOpen}
-					on:submit={(e) => {
-						selectionPlayerObject.amplua = e.detail;
-						selectedPlayers = [...selectedPlayers, selectionPlayerObject];
-						selectPlayerAmpluaOpen = false;
-					}}
-				/>
-			</svelte:fragment>
-		</ModalCreateRelation>
-	</svelte:fragment>
+	{#snippet createRelationField()}
+	
+			{#key selectedPlayers}
+				{#each selectedPlayers as selectedPlayer}
+					<Tile>
+						{selectedPlayer.firstName}
+						{selectedPlayer.lastName} - {Amplua[selectedPlayer.amplua]}
+					</Tile>
+				{/each}
+			{/key}
+			<Button
+				class="mt-4"
+				on:click={() => {
+					selectPlayerOpen = true;
+				}}
+			>
+				Додати гравця
+			</Button>
+		
+	{/snippet}
+	{#snippet modalCreateRelation()}
+	
+			<ModalCreateRelation
+				title="Гравець"
+				getFunc={getPlayers}
+				bind:open={selectPlayerOpen}
+				on:submit={(e) => {
+					selectionPlayerObject = e.detail;
+					selectPlayerOpen = false;
+					selectPlayerAmpluaOpen = true;
+				}}
+				alreadySelectedIds={selectedPlayers.map((selectedPlayer) => selectedPlayer.id)}
+				excludeHeaders={['teams', 'imageFile', 'id']}
+			>
+				{#snippet modalUnderSelect()}
+					
+						<ModalUnderSelect
+							title="Амплуа"
+							options={Object.keys(Amplua).map((key) => {
+								return { key: key, value: Amplua[key] };
+							})}
+							bind:open={selectPlayerAmpluaOpen}
+							on:submit={(e) => {
+								selectionPlayerObject.amplua = e.detail;
+								selectedPlayers = [...selectedPlayers, selectionPlayerObject];
+								selectPlayerAmpluaOpen = false;
+							}}
+						/>
+					
+					{/snippet}
+			</ModalCreateRelation>
+		
+	{/snippet}
 </ModalCreate>
 
 {#key sideListUpdater}

@@ -14,19 +14,34 @@
 	import Model from '$lib/scripts/model';
 	import ContextMenuSideList from '$lib/ui/ContextMenuSideList.svelte';
 
-	export let title: string = '';
-	export let getFunc: (props: PaginationProps) => Promise<Pagination<Model>>;
-	export let selectFunc: (id: number) => void;
-	export let newFunc: () => void;
-	export let headers: { key: string; value: string }[];
-	export let deleteFunc: (currentId: number) => Promise<void>;
-	export let duplicateFunc: (currentId: number) => Promise<void>;
-	export let currentId: number | null = null;
+	interface Props {
+		title?: string;
+		getFunc: (props: PaginationProps) => Promise<Pagination<Model>>;
+		selectFunc: (id: number) => void;
+		newFunc: () => void;
+		headers: { key: string; value: string }[];
+		deleteFunc: (currentId: number) => Promise<void>;
+		duplicateFunc: (currentId: number) => Promise<void>;
+		editFunc: (currentId: number) => Promise<void>;
+		currentId?: number | null;
+	}
+
+	let {
+		title = '',
+		getFunc,
+		selectFunc,
+		newFunc,
+		headers,
+		deleteFunc,
+		duplicateFunc,
+		editFunc,
+		currentId = null
+	}: Props = $props();
 
 	let pageSize = 4;
-	let page = 1;
-	let target: any;
-	let tableUpdate = false;
+	let page = $state(1);
+	let target: any = $state();
+	let tableUpdate = $state(false);
 </script>
 
 <div class="absolute right-0 top-24 w-44" bind:this={target}>
@@ -35,15 +50,17 @@
 			<DataTableSkeleton columns={1} />
 		{:then model}
 			<DataTable size="compact" {headers} rows={model.getRows()}>
-				<svelte:fragment slot="cell" let:cell let:row>
-					<ClickableTile
-						id={row.id}
-						disabled={row.id === currentId}
-						on:click={() => selectFunc(row.id)}
-					>
-						{cell.value}
-					</ClickableTile>
-				</svelte:fragment>
+				{#snippet cell({ cell, row })}
+							
+						<ClickableTile
+							id={row.id}
+							disabled={row.id === currentId}
+							on:click={() => selectFunc(row.id)}
+						>
+							{cell.value}
+						</ClickableTile>
+					
+							{/snippet}
 				<Toolbar>
 					{#if newFunc}
 						<ToolbarContent>
@@ -60,7 +77,8 @@
 				{target}
 				{deleteFunc}
 				{duplicateFunc}
-				on:update={() => (tableUpdate = !tableUpdate)}
+				{editFunc}
+				updateFunc={() => (tableUpdate = !tableUpdate)}
 			/>
 		{/await}
 	{/key}

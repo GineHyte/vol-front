@@ -30,13 +30,13 @@
 	import { PaginationProps } from '@/render/lib/scripts/pagination';
 
 	let exerciseId: number | undefined = undefined;
-	let createOpen = false;
-	let selectedTech: { [key: string]: any } | undefined = undefined;
-	let selectedSubtech: { [key: string]: any } | undefined = undefined;
-	let selectionTechOpen: boolean = false;
-	let selectionSubtechOpen: boolean = false;
-	let tableUpdater: boolean = false;
-	let targetForExercises: any;
+	let createOpen = $state(false);
+	let selectedTech: { [key: string]: any } | undefined = $state(undefined);
+	let selectedSubtech: { [key: string]: any } | undefined = $state(undefined);
+	let selectionTechOpen: boolean = $state(false);
+	let selectionSubtechOpen: boolean = $state(false);
+	let tableUpdater: boolean = $state(false);
+	let targetForExercises: any = $state();
 
 	function selectExercise(id: number) {
 		exerciseId = id;
@@ -110,11 +110,13 @@
 								])}
 								rows={exercises.getRows()}
 							>
-								<svelte:fragment slot="cell" let:cell let:row>
-									<div class="w-full h-full" id={row.id}>
-										{cell.value}
-									</div>
-								</svelte:fragment>
+								{#snippet cell({ cell, row })}
+															
+										<div class="w-full h-full" id={row.id}>
+											{cell.value}
+										</div>
+									
+															{/snippet}
 								<Toolbar>
 									<ToolbarContent>
 										<Button
@@ -151,57 +153,61 @@
 		requiredFields={['name', 'description', 'difficulty', 'timePerExercise']}
 		exclude={['imageUrl', 'videoUrl']}
 	>
-		<svelte:fragment slot="createRelationField">
-			{#if selectedTech}
-				<Tile>Техніка: {selectedTech.name}</Tile>
-			{/if}
-			{#if selectedSubtech}
-				<Tile>Підтехніка: {selectedSubtech.name}</Tile>
-			{/if}
-			<Button
-				class="mt-4"
-				on:click={() => {
-					selectionTechOpen = true;
-				}}
-			>
-				Вибрати техніку
-			</Button>
-			<Button
-				class="mt-4"
-				on:click={() => {
-					selectionSubtechOpen = true;
-				}}
-				disabled={!selectedTech}
-			>
-				Вибрати підтехніку
-			</Button>
-		</svelte:fragment>
-		<svelte:fragment slot="modalCreateRelation">
-			<ModalCreateRelation
-				title="Техніка"
-				getFunc={getTechs}
-				bind:open={selectionTechOpen}
-				on:submit={(e) => {
-					selectedTech = e.detail;
-					selectionTechOpen = false;
-					selectionSubtechOpen = true;
-				}}
-				excludeHeaders={['id']}
-			/>
-			{#if selectedTech}
-				<ModalCreateRelation
-					title="Підехніка"
-					getFunc={async () => {
-						return await getSubtechs(selectedTech?.id);
+		{#snippet createRelationField()}
+			
+				{#if selectedTech}
+					<Tile>Техніка: {selectedTech.name}</Tile>
+				{/if}
+				{#if selectedSubtech}
+					<Tile>Підтехніка: {selectedSubtech.name}</Tile>
+				{/if}
+				<Button
+					class="mt-4"
+					on:click={() => {
+						selectionTechOpen = true;
 					}}
-					bind:open={selectionSubtechOpen}
+				>
+					Вибрати техніку
+				</Button>
+				<Button
+					class="mt-4"
+					on:click={() => {
+						selectionSubtechOpen = true;
+					}}
+					disabled={!selectedTech}
+				>
+					Вибрати підтехніку
+				</Button>
+			
+			{/snippet}
+		{#snippet modalCreateRelation()}
+			
+				<ModalCreateRelation
+					title="Техніка"
+					getFunc={getTechs}
+					bind:open={selectionTechOpen}
 					on:submit={(e) => {
-						selectedSubtech = e.detail;
-						selectionSubtechOpen = false;
+						selectedTech = e.detail;
+						selectionTechOpen = false;
+						selectionSubtechOpen = true;
 					}}
 					excludeHeaders={['id']}
 				/>
-			{/if}
-		</svelte:fragment>
+				{#if selectedTech}
+					<ModalCreateRelation
+						title="Підехніка"
+						getFunc={async () => {
+							return await getSubtechs(selectedTech?.id);
+						}}
+						bind:open={selectionSubtechOpen}
+						on:submit={(e) => {
+							selectedSubtech = e.detail;
+							selectionSubtechOpen = false;
+						}}
+						excludeHeaders={['id']}
+					/>
+				{/if}
+			
+			{/snippet}
 	</ModalCreate>
 {/if}

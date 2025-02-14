@@ -1,12 +1,18 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import { Column, Grid, Row } from 'carbon-components-svelte';
 	import { Side } from '$lib/utils/utils';
 	import { createEventDispatcher } from 'svelte';
 
-	export let currentSide: Side;
-	export let side: Side;
+	interface Props {
+		currentSide: Side;
+		side: Side;
+	}
 
-	let zones: number[][];
+	let { currentSide, side }: Props = $props();
+
+	let zones: number[][] = $state();
 
 	if (side === Side.LEFT) {
 		zones = [
@@ -24,9 +30,11 @@
 
 	const dispatch = createEventDispatcher();
 
-	let disabled: boolean = true;
+	let disabled: boolean = $state(true);
 
-	$: disabled = currentSide !== side;
+	run(() => {
+		disabled = currentSide !== side;
+	});
 </script>
 
 <div class="w-full h-full flex flex-col">
@@ -37,7 +45,7 @@
 					class="w-full h-full border-2 border-white flex items-center justify-center cursor-pointer {disabled
 						? 'bg-gray-500 cursor-not-allowed'
 						: 'hover:bg-red-500 cursor-pointer'}"
-					on:click={() => dispatch('selectZone', zone)}
+					onclick={() => dispatch('selectZone', zone)}
 				>
 					{zone}
 				</button>

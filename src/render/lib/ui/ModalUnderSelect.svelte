@@ -2,12 +2,16 @@
 	import { Modal, TileGroup, RadioTile } from 'carbon-components-svelte';
 	import { createEventDispatcher } from 'svelte';
 
-	export let open: boolean = false;
-	export let title: string = '';
-	export let options: { [key: string]: any }[] = [];
+	interface Props {
+		open?: boolean;
+		title?: string;
+		options?: { [key: string]: any }[];
+	}
+
+	let { open = $bindable(false), title = '', options = [] }: Props = $props();
 
 	let dispatch = createEventDispatcher();
-	let selectedOption: string = '';
+	let selectedOption: string = $state('');
 </script>
 
 <Modal

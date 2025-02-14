@@ -1,21 +1,35 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import { ExpandableTile } from 'carbon-components-svelte';
-	import { Game, Player, Team } from '$lib/scripts/models';
-	import { getGame, getTeam, getPlayers } from '$lib/scripts/endpoints';
+	import { Game, Team } from '$lib/scripts/models';
+	import { getTeam } from '$lib/scripts/endpoints';
 	import PlayerElement from './Player.svelte';
 	import SideZones from './SideZones.svelte';
 	import { Side, Amplua } from '$lib/utils/utils';
 
-	export let game = new Game();
-	export let selectedZones: number[] = []; // zone
-	export let selectedSide: Side = Side.NOTSET;
-	export let selectedPlayer: number = -1;
-	export let zoneEnabled: number = 0; // 0 - false, 1 - left, 2 - right
-	export let submitFunc: () => Promise<void>;
-	export let actionOrder: number = 0;
+	interface Props {
+		game?: any;
+		selectedZones?: number[]; // zone
+		selectedSide?: Side;
+		selectedPlayer?: number;
+		zoneEnabled?: Side; // 0 - false, 1 - left, 2 - right
+		submitFunc: () => Promise<void>;
+		actionOrder?: number;
+	}
 
-	let teamALocal: Team | undefined = undefined;
-	let teamBLocal: Team | undefined = undefined;
+	let {
+		game = new Game(),
+		selectedZones = $bindable([]),
+		selectedSide = $bindable(Side.NOTSET),
+		selectedPlayer = $bindable(-1),
+		zoneEnabled = $bindable(0),
+		submitFunc,
+		actionOrder = $bindable(0)
+	}: Props = $props();
+
+	let teamALocal: Team | undefined = $state(undefined);
+	let teamBLocal: Team | undefined = $state(undefined);
 
 	async function getTeamLocal(teamId: number) {
 		let team = await getTeam(teamId);
@@ -27,11 +41,11 @@
 		return team;
 	}
 
-	let isPlayersEnabled = true;
+	let isPlayersEnabled = $state(true);
 
-	$: {
+	run(() => {
 		isPlayersEnabled = actionOrder === 0;
-	}
+	});
 </script>
 
 {#if game}
@@ -55,7 +69,7 @@
 						}
 					}}
 				/>
-				<div class="h-full w-[1px] bg-black" />
+				<div class="h-full w-[1px] bg-black"></div>
 				<SideZones
 					currentSide={zoneEnabled}
 					side={Side.RIGHT}
@@ -103,7 +117,7 @@
 						{/await}
 					{/if}
 				</div>
-				<div class="h-full w-[1px] bg-black" />
+				<div class="h-full w-[1px] bg-black"></div>
 				<div class="relative w-full">
 					{#if game.teamB}
 						{#await getTeamLocal(game.teamB)}
@@ -139,14 +153,18 @@
 			{/if}
 		</div>
 		<ExpandableTile>
-			<div slot="above"><h1 class="text-lg font-bold">Легенда поля:</h1></div>
-			<div slot="below">
-				<ul>
-					<li>Н - Нападник</li>
-					<li>З - Захисник</li>
-					<li>У - Універсальний</li>
-				</ul>
-			</div>
+			{#snippet above()}
+						<div ><h1 class="text-lg font-bold">Легенда поля:</h1></div>
+					{/snippet}
+			{#snippet below()}
+						<div >
+					<ul>
+						<li>Н - Нападник</li>
+						<li>З - Захисник</li>
+						<li>У - Універсальний</li>
+					</ul>
+				</div>
+					{/snippet}
 		</ExpandableTile>
 	</div>
 {/if}

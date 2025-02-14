@@ -1,9 +1,7 @@
-<script>
-	export let left;
-	export let top;
-	export let title;
+<script lang="ts">
 
 	import { createEventDispatcher } from 'svelte';
+	let { left, top, title } = $props();
 
 	const dispatch = createEventDispatcher();
 </script>
@@ -12,7 +10,7 @@
 	class="absolute rounded-full bg-red-800 w-12 h-12
 font-bold text-lg text-white flex justify-center items-center"
 	style="left:{left}px;top:{top}px"
-	on:click={() => dispatch('select')}
+	onclick={() => dispatch('select')}
 >
 	{title}
 </button>
