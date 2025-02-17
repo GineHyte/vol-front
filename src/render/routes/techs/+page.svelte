@@ -144,12 +144,10 @@
 									rows={subtechs.getRows()}
 								>
 									{#snippet cell({ cell, row })}
-																	
-											<div class="w-full h-full" id={row.id}>
-												{cell.value}
-											</div>
-										
-																	{/snippet}
+										<div class="w-full h-full" id={row.id}>
+											{cell.value}
+										</div>
+									{/snippet}
 									<Toolbar>
 										<ToolbarContent class="w-full">
 											<Button
@@ -201,7 +199,7 @@
 
 {#key createOpen}
 	<SideList
-		bind:currentId={techId}
+		bind:selectedId={techId}
 		title="Техніка"
 		deleteFunc={removeTech}
 		duplicateFunc={duplicateTech}

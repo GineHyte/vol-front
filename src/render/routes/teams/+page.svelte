@@ -135,63 +135,57 @@
 	requiredFields={['name']}
 >
 	{#snippet createRelationField()}
-	
-			{#key selectedPlayers}
-				{#each selectedPlayers as selectedPlayer}
-					<Tile>
-						{selectedPlayer.firstName}
-						{selectedPlayer.lastName} - {Amplua[selectedPlayer.amplua]}
-					</Tile>
-				{/each}
-			{/key}
-			<Button
-				class="mt-4"
-				on:click={() => {
-					selectPlayerOpen = true;
-				}}
-			>
-				Додати гравця
-			</Button>
-		
+		{#key selectedPlayers}
+			{#each selectedPlayers as selectedPlayer}
+				<Tile>
+					{selectedPlayer.firstName}
+					{selectedPlayer.lastName} - {Amplua[selectedPlayer.amplua]}
+				</Tile>
+			{/each}
+		{/key}
+		<Button
+			class="mt-4"
+			on:click={() => {
+				selectPlayerOpen = true;
+			}}
+		>
+			Додати гравця
+		</Button>
 	{/snippet}
 	{#snippet modalCreateRelation()}
-	
-			<ModalCreateRelation
-				title="Гравець"
-				getFunc={getPlayers}
-				bind:open={selectPlayerOpen}
-				on:submit={(e) => {
-					selectionPlayerObject = e.detail;
-					selectPlayerOpen = false;
-					selectPlayerAmpluaOpen = true;
-				}}
-				alreadySelectedIds={selectedPlayers.map((selectedPlayer) => selectedPlayer.id)}
-				excludeHeaders={['teams', 'imageFile', 'id']}
-			>
-				{#snippet modalUnderSelect()}
-					
-						<ModalUnderSelect
-							title="Амплуа"
-							options={Object.keys(Amplua).map((key) => {
-								return { key: key, value: Amplua[key] };
-							})}
-							bind:open={selectPlayerAmpluaOpen}
-							on:submit={(e) => {
-								selectionPlayerObject.amplua = e.detail;
-								selectedPlayers = [...selectedPlayers, selectionPlayerObject];
-								selectPlayerAmpluaOpen = false;
-							}}
-						/>
-					
-					{/snippet}
-			</ModalCreateRelation>
-		
+		<ModalCreateRelation
+			title="Гравець"
+			getFunc={getPlayers}
+			bind:open={selectPlayerOpen}
+			on:submit={(e) => {
+				selectionPlayerObject = e.detail;
+				selectPlayerOpen = false;
+				selectPlayerAmpluaOpen = true;
+			}}
+			alreadySelectedIds={selectedPlayers.map((selectedPlayer) => selectedPlayer.id)}
+			excludeHeaders={['teams', 'imageFile', 'id']}
+		>
+			{#snippet modalUnderSelect()}
+				<ModalUnderSelect
+					title="Амплуа"
+					options={Object.keys(Amplua).map((key) => {
+						return { key: key, value: Amplua[key] };
+					})}
+					bind:open={selectPlayerAmpluaOpen}
+					on:submit={(e) => {
+						selectionPlayerObject.amplua = e.detail;
+						selectedPlayers = [...selectedPlayers, selectionPlayerObject];
+						selectPlayerAmpluaOpen = false;
+					}}
+				/>
+			{/snippet}
+		</ModalCreateRelation>
 	{/snippet}
 </ModalCreate>
 
 {#key sideListUpdater}
 	<SideList
-		bind:currentId={teamId}
+		bind:selectedId={teamId}
 		title="Команда"
 		deleteFunc={removeTeam}
 		duplicateFunc={duplicateTeam}

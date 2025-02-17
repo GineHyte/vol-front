@@ -124,16 +124,16 @@
 		exclude={['teams', 'imageFile']}
 	>
 		{#snippet createRelationField()}
-				<svelte:fragment  />
-			{/snippet}
+			<svelte:fragment />
+		{/snippet}
 		{#snippet modalCreateRelation()}
-				<svelte:fragment  />
-			{/snippet}
+			<svelte:fragment />
+		{/snippet}
 	</ModalCreate>
 {/if}
 {#key sideListUpdater}
 	<SideList
-		bind:currentId={playerId}
+		bind:selectedId={playerId}
 		title="Гравець"
 		deleteFunc={removePlayer}
 		duplicateFunc={duplicatePlayer}

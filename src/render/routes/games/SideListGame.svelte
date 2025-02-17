@@ -1,8 +1,21 @@
-<!-- @migration-task Error while migrating Svelte code: Can only bind to state or props
-https://svelte.dev/e/bind_invalid_value -->
+<!-- Here are all SideList shit and also modals for Editing and Creating Models-->
 <script lang="ts">
-	import { getGame, createGame, deleteGame } from '$lib/scripts/endpoints';
+	import { getGame, createGame, deleteGame, getGames } from '$lib/scripts/endpoints';
 	import { pushNotification } from '$lib/utils/utils';
+	import SideList from '$lib/ui/SideList.svelte';
+	import CreateGame from './CreateGame.svelte';
+
+	let editOpen = $state(false);
+	let editGame: number | undefined = undefined;
+	let createOpen = $state(false);
+
+	interface Props {
+		selectedGameId?: number | undefined;
+		teamA?: any;
+		teamB?: any;
+	}
+
+	let { selectedGameId, teamA, teamB }: Props = $props();
 
 	async function duplicateGameRenderer(currentId: number) {
 		if (currentId) {
@@ -26,19 +39,29 @@ https://svelte.dev/e/bind_invalid_value -->
 			}
 		}
 	}
+
+	async function editGameRenderer(currentId: number) {
+		if (currentId) {
+			editOpen = true;
+			editGame = currentId;
+			selectedGameId = undefined;
+		}
+	}
 </script>
 
 {#key createOpen}
 	<SideList
-		bind:currentId={gameId}
+		selectedId={selectedGameId}
 		title="Гра"
 		deleteFunc={deleteGameRenderer}
 		duplicateFunc={duplicateGameRenderer}
+		editFunc={editGameRenderer}
 		newFunc={() => {
 			createOpen = true;
 		}}
 		getFunc={getGames}
-		selectFunc={selectGame}
 		headers={[{ key: 'name', value: 'Назва' }]}
 	/>
 {/key}
+<CreateGame bind:createOpen bind:teamA bind:teamB />
+<EditGame bind:createOpen bind:teamA bind:teamB />

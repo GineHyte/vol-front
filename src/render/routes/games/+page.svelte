@@ -36,8 +36,9 @@
 	import { Impact, Side } from '$lib/utils/utils';
 	import ModalCreateRelation from '$lib/ui/ModalCreateRelation.svelte';
 	import CreateGame from '@/render/routes/games/CreateGame.svelte';
+	import SideListGame from '@/render/routes/games/SideListGame.svelte';
 
-	let gameId: number | undefined = $state(undefined);
+	let selectedGameId: number | undefined = $state(undefined);
 	let createOpen = $state(false);
 	let selectedTech: number = $state(-1);
 	let selectedSubtech: number = $state(-1);
@@ -54,6 +55,8 @@
 	let teamA = $state(0);
 	let teamB = $state(0);
 	let selectTeamAOpen = false;
+	let editOpen = false;
+	let editGame: number | undefined = undefined;
 	let selectTeamBOpen = false;
 
 	let localGame: Game | undefined = undefined;
@@ -63,13 +66,9 @@
 		return localGame;
 	}
 
-	function selectGame(id: number) {
-		gameId = id;
-	}
-
 	async function submitAction() {
 		let action = new Action();
-		action.game = gameId;
+		action.game = selectedGameId;
 		action.team = selectedSide === Side.LEFT ? localGame?.teamA : localGame?.teamB;
 		action.player = selectedPlayer;
 		action.subtech = selectedSubtech;
@@ -129,10 +128,10 @@
 	});
 </script>
 
-{#if gameId}
+{#if selectedGameId}
 	<Content>
 		<Grid>
-			{#await getGameLocal(gameId)}
+			{#await getGameLocal(selectedGameId)}
 				<Row class="min-h-96 m-4">
 					<SkeletonPlaceholder class="size-96" />
 				</Row>
@@ -150,17 +149,15 @@
 										rows={techs.getRows()}
 									>
 										{#snippet cell({ cell, row })}
-																			
-												<button
-													onclick={() => {
+											<button
+												onclick={() => {
 													actionOrder = 2;
 													selectedTech = row.id;
 												}}
-												>
-													{cell.value}
-												</button>
-											
-																			{/snippet}
+											>
+												{cell.value}
+											</button>
+										{/snippet}
 									</DataTable>
 								{/await}
 							{:else if actionOrder === 2}
@@ -173,17 +170,15 @@
 										rows={subtechs.getRows()}
 									>
 										{#snippet cell({ cell, row })}
-																					
-												<button
-													onclick={() => {
+											<button
+												onclick={() => {
 													actionOrder = 3;
 													selectedSubtech = row.id;
 												}}
-												>
-													{cell.value}
-												</button>
-											
-																					{/snippet}
+											>
+												{cell.value}
+											</button>
+										{/snippet}
 									</DataTable>
 								{/await}
 							{:else if actionOrder === 3}
@@ -195,17 +190,15 @@
 									}))}
 								>
 									{#snippet cell({ cell, row })}
-																					
-											<button
-												onclick={() => {
+										<button
+											onclick={() => {
 												actionOrder = 4;
 												selectedImpact = row.id;
 											}}
-											>
-												{cell.value}
-											</button>
-										
-																					{/snippet}
+										>
+											{cell.value}
+										</button>
+									{/snippet}
 								</DataTable>
 							{/if}
 						{/key}
@@ -235,7 +228,7 @@
 				<Row>
 					<div class="w-full h-full mt-8" bind:this={targetForActions}>
 						{#key actionTableUpdate}
-							{#await getActions(gameId, new PaginationProps(actionsPage, actionsPageSize))}
+							{#await getActions(selectedGameId, new PaginationProps(actionsPage, actionsPageSize))}
 								<DataTableSkeleton />
 							{:then actions}
 								<DataTable
@@ -244,12 +237,10 @@
 									rows={actions.getRows()}
 								>
 									{#snippet cell({ cell, row })}
-																	
-											<div class="w-full h-full" id={row.id}>
-												{cell.value}
-											</div>
-										
-																	{/snippet}
+										<div class="w-full h-full" id={row.id}>
+											{cell.value}
+										</div>
+									{/snippet}
 								</DataTable>
 								<Pagination
 									pageSizes={[5, 10, 20, 50]}
@@ -272,18 +263,4 @@
 	</Content>
 {/if}
 
-<CreateGame bind:createOpen bind:teamA bind:teamB />
-{#key createOpen}
-	<SideList
-		bind:currentId={gameId}
-		title="Гра"
-		deleteFunc={deleteGameRenderer}
-		duplicateFunc={duplicateGameRenderer}
-		newFunc={() => {
-			createOpen = true;
-		}}
-		getFunc={getGames}
-		selectFunc={selectGame}
-		headers={[{ key: 'name', value: 'Назва' }]}
-	/>
-{/key}
+<SideListGame {selectedGameId} {createOpen} {selectGame} {editOpen} {editGame} />

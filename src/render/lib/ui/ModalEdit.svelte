@@ -15,16 +15,17 @@
 
 	import Model from '$lib/scripts/model';
 	import Field from '$lib/scripts/field';
-	import { createEventDispatcher } from 'svelte';
 
 	interface Props {
 		title?: string;
-		model: Model | undefined;
+		model: Model;
 		requiredFields?: string[];
 		open?: boolean;
 		exclude?: string[];
 		createRelationField?: import('svelte').Snippet;
 		modalCreateRelation?: import('svelte').Snippet;
+		onSubmit: (e: Event) => Promise<void>;
+		onClose: () => void;
 	}
 
 	let {
@@ -34,10 +35,11 @@
 		open = $bindable(false),
 		exclude = [],
 		createRelationField,
-		modalCreateRelation
+		modalCreateRelation,
+		onSubmit,
+		onClose,
 	}: Props = $props();
 
-	const dispatch = createEventDispatcher();
 	title = '+ ' + title;
 	exclude.push('id');
 
@@ -51,19 +53,22 @@
 		// workaround for Carbon Design System Custom Events
 		let target = document.getElementById(id) as HTMLInputElement;
 		let value = target.value;
-		model[key] = value;
+		// @ts-ignore
+		model[id] = value;
 	}
 
 	function handleCheckbox(id: string) {
 		let target = document.getElementById(id) as HTMLInputElement;
 		let value = target.checked;
-		model[key] = value;
+		// @ts-ignore
+		model[id] = value;
 	}
 
 	function handleDatePicker(id: string) {
 		let date = document.getElementById(id + 'date') as HTMLInputElement;
 		let time = document.getElementById(id + 'time') as HTMLInputElement;
-		model[key] = date.value + ' ' + time.value;
+		// @ts-ignore
+		model[id] = date.value + ' ' + time.value;
 	}
 
 	function getPrimaryButtonDisabled() {
@@ -80,18 +85,7 @@
 </script>
 
 {#if open}
-	<ComposedModal
-		size={'lg'}
-		bind:open
-		on:submit={async () => {
-			dispatch('submit', model);
-			model = undefined;
-		}}
-		on:close={() => {
-			dispatch('close');
-			model = undefined;
-		}}
-	>
+	<ComposedModal size={'lg'} bind:open on:submit={onSubmit} on:close={onClose}>
 		<ModalHeader {title} />
 		<ModalBody hasForm>
 			{#each model.getCreationArray(exclude) as item}

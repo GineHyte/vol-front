@@ -6,7 +6,6 @@
 		Toolbar,
 		ToolbarContent,
 		Button,
-		PaginationNav,
 	} from 'carbon-components-svelte';
 
 	import CompactPagination from '$lib/ui/CompactPagination.svelte';
@@ -16,26 +15,24 @@
 
 	interface Props {
 		title?: string;
-		getFunc: (props: PaginationProps) => Promise<Pagination<Model>>;
-		selectFunc: (id: number) => void;
-		newFunc: () => void;
 		headers: { key: string; value: string }[];
+		selectedId?: number | null;
+		getFunc: (props: PaginationProps) => Promise<Pagination<Model>>;
+		newFunc: () => void;
+		editFunc: (currentId: number) => void;
 		deleteFunc: (currentId: number) => Promise<void>;
 		duplicateFunc: (currentId: number) => Promise<void>;
-		editFunc: (currentId: number) => Promise<void>;
-		currentId?: number | null;
 	}
 
 	let {
 		title = '',
-		getFunc,
-		selectFunc,
-		newFunc,
 		headers,
+		selectedId = $bindable(undefined),
+		getFunc,
+		newFunc,
+		editFunc,
 		deleteFunc,
 		duplicateFunc,
-		editFunc,
-		currentId = null
 	}: Props = $props();
 
 	let pageSize = 4;
@@ -51,16 +48,14 @@
 		{:then model}
 			<DataTable size="compact" {headers} rows={model.getRows()}>
 				{#snippet cell({ cell, row })}
-							
-						<ClickableTile
-							id={row.id}
-							disabled={row.id === currentId}
-							on:click={() => selectFunc(row.id)}
-						>
-							{cell.value}
-						</ClickableTile>
-					
-							{/snippet}
+					<ClickableTile
+						id={row.id}
+						disabled={row.id === selectedId}
+						on:click={() => (selectedId = row.id)}
+					>
+						{cell.value}
+					</ClickableTile>
+				{/snippet}
 				<Toolbar>
 					{#if newFunc}
 						<ToolbarContent>
