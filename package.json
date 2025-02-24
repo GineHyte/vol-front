@@ -1,86 +1,87 @@
 {
-  "name": "vol-front",
-  "version": "0.1.1",
-  "private": true,
-  "description": "Technical Skills in Beach Volleyball",
-  "main": "src/main/electron.cjs",
-  "type": "module",
-  "author": "Petrenko Oleksii",
-  "scripts": {
-    "dev": "cross-env NODE_ENV=dev npm run dev:all",
-    "dev:all": "concurrently -n=svelte,electron -c='#ff3e00',blue \"npm run dev:svelte\" \"npm run dev:electron\"",
-    "dev:svelte": "vite dev",
-    "dev:electron": "electron .",
-    "build": "cross-env NODE_ENV=production npm run build:svelte && npm run build:electron",
-    "build:svelte": "vite build",
-    "build:electron": "node package.cjs",
-    "preview": "electron .",
-    "publish": "electron-forge publish",
-    "start": "electron-forge start",
-    "package": "electron-forge package",
-    "make": "electron-forge make",
-    "test": "jest"
-  },
-  "build": {
-    "files": [
-      "src/**/*"
-    ]
-  },
-  "engines": {
-    "npm": ">=7",
-    "yarn": "use npm - https://github.com/FractalHQ/sveltekit-electron/issues/12#issuecomment-1068399385"
-  },
-  "browserslist": [
-    "Chrome 89"
-  ],
-  "dependencies": {
-    "carbon-icons-svelte": "^12.13.0",
-    "carbon-preprocess-svelte": "^0.11.10",
-    "electron-builder": "^25.1.8",
-    "electron-publish": "^25.1.7",
-    "electron-reloader": "^1.2.3",
-    "electron-serve": "^1.1.0",
-    "electron-settings": "^4.0.4",
-    "electron-squirrel-startup": "^1.0.1",
-    "electron-window-state": "^5.0.3",
-    "electron-winstaller": "^5.4.0",
-    "ts-jest": "^29.2.5",
-    "ts-node": "^10.9.2",
-    "update-electron-app": "^3.1.0"
-  },
-  "devDependencies": {
-    "@sveltejs/adapter-static": "3.0.8",
-    "@sveltejs/kit": "2.17.1",
-    "@types/jest": "^29.5.14",
-    "@typescript-eslint/eslint-plugin": "^5.56.0",
-    "@typescript-eslint/parser": "^5.56.0",
-    "autoprefixer": "^10.4.20",
-    "carbon-components-svelte": "^0.85.2",
-    "concurrently": "^7.6.0",
-    "cross-env": "^7.0.3",
-    "dotenv": "^16.0.3",
-    "electron": "^23.2.0",
-    "electron-connect": "^0.6.3",
-    "electron-updater": "^5.3.0",
-    "eslint": "^8.36.0",
-    "eslint-config-prettier": "^8.8.0",
-    "jest": "^29.7.0",
-    "npm-run-all": "^4.1.5",
-    "postcss": "^8.4.47",
-    "prettier": "3.5.1",
-    "prettier-plugin-svelte": "3.3.3",
-    "sass": "^1.60.0",
-    "svelte": "5.20.0",
-    "svelte-check": "4.1.4",
-    "svelte-preprocess": "6.0.3",
-    "tailwindcss": "^3.4.14",
-    "tslib": "^2.5.0",
-    "typescript": "5.7.3",
-    "vite": "6.1.0"
-  },
-  "overrides": {
-    "electron": {
-      "got": "^12.5.1"
-    }
-  }
+	"name": "vol-front",
+	"version": "0.1.1",
+	"private": true,
+	"description": "Technical Skills in Beach Volleyball",
+	"main": "src/main/electron.cjs",
+	"type": "module",
+	"author": "Petrenko Oleksii",
+	"scripts": {
+		"dev": "cross-env NODE_ENV=dev npm run dev:all",
+		"dev:all": "concurrently -n=svelte,electron -c='#ff3e00',blue \"npm run dev:svelte\" \"npm run dev:electron\"",
+		"dev:svelte": "vite dev",
+		"dev:electron": "electron .",
+		"build": "cross-env NODE_ENV=production npm run build:svelte && npm run build:electron",
+		"build:svelte": "vite build",
+		"build:electron": "node package.cjs",
+		"preview": "electron .",
+		"publish": "electron-forge publish",
+		"start": "electron-forge start",
+		"package": "electron-forge package",
+		"make": "electron-forge make",
+		"test": "jest",
+		"format": "prettier --write ."
+	},
+	"build": {
+		"files": [
+			"src/**/*"
+		]
+	},
+	"engines": {
+		"npm": ">=7",
+		"yarn": "use npm - https://github.com/FractalHQ/sveltekit-electron/issues/12#issuecomment-1068399385"
+	},
+	"browserslist": [
+		"Chrome 89"
+	],
+	"dependencies": {
+		"carbon-icons-svelte": "^12.13.0",
+		"carbon-preprocess-svelte": "^0.11.10",
+		"electron-builder": "^25.1.8",
+		"electron-publish": "^25.1.7",
+		"electron-reloader": "^1.2.3",
+		"electron-serve": "^1.1.0",
+		"electron-settings": "^4.0.4",
+		"electron-squirrel-startup": "^1.0.1",
+		"electron-window-state": "^5.0.3",
+		"electron-winstaller": "^5.4.0",
+		"ts-jest": "^29.2.5",
+		"ts-node": "^10.9.2",
+		"update-electron-app": "^3.1.0"
+	},
+	"devDependencies": {
+		"@sveltejs/adapter-static": "3.0.8",
+		"@sveltejs/kit": "2.17.1",
+		"@types/jest": "^29.5.14",
+		"@typescript-eslint/eslint-plugin": "^5.56.0",
+		"@typescript-eslint/parser": "^5.56.0",
+		"autoprefixer": "^10.4.20",
+		"carbon-components-svelte": "^0.85.2",
+		"concurrently": "^7.6.0",
+		"cross-env": "^7.0.3",
+		"dotenv": "^16.0.3",
+		"electron": "^23.2.0",
+		"electron-connect": "^0.6.3",
+		"electron-updater": "^5.3.0",
+		"eslint": "^8.36.0",
+		"eslint-config-prettier": "^8.8.0",
+		"jest": "^29.7.0",
+		"npm-run-all": "^4.1.5",
+		"postcss": "^8.4.47",
+		"prettier": "3.5.1",
+		"prettier-plugin-svelte": "3.3.3",
+		"sass": "^1.60.0",
+		"svelte": "5.20.0",
+		"svelte-check": "4.1.4",
+		"svelte-preprocess": "6.0.3",
+		"tailwindcss": "^3.4.14",
+		"tslib": "^2.5.0",
+		"typescript": "5.7.3",
+		"vite": "6.1.0"
+	},
+	"overrides": {
+		"electron": {
+			"got": "^12.5.1"
+		}
+	}
 }

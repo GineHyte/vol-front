@@ -10,11 +10,11 @@ const config = {
 			assets: 'build',
 			fallback: 'index.html',
 			precompress: false,
-			strict: true
+			strict: true,
 		}),
 		paths: {
 			base: '',
-			relative: true
+			relative: true,
 		},
 		appDir: 'app',
 		files: {
@@ -22,11 +22,11 @@ const config = {
 			lib: 'src/render/lib',
 			appTemplate: 'src/app.html',
 		},
-		prerender: { 
+		prerender: {
 			entries: [],
-			handleHttpError: 'warn'
-		}
-	}
+			handleHttpError: 'warn',
+		},
+	},
 };
 
 export default config;
