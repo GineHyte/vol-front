@@ -166,7 +166,7 @@
 									</DataTable>
 								{/await}
 							{:else if actionOrder === 2}
-								{#await getSubtechs(selectedTech)}
+								{#await getSubtechs(selectedTech, new PaginationProps(1, 100))}
 									<DataTableSkeleton />
 								{:then subtechs}
 									<DataTable
