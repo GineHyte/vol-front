@@ -1,8 +1,7 @@
 <script lang="ts">
 	import {
-		SkeletonPlaceholder,
-		ImageLoader,
 		Content,
+		Pagination,
 		Tile,
 		Grid,
 		DataTable,
@@ -12,7 +11,6 @@
 		Toolbar,
 		ToolbarContent,
 		Button,
-		SkeletonText,
 	} from 'carbon-components-svelte';
 	import {
 		getExercises,
@@ -26,10 +24,10 @@
 	import ModalCreate from '$lib/ui/ModalCreate.svelte';
 	import { pushNotification } from '$lib/utils/utils';
 	import ModalCreateRelation from '$lib/ui/ModalCreateRelation.svelte';
-	import ContextMenuSideList from '$lib/ui/ContextMenuSideList.svelte';
+	import ContextMenu from '@/render/lib/ui/ContextMenu.svelte';
 	import { PaginationProps } from '@/render/lib/scripts/pagination';
+	import { Rewind_10 } from 'carbon-icons-svelte';
 
-	let exerciseId: number | undefined = undefined;
 	let createOpen = $state(false);
 	let selectedTech: { [key: string]: any } | undefined = $state(undefined);
 	let selectedSubtech: { [key: string]: any } | undefined = $state(undefined);
@@ -37,10 +35,8 @@
 	let selectionSubtechOpen: boolean = $state(false);
 	let tableUpdater: boolean = $state(false);
 	let targetForExercises: any = $state();
-
-	function selectExercise(id: number) {
-		exerciseId = id;
-	}
+	let page = $state(1);
+	let pageSize = $state(10);
 
 	function updateTable() {
 		tableUpdater = !tableUpdater;
@@ -96,7 +92,7 @@
 			<Column>
 				<div bind:this={targetForExercises}>
 					{#key tableUpdater}
-						{#await getExercises(new PaginationProps(1, 100))}
+						{#await getExercises(new PaginationProps(page, pageSize))}
 							<DataTableSkeleton />
 						{:then exercises}
 							<DataTable
@@ -111,12 +107,10 @@
 								rows={exercises.getRows()}
 							>
 								{#snippet cell({ cell, row })}
-															
-										<div class="w-full h-full" id={row.id}>
-											{cell.value}
-										</div>
-									
-															{/snippet}
+									<div class="w-full h-full" id={row.id}>
+										{cell.value}
+									</div>
+								{/snippet}
 								<Toolbar>
 									<ToolbarContent>
 										<Button
@@ -130,14 +124,20 @@
 									</ToolbarContent>
 								</Toolbar>
 							</DataTable>
+							<Pagination
+								pageSizes={[10, 50, 100]}
+								bind:pageSize
+								bind:page
+								totalItems={exercises.total}
+							/>
 						{/await}
 					{/key}
 				</div>
-				<ContextMenuSideList
+				<ContextMenu
 					target={targetForExercises}
 					deleteFunc={removeExercise}
 					duplicateFunc={duplicateExercise}
-					on:update={updateTable}
+					updateFunc={updateTable}
 				/>
 			</Column>
 		</Row>
@@ -154,60 +154,56 @@
 		exclude={['imageUrl', 'videoUrl']}
 	>
 		{#snippet createRelationField()}
-			
-				{#if selectedTech}
-					<Tile>Техніка: {selectedTech.name}</Tile>
-				{/if}
-				{#if selectedSubtech}
-					<Tile>Підтехніка: {selectedSubtech.name}</Tile>
-				{/if}
-				<Button
-					class="mt-4"
-					on:click={() => {
-						selectionTechOpen = true;
-					}}
-				>
-					Вибрати техніку
-				</Button>
-				<Button
-					class="mt-4"
-					on:click={() => {
-						selectionSubtechOpen = true;
-					}}
-					disabled={!selectedTech}
-				>
-					Вибрати підтехніку
-				</Button>
-			
-			{/snippet}
+			{#if selectedTech}
+				<Tile>Техніка: {selectedTech.name}</Tile>
+			{/if}
+			{#if selectedSubtech}
+				<Tile>Підтехніка: {selectedSubtech.name}</Tile>
+			{/if}
+			<Button
+				class="mt-4"
+				on:click={() => {
+					selectionTechOpen = true;
+				}}
+			>
+				Вибрати техніку
+			</Button>
+			<Button
+				class="mt-4"
+				on:click={() => {
+					selectionSubtechOpen = true;
+				}}
+				disabled={!selectedTech}
+			>
+				Вибрати підтехніку
+			</Button>
+		{/snippet}
 		{#snippet modalCreateRelation()}
-			
+			<ModalCreateRelation
+				title="Техніка"
+				getFunc={getTechs}
+				bind:open={selectionTechOpen}
+				on:submit={(e) => {
+					selectedTech = e.detail;
+					selectionTechOpen = false;
+					selectionSubtechOpen = true;
+				}}
+				excludeHeaders={['id']}
+			/>
+			{#if selectedTech}
 				<ModalCreateRelation
-					title="Техніка"
-					getFunc={getTechs}
-					bind:open={selectionTechOpen}
+					title="Підехніка"
+					getFunc={async () => {
+						return await getSubtechs(selectedTech?.id);
+					}}
+					bind:open={selectionSubtechOpen}
 					on:submit={(e) => {
-						selectedTech = e.detail;
-						selectionTechOpen = false;
-						selectionSubtechOpen = true;
+						selectedSubtech = e.detail;
+						selectionSubtechOpen = false;
 					}}
 					excludeHeaders={['id']}
 				/>
-				{#if selectedTech}
-					<ModalCreateRelation
-						title="Підехніка"
-						getFunc={async () => {
-							return await getSubtechs(selectedTech?.id);
-						}}
-						bind:open={selectionSubtechOpen}
-						on:submit={(e) => {
-							selectedSubtech = e.detail;
-							selectionSubtechOpen = false;
-						}}
-						excludeHeaders={['id']}
-					/>
-				{/if}
-			
-			{/snippet}
+			{/if}
+		{/snippet}
 	</ModalCreate>
 {/if}

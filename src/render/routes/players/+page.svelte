@@ -23,13 +23,9 @@
 	import ModalCreate from '$lib/ui/ModalCreate.svelte';
 	import { pushNotification } from '$lib/utils/utils';
 
-	let playerId: number | undefined = $state(undefined);
+	let selectedPlayerId: number | undefined = $state(undefined);
 	let createOpen = $state(false);
 	let sideListUpdater: boolean = $state(false);
-
-	function selectPlayer(id: number) {
-		playerId = id;
-	}
 
 	function updateSideList() {
 		sideListUpdater = !sideListUpdater;
@@ -57,7 +53,7 @@
 			}
 		}
 		updateSideList();
-		playerId = undefined;
+		selectedPlayerId = undefined;
 	}
 
 	async function createPlayerRenderer(inputData: any) {
@@ -77,11 +73,11 @@
 	}
 </script>
 
-{#if playerId}
+{#if selectedPlayerId}
 	<Content>
 		<Grid>
 			<Row class="min-h-96 m-4">
-				{#await getPlayer(playerId)}
+				{#await getPlayer(selectedPlayerId)}
 					<Column>
 						<SkeletonPlaceholder class="size-96" />
 					</Column>
@@ -103,7 +99,7 @@
 			</Row>
 			<Row>
 				<Column>
-					{#await getGames(new PaginationProps(), undefined, playerId)}
+					{#await getGames(new PaginationProps(), undefined, selectedPlayerId)}
 						<DataTableSkeleton />
 					{:then games}
 						<DataTable headers={games.getHeaders()} rows={games.getRows()} />
@@ -122,18 +118,11 @@
 		bind:open={createOpen}
 		requiredFields={['age', 'firstName', 'lastName']}
 		exclude={['teams', 'imageFile']}
-	>
-		{#snippet createRelationField()}
-			<svelte:fragment />
-		{/snippet}
-		{#snippet modalCreateRelation()}
-			<svelte:fragment />
-		{/snippet}
-	</ModalCreate>
+	></ModalCreate>
 {/if}
 {#key sideListUpdater}
 	<SideList
-		bind:selectedId={playerId}
+		bind:selectedId={selectedPlayerId}
 		title="Гравець"
 		deleteFunc={removePlayer}
 		duplicateFunc={duplicatePlayer}
@@ -141,7 +130,9 @@
 			createOpen = true;
 		}}
 		getFunc={getPlayers}
-		selectFunc={selectPlayer}
+		editFunc={(currentId: number) => {
+			selectedPlayerId = currentId;
+		}}
 		headers={[{ key: 'firstName', value: "Ім'я" }]}
 	/>
 {/key}

@@ -1,6 +1,6 @@
 {
 	"name": "vol-front",
-	"version": "0.1.1",
+	"version": "0.1.2",
 	"private": true,
 	"description": "Technical Skills in Beach Volleyball",
 	"main": "src/main/electron.cjs",
@@ -38,6 +38,7 @@
 		"carbon-icons-svelte": "^12.13.0",
 		"carbon-preprocess-svelte": "^0.11.10",
 		"electron-builder": "^25.1.8",
+		"electron-packager": "^17.1.2",
 		"electron-publish": "^25.1.7",
 		"electron-reloader": "^1.2.3",
 		"electron-serve": "^1.1.0",

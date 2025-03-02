@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Button, TextInput } from 'carbon-components-svelte';
+	import { Button, Checkbox, TextInput } from 'carbon-components-svelte';
 	import { pushNotification } from '$lib/utils/utils';
 	import { settingsRenderer, versionRenderer } from '@/render/lib/utils/store';
 	import { ProgressBar } from 'carbon-components-svelte';
@@ -9,19 +9,22 @@
 		settings = v;
 	});
 
-	let apiUrl = $state('');
-	let apiVersion = '';
-
 	function saveSettings(e: Event) {
 		pushNotification('settingsSaveSuccess');
 
 		window.electron.setSettings({
-			apiUrl: apiUrl,
-			apiVersion: apiVersion,
+			apiUrl: settings.apiUrl,
+			apiVersion: settings.apiVersion,
+			trunicate: settings.trunicate,
 			loaded: true,
 		});
 
-		settingsRenderer.set({ ...settings, apiUrl: apiUrl, apiVersion: apiVersion });
+		settingsRenderer.set({
+			...settings,
+			apiUrl: settings.apiUrl,
+			apiVersion: settings.apiVersion,
+			trunicate: settings.trunicate,
+		});
 	}
 
 	function checkUpdate() {
@@ -35,11 +38,12 @@
 
 <TextInput
 	labelText="IP адрес сервера"
-	bind:value={apiUrl}
+	bind:value={settings.apiUrl}
 	placeholder={settings.apiUrl}
 	class="mb-4"
 	on:focus={(e) => (e.target.value = e.target.placeholder)}
 />
+<Checkbox labelText="Урізання назв" bind:checked={settings.trunicate} class="mb-4" />
 <!-- <TextInput
 	labelText="Версія API"
 	bind:value={apiVersion}

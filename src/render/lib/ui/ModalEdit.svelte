@@ -25,7 +25,7 @@
 		createRelationField?: import('svelte').Snippet;
 		modalCreateRelation?: import('svelte').Snippet;
 		onSubmit: (e: Event) => Promise<void>;
-		onClose: () => void;
+		onClose?: () => void;
 	}
 
 	let {
@@ -37,7 +37,7 @@
 		createRelationField,
 		modalCreateRelation,
 		onSubmit,
-		onClose,
+		onClose = () => {},
 	}: Props = $props();
 
 	title = '+ ' + title;

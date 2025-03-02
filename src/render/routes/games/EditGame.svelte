@@ -7,7 +7,7 @@
 	import { pushNotification } from '$lib/utils/utils';
 
 	interface Props {
-		createOpen?: boolean;
+		editOpen?: boolean;
 		teamA?: any;
 		teamB?: any;
 		selectTeamAOpen?: boolean;
@@ -15,7 +15,7 @@
 	}
 
 	let {
-		createOpen = $bindable(false),
+		editOpen: createOpen = $bindable(false),
 		teamA = $bindable(undefined),
 		teamB = $bindable(undefined),
 		selectTeamAOpen = $bindable(false),
@@ -43,7 +43,7 @@
 <ModalEdit
 	title="Гра"
 	model={new Game()}
-	handleSubmit={editGameRenderer}
+	onSubmit={editGameRenderer}
 	bind:open={createOpen}
 	requiredFields={['name']}
 >

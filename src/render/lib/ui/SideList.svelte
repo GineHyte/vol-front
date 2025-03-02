@@ -11,7 +11,8 @@
 	import CompactPagination from '$lib/ui/CompactPagination.svelte';
 	import { Pagination, PaginationProps } from '$lib/scripts/pagination';
 	import Model from '$lib/scripts/model';
-	import ContextMenuSideList from '$lib/ui/ContextMenuSideList.svelte';
+	import ContextMenu from '@/render/lib/ui/ContextMenu.svelte';
+	import { trunicate } from '../utils/utils';
 
 	interface Props {
 		title?: string;
@@ -53,7 +54,7 @@
 						disabled={row.id === selectedId}
 						on:click={() => (selectedId = row.id)}
 					>
-						{cell.value}
+						{trunicate(cell.value, 10)}
 					</ClickableTile>
 				{/snippet}
 				<Toolbar>
@@ -68,7 +69,7 @@
 				<ClickableTile disabled>Немає даних</ClickableTile>
 			{/if}
 			<CompactPagination bind:page total={model.pages} />
-			<ContextMenuSideList
+			<ContextMenu
 				{target}
 				{deleteFunc}
 				{duplicateFunc}

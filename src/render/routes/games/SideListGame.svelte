@@ -4,6 +4,7 @@
 	import { pushNotification } from '$lib/utils/utils';
 	import SideList from '$lib/ui/SideList.svelte';
 	import CreateGame from './CreateGame.svelte';
+	import EditGame from './EditGame.svelte';
 
 	let editOpen = $state(false);
 	let editGame: number | undefined = undefined;
@@ -15,7 +16,11 @@
 		teamB?: any;
 	}
 
-	let { selectedGameId, teamA, teamB }: Props = $props();
+	let {
+		selectedGameId = $bindable(),
+		teamA = $bindable(),
+		teamB = $bindable(),
+	}: Props = $props();
 
 	async function duplicateGameRenderer(currentId: number) {
 		if (currentId) {
@@ -51,7 +56,7 @@
 
 {#key createOpen}
 	<SideList
-		selectedId={selectedGameId}
+		bind:selectedId={selectedGameId}
 		title="Гра"
 		deleteFunc={deleteGameRenderer}
 		duplicateFunc={duplicateGameRenderer}
@@ -64,4 +69,4 @@
 	/>
 {/key}
 <CreateGame bind:createOpen bind:teamA bind:teamB />
-<EditGame bind:createOpen bind:teamA bind:teamB />
+<EditGame bind:editOpen bind:teamA bind:teamB />

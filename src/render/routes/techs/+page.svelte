@@ -28,7 +28,7 @@
 	import ModalCreate from '$lib/ui/ModalCreate.svelte';
 	import { pushNotification } from '$lib/utils/utils';
 	import { PaginationProps } from '$lib/scripts/pagination';
-	import ContextMenuSideList from '$lib/ui/ContextMenuSideList.svelte';
+	import ContextMenu from '$lib/ui/ContextMenu.svelte';
 	import { error } from '@sveltejs/kit';
 
 	let techId: number | undefined = $state(undefined);
@@ -168,11 +168,11 @@
 							{/await}
 						{/key}
 					</div>
-					<ContextMenuSideList
+					<ContextMenu
 						target={targetForSubtechs}
 						deleteFunc={removeSubtech}
 						duplicateFunc={duplicateSubtech}
-						on:update={() => (subtechTableUpdate = !subtechTableUpdate)}
+						updateFunc={() => (subtechTableUpdate = !subtechTableUpdate)}
 					/>
 				</Row>
 			{/await}
@@ -203,11 +203,11 @@
 		title="Техніка"
 		deleteFunc={removeTech}
 		duplicateFunc={duplicateTech}
+		editFunc={() => {}}
 		newFunc={() => {
 			createOpen = true;
 		}}
 		getFunc={getTechs}
-		selectFunc={selectTech}
 		headers={[{ key: 'name', value: 'Назва' }]}
 	/>
 {/key}

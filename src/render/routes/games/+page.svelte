@@ -32,11 +32,12 @@
 	import ModalCreate from '$lib/ui/ModalCreate.svelte';
 	import { pushNotification } from '$lib/utils/utils';
 	import Field from '@/render/routes/games/Field.svelte';
-	import ContextMenuSideList from '$lib/ui/ContextMenuSideList.svelte';
+	import ContextMenu from '@/render/lib/ui/ContextMenu.svelte';
 	import { Impact, Side } from '$lib/utils/utils';
 	import ModalCreateRelation from '$lib/ui/ModalCreateRelation.svelte';
 	import CreateGame from '@/render/routes/games/CreateGame.svelte';
 	import SideListGame from '@/render/routes/games/SideListGame.svelte';
+	import EditGame from './EditGame.svelte';
 
 	let selectedGameId: number | undefined = $state(undefined);
 	let createOpen = $state(false);
@@ -55,11 +56,15 @@
 	let teamA = $state(0);
 	let teamB = $state(0);
 	let selectTeamAOpen = false;
-	let editOpen = false;
+	let editOpen = $state(false);
 	let editGame: number | undefined = undefined;
 	let selectTeamBOpen = false;
 
 	let localGame: Game | undefined = undefined;
+
+	$effect(() => {
+		console.log(selectedGameId);
+	});
 
 	async function getGameLocal(gameIdLocal: number) {
 		localGame = await getGame(gameIdLocal);
@@ -140,7 +145,7 @@
 					<Column>
 						{#key actionOrder}
 							{#if actionOrder === 1}
-								{#await getTechs()}
+								{#await getTechs(new PaginationProps(1, 100))}
 									<DataTableSkeleton />
 								{:then techs}
 									<DataTable
@@ -251,11 +256,11 @@
 							{/await}
 						{/key}
 					</div>
-					<ContextMenuSideList
+					<ContextMenu
 						target={targetForActions}
 						deleteFunc={removeAction}
 						duplicateFunc={duplicateAction}
-						on:update={() => (actionTableUpdate = !actionTableUpdate)}
+						updateFunc={() => (actionTableUpdate = !actionTableUpdate)}
 					/>
 				</Row>
 			{/await}
@@ -263,4 +268,4 @@
 	</Content>
 {/if}
 
-<SideListGame {selectedGameId} {createOpen} {selectGame} {editOpen} {editGame} />
+<SideListGame bind:selectedGameId bind:teamA bind:teamB />

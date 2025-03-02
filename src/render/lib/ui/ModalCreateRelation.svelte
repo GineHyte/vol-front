@@ -3,13 +3,13 @@
 
 	import { DataTable, DataTableSkeleton, Modal } from 'carbon-components-svelte';
 	import { createEventDispatcher } from 'svelte';
-	import { Pagination } from '$lib/scripts/pagination';
+	import { Pagination, PaginationProps } from '$lib/scripts/pagination';
 
 	interface Props {
 		open?: boolean;
 		title?: string;
 		excludeHeaders?: string[];
-		getFunc: () => Promise<Pagination<any>>;
+		getFunc: (pprop: PaginationProps) => Promise<Pagination<any>>;
 		alreadySelectedIds?: number[];
 		modalUnderSelect?: import('svelte').Snippet;
 	}
@@ -20,7 +20,7 @@
 		excludeHeaders = [],
 		getFunc,
 		alreadySelectedIds = [],
-		modalUnderSelect
+		modalUnderSelect,
 	}: Props = $props();
 
 	let dispatch = createEventDispatcher();
@@ -44,7 +44,7 @@
 		dispatch('submit', localSelectedRow);
 	}}
 >
-	{#await getFunc()}
+	{#await getFunc(new PaginationProps(1, 100))}
 		<DataTableSkeleton />
 	{:then model}
 		<DataTable
