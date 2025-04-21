@@ -10,6 +10,7 @@
 		SkeletonText,
 		DataTable,
 		DataTableSkeleton,
+		Button,
 	} from 'carbon-components-svelte';
 	import {
 		getPlayers,
@@ -17,15 +18,18 @@
 		createPlayer,
 		deletePlayer,
 		getGames,
+		calculatePlayerStats,
 	} from '$lib/scripts/endpoints';
 	import { PaginationProps } from '$lib/scripts/pagination';
 	import { Player } from '$lib/scripts/models';
 	import ModalCreate from '$lib/ui/ModalCreate.svelte';
 	import { pushNotification } from '$lib/utils/utils';
+	import Stats from './Stats.svelte';
 
 	let selectedPlayerId: number | undefined = $state(undefined);
 	let createOpen = $state(false);
 	let sideListUpdater: boolean = $state(false);
+	let showStatistics = $state(false);
 
 	function updateSideList() {
 		sideListUpdater = !sideListUpdater;
@@ -95,6 +99,24 @@
 						<p>Зріст: {player.height ? player.height : ''}</p>
 						<p>Вага: {player.weight ? player.weight : ''}</p>
 					</Column>
+					<Column>
+						<Button
+							on:click={() => {
+								showStatistics = !showStatistics;
+							}}
+						>
+							Статистика
+						</Button>
+						<Button
+							on:click={async () => {
+								if (selectedPlayerId) {
+									calculatePlayerStats(selectedPlayerId);
+								}
+							}}
+						>
+							Розрахувати статистику
+						</Button>
+					</Column>
 				{/await}
 			</Row>
 			<Row>
@@ -136,3 +158,6 @@
 		headers={[{ key: 'firstName', value: "Ім'я" }]}
 	/>
 {/key}
+{#if showStatistics && selectedPlayerId}
+	<Stats bind:open={showStatistics} playerId={selectedPlayerId} />
+{/if}

@@ -2,5 +2,11 @@
 	"[svelte]": {
 		"editor.formatOnSave": true,
 		"editor.defaultFormatter": "svelte.svelte-vscode"
+	},
+	"github.copilot.enable": {
+		"*": true,
+		"plaintext": false,
+		"markdown": false,
+		"scminput": false
 	}
 }

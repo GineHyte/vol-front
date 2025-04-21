@@ -275,3 +275,160 @@ export class Exercise extends Model {
 		return this.proxify();
 	}
 }
+
+export class PlayerSum extends Model {
+	nameWithId: any
+	sumActions: any
+	prozent: any
+
+	constructor() {
+		super()
+
+		this.nameWithId = new Field('player', NameWithIdType)
+		this.sumActions = new Field('sum_actions', Number, 'Кількість дій')
+		this.prozent = new Field('prozent', Number, 'Процент від усіх дій')
+		
+		return this.proxify();
+	}
+}
+
+export class TechSum extends Model {
+	nameWithId: any
+	player: any
+	sumActions: any
+	prozent: any
+
+	constructor() {
+		super()
+		
+		this.nameWithId = new Field('tech', NameWithIdType)
+		this.player = new Field('player', Number, 'Гравець')
+		this.sumActions = new Field('sum_actions', Number, 'Кількість дій')
+		this.prozent = new Field('prozent', Number, 'Процент від усіх дій')
+		
+		return this.proxify();
+	}
+}
+
+export class SubtechSum extends Model {
+	nameWithId: any
+	tech: any
+	player: any
+	sumActions: any
+	prozent: any
+
+	constructor() {
+		super()
+		
+		this.nameWithId = new Field('subtech', NameWithIdType)
+		this.tech = new Field('tech', Number, 'Техніка')
+		this.player = new Field('player', Number, 'Гравець')
+		this.sumActions = new Field('sum_actions', Number, 'Кількість дій')
+		this.prozent = new Field('prozent', Number, 'Процент від усіх дій')
+		
+		return this.proxify();
+	}
+}
+
+export class ImpactSum extends Model {
+	impact: any
+	subtech: any
+	tech: any
+	player: any
+	sumActions: any
+	prozent: any
+
+	constructor() {
+		super()
+		
+		this.impact = new Field('impact', String, 'Якісний показник гри', [], Impact)
+		this.subtech = new Field('subtech', Number, 'Субтехніка')
+		this.tech = new Field('tech', Number, 'Техніка')
+		this.player = new Field('player', Number, 'Гравець')
+		this.sumActions = new Field('sum_actions', Number, 'Кількість дій')
+		this.prozent = new Field('prozent', Number, 'Процент від усіх дій')
+		
+		return this.proxify();
+	}
+}
+
+export class ZoneSum extends Model {
+	zone: any
+	impact: any
+	subtech: any
+	tech: any
+	player: any
+	sumActions: any
+	prozent: any
+
+	constructor() {
+		super()
+		
+		this.zone = new Field('zone', String, 'Зона')
+		this.impact = new Field('impact', String, 'Якісний показник гри', [], Impact)
+		this.subtech = new Field('subtech', Number, 'Субтехніка')
+		this.tech = new Field('tech', Number, 'Техніка')
+		this.player = new Field('player', Number, 'Гравець')
+		this.sumActions = new Field('sum_actions', Number, 'Кількість дій')
+		this.prozent = new Field('prozent', Number, 'Процент від усіх дій')
+		
+		return this.proxify();
+	}
+}
+
+
+export class PlayerStats extends Model {
+	playerSum: any
+	techTop: any
+
+	constructor() {
+		super()
+		
+		this.playerSum = new Field('player_sum', new Datatype(PlayerSum), 'Гравець')
+		this.techTop = new Field('tech_top', new Datatype([TechSum]))
+		
+		return this.proxify();
+	}
+}
+
+export class SubtechStats extends Model {
+	techTop: any
+	subtechTop: any
+
+	constructor() {
+		super()
+		
+		this.techTop = new Field('tech_top', new Datatype(TechSum))
+		this.subtechTop = new Field('subtech_top', new Datatype([SubtechSum]))
+		
+		return this.proxify();
+	}
+}
+
+export class ImpactStats extends Model {
+	subtechTop: any
+	impactTop: any
+
+	constructor() {
+		super()
+		
+		this.subtechTop = new Field('subtech_top', new Datatype(SubtechSum))
+		this.impactTop = new Field('impact_top', new Datatype([ImpactSum]))
+		
+		return this.proxify();
+	}
+}
+
+export class ZoneStats extends Model {
+	impactTop: any
+	zoneTop: any
+
+	constructor() {
+		super()
+		
+		this.impactTop = new Field('impact_top', new Datatype(ImpactSum))
+		this.zoneTop = new Field('zone_top', new Datatype([ZoneSum]))
+		
+		return this.proxify();
+	}
+}

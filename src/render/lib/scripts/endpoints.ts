@@ -1,5 +1,5 @@
 import { ApiImpl } from './api';
-import { Player, Team, Game, Status, Action, Tech, Subtech, Exercise } from '$lib/scripts/models';
+import { Player, Team, Game, Status, Action, Tech, Subtech, Exercise, PlayerStats } from '$lib/scripts/models';
 import { Pagination, PaginationProps } from '$lib/scripts/pagination';
 
 const Api = new ApiImpl();
@@ -197,6 +197,22 @@ export async function createExercise(exercise: Exercise): Promise<Status> {
 
 export async function deleteExercise(id: number): Promise<Status> {
 	return Api.delete(`/exercises/${id}`).then((data: any) => {
+		return new Status().deserialize(data) as Status;
+	});
+}
+
+export async function getPlayerStats(
+	playerId: number,
+): Promise<PlayerStats> {
+	return Api.get(`/algorithm/stats/${playerId}`).then((data: any) => {
+		return new PlayerStats().deserialize(data) as PlayerStats;
+	});
+}
+
+export async function calculatePlayerStats(
+	playerId: number,
+): Promise<Status> {
+	return Api.get(`/algorithm/stats/calculate/${playerId}`).then((data: any) => {
 		return new Status().deserialize(data) as Status;
 	});
 }
