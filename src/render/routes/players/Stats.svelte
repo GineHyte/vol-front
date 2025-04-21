@@ -2,8 +2,9 @@
 	import '@carbon/charts-svelte/styles.css';
 	import { PieChart } from '@carbon/charts-svelte';
 	import { Modal } from 'carbon-components-svelte';
-	import { getPlayerStats } from '@/render/lib/scripts/endpoints';
+	import { getPlayerStats, getTechStats } from '@/render/lib/scripts/endpoints';
 	import type { TechSum } from '@/render/lib/scripts/models';
+	import type { Impact } from '@/render/lib/utils/utils';
 
 	interface Props {
 		open: boolean;
@@ -11,21 +12,35 @@
 	}
 
 	let { open = $bindable(), playerId }: Props = $props();
+	let diagramDepth = 0;
+
+	let techId: number | undefined;
+	let subtechId: number | undefined;
+	let impact: typeof Impact | undefined;
 
 	// **
 	// This Method can be moved to modal.ts file
 	// 1 HTTP request to get player stats !!!
 	// **
-	async function getPlayerChartData(playerId: number): Promise<{ [index: string]: any }[]> {
-		let data = await getPlayerStats(playerId);
+	async function getPlayerChartData(): Promise<{ [index: string]: any }[]> {
 		let chartData: { [index: string]: any }[] = [];
-		if (data.techTop.length > 0) {
-			data.techTop.forEach((el: TechSum) => {
+		if (diagramDepth === 0) {
+			let data = await getPlayerStats(playerId);
+			chartData = data.techTop.map((el: TechSum) => {
 				let record = {
 					group: el.nameWithId.name,
 					value: el.sumActions,
 				};
-				chartData.push(record);
+				return record;
+			});
+		} else if (diagramDepth === 1) {
+			let data = await getTechStats(playerId);
+			chartData = data.subtechTop.map((el: TechSum) => {
+				let record = {
+					group: el.nameWithId.name,
+					value: el.sumActions,
+				};
+				return record;
 			});
 		}
 		return chartData;
@@ -33,7 +48,7 @@
 </script>
 
 <Modal bind:open passiveModal hasScrollingContent>
-	{#await getPlayerChartData(playerId)}
+	{#await getPlayerChartData()}
 		<PieChart
 			data={[]}
 			options={{
@@ -53,7 +68,6 @@
 			}}
 		/>
 	{:then data}
-		{console.log(data)}
 		<PieChart
 			{data}
 			options={{

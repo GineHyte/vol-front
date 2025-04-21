@@ -1,5 +1,5 @@
 import { ApiImpl } from './api';
-import { Player, Team, Game, Status, Action, Tech, Subtech, Exercise, PlayerStats } from '$lib/scripts/models';
+import { Player, Team, Game, Status, Action, Tech, Subtech, Exercise, PlayerStats, TechStats, SubtechStats, ImpactStats } from '$lib/scripts/models';
 import { Pagination, PaginationProps } from '$lib/scripts/pagination';
 
 const Api = new ApiImpl();
@@ -216,3 +216,34 @@ export async function calculatePlayerStats(
 		return new Status().deserialize(data) as Status;
 	});
 }
+
+export async function getTechStats(
+	playerId: number,
+	techId: number,
+): Promise<TechStats> {
+	return Api.get(`/algorithm/stats/${playerId}/${techId}`).then((data: any) => {
+		return new TechStats().deserialize(data) as TechStats;
+	});
+}
+
+export async function getSubtechStats(
+	playerId: number,
+	techId: number,
+	subtechId: number,
+): Promise<SubtechStats> {
+	return Api.get(`/algorithm/stats/${playerId}/${techId}/${subtechId}`).then((data: any) => {
+		return new SubtechStats().deserialize(data) as SubtechStats;
+	});
+}
+
+export async function getImpactStats(
+	playerId: number,
+	techId: number,
+	subtechId: number,
+	impact: string,
+): Promise<ImpactStats> {
+	return Api.get(`/algorithm/stats/${playerId}/${techId}/${subtechId}/${impact}`).then((data: any) => {
+		return new ImpactStats().deserialize(data) as ImpactStats;
+	});
+}
+

@@ -391,7 +391,7 @@ export class PlayerStats extends Model {
 	}
 }
 
-export class SubtechStats extends Model {
+export class TechStats extends Model {
 	techTop: any
 	subtechTop: any
 
@@ -405,7 +405,7 @@ export class SubtechStats extends Model {
 	}
 }
 
-export class ImpactStats extends Model {
+export class SubtechStats extends Model {
 	subtechTop: any
 	impactTop: any
 
@@ -419,7 +419,7 @@ export class ImpactStats extends Model {
 	}
 }
 
-export class ZoneStats extends Model {
+export class ImpactStats extends Model {
 	impactTop: any
 	zoneTop: any
 
