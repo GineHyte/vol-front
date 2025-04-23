@@ -4,7 +4,9 @@
 	import { Modal } from 'carbon-components-svelte';
 	import { getPlayerStats, getTechStats } from '@/render/lib/scripts/endpoints';
 	import type { TechSum } from '@/render/lib/scripts/models';
-	import type { Impact } from '@/render/lib/utils/utils';
+	import type { ToolbarControlTypes } from '@carbon/charts';
+	import { Impact } from '@/render/lib/utils/utils';
+	import { onMount } from 'svelte';
 
 	interface Props {
 		open: boolean;
@@ -15,8 +17,14 @@
 	let diagramDepth = 0;
 
 	let techId: number | undefined;
+	let techIds: number[] = [];
 	let subtechId: number | undefined;
-	let impact: typeof Impact | undefined;
+	let subtechIds: number[] = [];
+	let impact: keyof typeof Impact | undefined;
+	let impacts: (keyof typeof Impact)[];
+
+	let loaded: boolean = $state(false);
+	let chartComponent: PieChart | undefined = $state();
 
 	// **
 	// This Method can be moved to modal.ts file
@@ -33,8 +41,8 @@
 				};
 				return record;
 			});
-		} else if (diagramDepth === 1) {
-			let data = await getTechStats(playerId);
+		} else if (diagramDepth === 1 && techId) {
+			let data = await getTechStats(playerId, techId);
 			chartData = data.subtechTop.map((el: TechSum) => {
 				let record = {
 					group: el.nameWithId.name,
@@ -44,6 +52,22 @@
 			});
 		}
 		return chartData;
+	}
+
+	function handleChartLoad() {
+		console.log(chartComponent);
+		console.log(chartComponent.services);
+		if (chartComponent && chartComponent.services && chartComponent.services.events) {
+			chartComponent.services.events.addEventListener('pie-slice-click', handleSliceClick);
+		}
+	}
+
+	function handleSliceClick(event: CustomEvent) {
+		const clickedSliceData = event.detail;
+		alert(`Clicked on ${clickedSliceData.label} with value ${clickedSliceData.value}`);
+		console.log('Clicked slice data:', clickedSliceData);
+		// You can now use this data to perform other actions,
+		// such as updating a state variable or navigating to another page.
 	}
 </script>
 
@@ -64,12 +88,21 @@
 				pie: {
 					alignment: 'center',
 				},
-				height: '400px',
+				height: '600px',
 			}}
 		/>
 	{:then data}
 		<PieChart
+			on:pie-slice-click={() => {
+				console.log('TEST');
+			}}
 			{data}
+			bind:chart={chartComponent}
+			on:update={() => {
+				if (chartComponent) {
+					handleChartLoad();
+				}
+			}}
 			options={{
 				theme: 'g90',
 				title: 'Статистика по гравцю',
@@ -77,10 +110,16 @@
 				legend: {
 					alignment: 'center',
 				},
+				tooltip: {
+					enabled: false,
+				},
+				toolbar: {
+					enabled: false,
+				},
 				pie: {
 					alignment: 'center',
 				},
-				height: '400px',
+				height: '600px',
 			}}
 		/>
 	{/await}
