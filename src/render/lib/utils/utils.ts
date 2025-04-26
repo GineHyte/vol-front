@@ -31,10 +31,10 @@ export function trunicate(value: any, length: number = 20) {
 	return value;
 }
 
-export const Amplua: {} = {
-	Defender: 'Захисник',
-	Attacker: 'Нападник',
-	Universal: 'Універсальний',
+export const Amplua: {[key: string]: string} = {
+	DEFENDER: 'Захисник',
+	ATTACKER: 'Нападник',
+	UNIVERSAL: 'Універсальний',
 };
 
 export enum Side {
@@ -43,14 +43,14 @@ export enum Side {
 	NOTSET = 0,
 }
 
-export const Impact: {} = {
-	Efficiency: 'Ефективність',
-	Mistake: 'Помилка',
-	Score: 'Вигране очко',
-	Fail: 'Брак',
+export const Impact: {[key: string]: string} = {
+	EFFICIENCY: 'Ефективність',
+	MISTAKE: 'Помилка',
+	SCORE: 'Вигране очко',
+	FAIL: 'Брак',
 };
 
-export const TrueFalse: {} = {
+export const TrueFalse: {[key: string]: string} = {
 	true: 'Так',
 	false: 'Ні',
 };

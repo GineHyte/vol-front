@@ -2,11 +2,14 @@
 	import '@carbon/charts-svelte/styles.css';
 	import { PieChart } from '@carbon/charts-svelte';
 	import { Modal } from 'carbon-components-svelte';
-	import { getPlayerStats, getTechStats } from '@/render/lib/scripts/endpoints';
-	import type { TechSum } from '@/render/lib/scripts/models';
-	import type { ToolbarControlTypes } from '@carbon/charts';
+	import {
+		getPlayerStats,
+		getTechStats,
+		getImpactStats,
+		getSubtechStats,
+	} from '@/render/lib/scripts/endpoints';
+	import type { TechSum, SubtechSum, ImpactSum, ZoneSum } from '@/render/lib/scripts/models';
 	import { Impact } from '@/render/lib/utils/utils';
-	import { onMount } from 'svelte';
 
 	interface Props {
 		open: boolean;
@@ -14,16 +17,15 @@
 	}
 
 	let { open = $bindable(), playerId }: Props = $props();
-	let diagramDepth = 0;
+	let diagramDepth = $state(0);
 
 	let techId: number | undefined;
-	let techIds: number[] = [];
+	let techIds: { [key: string]: number } = {};
 	let subtechId: number | undefined;
-	let subtechIds: number[] = [];
-	let impact: keyof typeof Impact | undefined;
-	let impacts: (keyof typeof Impact)[];
+	let subtechIds: { [key: string]: number } = {};
+	let impact: string | undefined;
+	let impacts: { [key: string]: string } = {};
 
-	let loaded: boolean = $state(false);
 	let chartComponent: PieChart | undefined = $state();
 
 	// **
@@ -39,13 +41,39 @@
 					group: el.nameWithId.name,
 					value: el.sumActions,
 				};
+				techIds[el.nameWithId.name] = el.nameWithId.id;
 				return record;
 			});
-		} else if (diagramDepth === 1 && techId) {
+		} else if (diagramDepth === 1 && techId !== undefined) {
 			let data = await getTechStats(playerId, techId);
-			chartData = data.subtechTop.map((el: TechSum) => {
+			chartData = data.subtechTop.map((el: SubtechSum) => {
 				let record = {
 					group: el.nameWithId.name,
+					value: el.sumActions,
+				};
+				subtechIds[el.nameWithId.name] = el.nameWithId.id;
+				return record;
+			});
+		} else if (diagramDepth == 2 && techId !== undefined && subtechId !== undefined) {
+			let data = await getSubtechStats(playerId, techId, subtechId);
+			chartData = data.impactTop.map((el: ImpactSum) => {
+				let record = {
+					group: Impact[el.impact],
+					value: el.sumActions,
+				};
+				impacts[Impact[el.impact]] = el.impact;
+				return record;
+			});
+		} else if (
+			diagramDepth == 3 &&
+			techId !== undefined &&
+			subtechId !== undefined &&
+			impact !== undefined
+		) {
+			let data = await getImpactStats(playerId, techId, subtechId, impact);
+			chartData = data.zoneTop.map((el: ZoneSum) => {
+				let record = {
+					group: el.zone,
 					value: el.sumActions,
 				};
 				return record;
@@ -55,72 +83,81 @@
 	}
 
 	function handleChartLoad() {
-		console.log(chartComponent);
-		console.log(chartComponent.services);
 		if (chartComponent && chartComponent.services && chartComponent.services.events) {
 			chartComponent.services.events.addEventListener('pie-slice-click', handleSliceClick);
 		}
 	}
 
 	function handleSliceClick(event: CustomEvent) {
-		const clickedSliceData = event.detail;
-		alert(`Clicked on ${clickedSliceData.label} with value ${clickedSliceData.value}`);
-		console.log('Clicked slice data:', clickedSliceData);
-		// You can now use this data to perform other actions,
-		// such as updating a state variable or navigating to another page.
+		if (diagramDepth <= 2) {
+			let group = event.detail.datum.data.group;
+			switch (diagramDepth) {
+				case 0:
+					techId = techIds[group];
+				case 1:
+					subtechId = subtechIds[group];
+				case 2:
+					impact = impacts[group];
+			}
+			diagramDepth += 1;
+		}
 	}
 </script>
 
-<Modal bind:open passiveModal hasScrollingContent>
-	{#await getPlayerChartData()}
-		<PieChart
-			data={[]}
-			options={{
-				theme: 'g90',
-				title: 'Статистика по гравцю',
-				resizable: true,
-				data: {
-					loading: true,
-				},
-				legend: {
-					alignment: 'center',
-				},
-				pie: {
-					alignment: 'center',
-				},
-				height: '600px',
-			}}
-		/>
-	{:then data}
-		<PieChart
-			on:pie-slice-click={() => {
-				console.log('TEST');
-			}}
-			{data}
-			bind:chart={chartComponent}
-			on:update={() => {
-				if (chartComponent) {
-					handleChartLoad();
-				}
-			}}
-			options={{
-				theme: 'g90',
-				title: 'Статистика по гравцю',
-				resizable: true,
-				legend: {
-					alignment: 'center',
-				},
-				tooltip: {
-					enabled: false,
-				},
-				toolbar: {
-					enabled: false,
-				},
-				pie: {
-					alignment: 'center',
-				},
-				height: '600px',
-			}}
-		/>
-	{/await}
-</Modal>
+{#key diagramDepth}
+	<Modal
+		bind:open
+		hasScrollingContent
+		primaryButtonText="Назад"
+		passiveModal={diagramDepth == 0}
+		on:click:button--primary={() => {
+			diagramDepth -= 1;
+		}}
+	>
+		{#await getPlayerChartData()}
+			<PieChart
+				data={[]}
+				options={{
+					theme: 'g90',
+					title: 'Статистика по гравцю',
+					resizable: true,
+					data: {
+						loading: true,
+					},
+					legend: {
+						alignment: 'center',
+					},
+					pie: {
+						alignment: 'center',
+					},
+					height: '600px',
+				}}
+			/>
+		{:then data}
+			<PieChart
+				{data}
+				bind:chart={chartComponent}
+				on:update={() => {
+					if (chartComponent) {
+						handleChartLoad();
+					}
+				}}
+				options={{
+					theme: 'g90',
+					title: 'Статистика по гравцю',
+					resizable: true,
+					legend: {
+						alignment: 'center',
+					},
+					toolbar: {
+						enabled: false,
+					},
+					pie: {
+						alignment: 'center',
+					},
+					height: '600px',
+				}}
+			/>
+		{/await}
+	</Modal>
+{/key}

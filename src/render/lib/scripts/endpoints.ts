@@ -246,4 +246,3 @@ export async function getImpactStats(
 		return new ImpactStats().deserialize(data) as ImpactStats;
 	});
 }
-

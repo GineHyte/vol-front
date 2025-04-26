@@ -25,7 +25,7 @@
 		selectedPlayer = $bindable(-1),
 		zoneEnabled = $bindable(0),
 		submitFunc,
-		actionOrder = $bindable(0)
+		actionOrder = $bindable(0),
 	}: Props = $props();
 
 	let teamALocal: Team | undefined = $state(undefined);
@@ -33,6 +33,7 @@
 
 	async function getTeamLocal(teamId: number) {
 		let team = await getTeam(teamId);
+		console.log(team);
 		if (game.teamA === team.id) {
 			teamALocal = team;
 		} else {
@@ -154,17 +155,17 @@
 		</div>
 		<ExpandableTile>
 			{#snippet above()}
-						<div ><h1 class="text-lg font-bold">Легенда поля:</h1></div>
-					{/snippet}
+				<div><h1 class="text-lg font-bold">Легенда поля:</h1></div>
+			{/snippet}
 			{#snippet below()}
-						<div >
+				<div>
 					<ul>
 						<li>Н - Нападник</li>
 						<li>З - Захисник</li>
 						<li>У - Універсальний</li>
 					</ul>
 				</div>
-					{/snippet}
+			{/snippet}
 		</ExpandableTile>
 	</div>
 {/if}
