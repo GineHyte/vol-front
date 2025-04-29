@@ -19,17 +19,20 @@
 		deletePlayer,
 		getGames,
 		calculatePlayerStats,
+		generatePlan,
 	} from '$lib/scripts/endpoints';
 	import { PaginationProps } from '$lib/scripts/pagination';
 	import { Player } from '$lib/scripts/models';
 	import ModalCreate from '$lib/ui/ModalCreate.svelte';
 	import { pushNotification } from '$lib/utils/utils';
 	import Stats from './Stats.svelte';
+	import Plan from './Plan.svelte';
 
 	let selectedPlayerId: number | undefined = $state(undefined);
 	let createOpen = $state(false);
 	let sideListUpdater: boolean = $state(false);
 	let showStatistics = $state(false);
+	let showPlan = $state(false);
 
 	function updateSideList() {
 		sideListUpdater = !sideListUpdater;
@@ -117,6 +120,24 @@
 							Розрахувати статистику
 						</Button>
 					</Column>
+					<Column>
+						<Button
+							on:click={() => {
+								showPlan = !showPlan;
+							}}
+						>
+							План тренувань
+						</Button>
+						<Button
+							on:click={async () => {
+								if (selectedPlayerId) {
+									generatePlan(selectedPlayerId);
+								}
+							}}
+						>
+							Розрахувати План тренувань
+						</Button>
+					</Column>
 				{/await}
 			</Row>
 			<Row>
@@ -160,4 +181,7 @@
 {/key}
 {#if showStatistics && selectedPlayerId}
 	<Stats bind:open={showStatistics} playerId={selectedPlayerId} />
+{/if}
+{#if showPlan && selectedPlayerId}
+	<Plan bind:open={showPlan} playerId={selectedPlayerId} />
 {/if}

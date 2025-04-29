@@ -432,3 +432,16 @@ export class ImpactStats extends Model {
 		return this.proxify();
 	}
 }
+
+
+export class PlanWeek extends Model {
+	exercises: any
+	week: any
+
+	constructor() {
+		super()
+
+		this.exercises = new Field('exercises', new Datatype([Exercise]))
+		this.week = new Field('week', Number)
+	}
+}

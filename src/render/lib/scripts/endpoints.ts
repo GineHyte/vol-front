@@ -1,5 +1,5 @@
 import { ApiImpl } from './api';
-import { Player, Team, Game, Status, Action, Tech, Subtech, Exercise, PlayerStats, TechStats, SubtechStats, ImpactStats } from '$lib/scripts/models';
+import { Player, Team, Game, Status, Action, Tech, Subtech, Exercise, PlayerStats, TechStats, SubtechStats, ImpactStats, PlanWeek } from '$lib/scripts/models';
 import { Pagination, PaginationProps } from '$lib/scripts/pagination';
 
 const Api = new ApiImpl();
@@ -244,5 +244,22 @@ export async function getImpactStats(
 ): Promise<ImpactStats> {
 	return Api.get(`/algorithm/stats/${playerId}/${techId}/${subtechId}/${impact}`).then((data: any) => {
 		return new ImpactStats().deserialize(data) as ImpactStats;
+	});
+}
+
+export async function generatePlan(
+	playerId: number,
+): Promise<Status> {
+	return Api.get(`/algorithm/plan/${playerId}`).then((data: any) => {
+		return new Status().deserialize(data) as Status;
+	});
+}
+
+export async function getPlanWeek(
+	playerId: number,
+	weekNumber: number,
+): Promise<PlanWeek> {
+	return Api.get(`/algorithm/plan/${playerId}/${weekNumber}`).then((data: any) => {
+		return new PlanWeek().deserialize(data) as PlanWeek;
 	});
 }
