@@ -443,5 +443,7 @@ export class PlanWeek extends Model {
 
 		this.exercises = new Field('exercises', new Datatype([Exercise]))
 		this.week = new Field('week', Number)
+
+		return this.proxify();
 	}
 }

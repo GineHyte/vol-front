@@ -12,6 +12,7 @@
 		DataTableSkeleton,
 		Button,
 	} from 'carbon-components-svelte';
+	import { ChartStacked, MachineLearningModel } from 'carbon-icons-svelte';
 	import {
 		getPlayers,
 		getPlayer,
@@ -33,6 +34,7 @@
 	let sideListUpdater: boolean = $state(false);
 	let showStatistics = $state(false);
 	let showPlan = $state(false);
+	let playerName = $state('');
 
 	function updateSideList() {
 		sideListUpdater = !sideListUpdater;
@@ -78,13 +80,19 @@
 		createOpen = false;
 		updateSideList();
 	}
+
+	async function getPlayerAndSaveName(playerId: number) {
+		let player = await getPlayer(playerId);
+		playerName = `${player.firstName} ${player.lastName}`;
+		return player;
+	}
 </script>
 
 {#if selectedPlayerId}
 	<Content>
 		<Grid>
 			<Row class="min-h-96 m-4">
-				{#await getPlayer(selectedPlayerId)}
+				{#await getPlayerAndSaveName(selectedPlayerId)}
 					<Column>
 						<SkeletonPlaceholder class="size-96" />
 					</Column>
@@ -103,40 +111,44 @@
 						<p>Вага: {player.weight ? player.weight : ''}</p>
 					</Column>
 					<Column>
-						<Button
-							on:click={() => {
-								showStatistics = !showStatistics;
-							}}
-						>
-							Статистика
-						</Button>
-						<Button
-							on:click={async () => {
-								if (selectedPlayerId) {
-									calculatePlayerStats(selectedPlayerId);
-								}
-							}}
-						>
-							Розрахувати статистику
-						</Button>
-					</Column>
-					<Column>
-						<Button
-							on:click={() => {
-								showPlan = !showPlan;
-							}}
-						>
-							План тренувань
-						</Button>
-						<Button
-							on:click={async () => {
-								if (selectedPlayerId) {
-									generatePlan(selectedPlayerId);
-								}
-							}}
-						>
-							Розрахувати План тренувань
-						</Button>
+						<div>
+							<Button
+								on:click={() => {
+									showStatistics = !showStatistics;
+								}}
+							>
+								Статистика
+							</Button>
+							<Button
+								kind="ghost"
+								iconDescription="Розрахувати статистику"
+								icon={ChartStacked}
+								on:click={async () => {
+									if (selectedPlayerId) {
+										calculatePlayerStats(selectedPlayerId);
+									}
+								}}
+							></Button>
+						</div>
+						<div>
+							<Button
+								on:click={() => {
+									showPlan = !showPlan;
+								}}
+							>
+								План тренувань
+							</Button>
+							<Button
+								kind="ghost"
+								iconDescription="Розрахувати план тренувань"
+								icon={MachineLearningModel}
+								on:click={async () => {
+									if (selectedPlayerId) {
+										generatePlan(selectedPlayerId);
+									}
+								}}
+							></Button>
+						</div>
 					</Column>
 				{/await}
 			</Row>
@@ -183,5 +195,5 @@
 	<Stats bind:open={showStatistics} playerId={selectedPlayerId} />
 {/if}
 {#if showPlan && selectedPlayerId}
-	<Plan bind:open={showPlan} playerId={selectedPlayerId} />
+	<Plan bind:open={showPlan} playerId={selectedPlayerId} {playerName} />
 {/if}
