@@ -11,6 +11,7 @@
 		DataTable,
 		DataTableSkeleton,
 		Button,
+		Loading,
 	} from 'carbon-components-svelte';
 	import { ChartStacked, MachineLearningModel } from 'carbon-icons-svelte';
 	import {
@@ -35,6 +36,38 @@
 	let showStatistics = $state(false);
 	let showPlan = $state(false);
 	let playerName = $state('');
+	let generatePlanLoading = $state(false);
+	let calculatePlayerStatsLoading = $state(false);
+
+	async function onGeneratePlan() {
+		if (selectedPlayerId) {
+			generatePlanLoading = true;
+			let status = await generatePlan(selectedPlayerId);
+			if (status.status === 'success') {
+				pushNotification('generatePlanSuccess');
+			} else {
+				pushNotification('generatePlanError');
+			}
+			generatePlanLoading = false;
+		}
+	}
+
+	async function onCalculatePlayerStats() {
+		if (selectedPlayerId) {
+			calculatePlayerStatsLoading = true;
+			let status = await calculatePlayerStats(selectedPlayerId);
+			if (status.status === 'success') {
+				pushNotification('calculatePlayerStatsSuccess');
+			} else {
+				if (status.detail === 'No actions found for player') {
+					pushNotification('calculatePlayerStatsNoActionError');
+				} else {
+					pushNotification('calculatePlayerStatsNoPlayerError');
+				}
+			}
+			calculatePlayerStatsLoading = false;
+		}
+	}
 
 	function updateSideList() {
 		sideListUpdater = !sideListUpdater;
@@ -119,16 +152,25 @@
 							>
 								Статистика
 							</Button>
-							<Button
-								kind="ghost"
-								iconDescription="Розрахувати статистику"
-								icon={ChartStacked}
-								on:click={async () => {
-									if (selectedPlayerId) {
-										calculatePlayerStats(selectedPlayerId);
-									}
-								}}
-							></Button>
+							{#if calculatePlayerStatsLoading}
+								<Button kind="ghost" iconDescription="Завантаження...">
+									{#snippet icon()}
+										<Loading
+											class="text-transparent"
+											small
+											withOverlay={false}
+											description="Завантаження..."
+										/>
+									{/snippet}
+								</Button>
+							{:else}
+								<Button
+									kind="ghost"
+									iconDescription="Розрахувати статистику"
+									icon={ChartStacked}
+									on:click={onCalculatePlayerStats}
+								></Button>
+							{/if}
 						</div>
 						<div>
 							<Button
@@ -138,16 +180,25 @@
 							>
 								План тренувань
 							</Button>
-							<Button
-								kind="ghost"
-								iconDescription="Розрахувати план тренувань"
-								icon={MachineLearningModel}
-								on:click={async () => {
-									if (selectedPlayerId) {
-										generatePlan(selectedPlayerId);
-									}
-								}}
-							></Button>
+							{#if generatePlanLoading}
+								<Button kind="ghost" iconDescription="Завантаження...">
+									{#snippet icon()}
+										<Loading
+											class="text-transparent"
+											small
+											withOverlay={false}
+											description="Завантаження..."
+										/>
+									{/snippet}
+								</Button>
+							{:else}
+								<Button
+									kind="ghost"
+									iconDescription="План тренувань"
+									icon={MachineLearningModel}
+									on:click={onGeneratePlan}
+								></Button>
+							{/if}
 						</div>
 					</Column>
 				{/await}

@@ -225,6 +225,31 @@ const NOTIFICATIONS = {
 		message: 'Вправа не може бути створена.',
 		kind: 'error',
 	},
+	generatePlanSuccess: {
+		title: 'Успіх!',
+		message: 'План згенеровано.',
+		kind: 'success',
+	},
+	generatePlanError: {
+		title: 'Помилка!',
+		message: 'План не може бути згенерований: гравця не знайдено.',
+		kind: 'error',
+	},
+	calculatePlayerStatsSuccess: {
+		title: 'Успіх!',
+		message: 'Статистика гравця розрахована.',
+		kind: 'success',
+	},
+	calculatePlayerStatsNoActionError: {
+		title: 'Помилка!',
+		message: 'Статистика гравця не може бути розрахована: немає дій.',
+		kind: 'error',
+	},
+	calculatePlayerStatsNoPlayerError: {
+		title: 'Помилка!',
+		message: 'Статистика гравця не може бути розрахована: гравця не знайдено.',
+		kind: 'error',
+	},
 };
 
 export default function getNotification(name: string, params: { [key: string]: string } = {}) {

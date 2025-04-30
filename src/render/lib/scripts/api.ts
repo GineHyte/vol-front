@@ -138,6 +138,7 @@ export class ApiImpl implements Api {
 	}
 
 	private __errorHandler(resp: Response | Error) {
+		return
 		if (resp instanceof Response) {
 			pushNotification('apiError', {
 				body: JSON.stringify(resp.body),

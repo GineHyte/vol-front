@@ -7,6 +7,11 @@
 		"*": false,
 		"plaintext": false,
 		"markdown": false,
-		"scminput": false
+		"scminput": false,
+		"rust": false,
+		"python": false,
+		"objectscript-class": true,
+		"svelte": true,
+		"typescript": true
 	}
 }
