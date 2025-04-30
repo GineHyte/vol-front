@@ -1,7 +1,7 @@
 <script lang="ts">
 	import '@carbon/charts-svelte/styles.css';
 	import { getPlanWeek } from '@/render/lib/scripts/endpoints';
-	import { Modal, DataTableSkeleton, DataTable } from 'carbon-components-svelte';
+	import { Modal, DataTableSkeleton, DataTable, Dropdown } from 'carbon-components-svelte';
 	import type { DataTableRow } from 'carbon-components-svelte/types/DataTable/DataTable.svelte';
 	import type { Exercise, PlanWeek } from '@/render/lib/scripts/models';
 
@@ -12,7 +12,7 @@
 	}
 
 	let { open = $bindable(), playerId, playerName }: Props = $props();
-	let weekNumber: number = 1;
+	let weekNumber: number = $state(1);
 	const tableHeaders = [
 		{ key: 'name', value: 'Назва' },
 		// { key: 'description', value: 'Опис' },
@@ -37,15 +37,16 @@
 	}
 </script>
 
-<Modal bind:open hasScrollingContent>
+<Modal modalHeading={playerName} class="pt-10" bind:open hasScrollingContent>
 	{#await getPlanWeek(playerId, weekNumber)}
 		<DataTableSkeleton />
 	{:then planWeek}
-		<DataTable
-			sortable
-			title={playerName}
-			headers={tableHeaders}
-			rows={formatPlanWeek(planWeek)}
-		></DataTable>
+		<Dropdown
+			bind:selectedId={weekNumber}
+			items={[...Array(12)].map((_, i) => ({ id: i + 1, text: `Тиждень ${i + 1}` }))}
+			label="Тиждень"
+			class="mb-4"
+		/>
+		<DataTable sortable headers={tableHeaders} rows={formatPlanWeek(planWeek)}></DataTable>
 	{/await}
 </Modal>
