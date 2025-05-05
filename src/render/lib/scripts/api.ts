@@ -20,7 +20,7 @@ settingsRenderer.subscribe((settings: any) => {
 		if (isDev) {
 			apiUrl = 'http://' + apiUrl;
 		} else {
-			apiUrl = 'https://' + apiUrl;
+			apiUrl = 'http://' + apiUrl;
 		}
 	}
 });
