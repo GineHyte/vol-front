@@ -96,6 +96,7 @@
 							<DataTableSkeleton />
 						{:then exercises}
 							<DataTable
+								sortable
 								headers={exercises.getHeaders([
 									'imageUrl',
 									'videoUrl',

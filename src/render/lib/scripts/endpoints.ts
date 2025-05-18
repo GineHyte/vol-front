@@ -250,7 +250,7 @@ export async function getImpactStats(
 export async function generatePlan(
 	playerId: number,
 ): Promise<Status> {
-	return Api.get(`/algorithm/plan/${playerId}`).then((data: any) => {
+	return Api.get(`/algorithm/plan/calculate/${playerId}`).then((data: any) => {
 		return new Status().deserialize(data) as Status;
 	});
 }

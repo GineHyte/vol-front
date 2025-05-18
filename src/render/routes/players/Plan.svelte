@@ -37,7 +37,14 @@
 	}
 </script>
 
-<Modal modalHeading={playerName} class="pt-10" bind:open hasScrollingContent>
+<Modal
+	modalHeading={playerName}
+	class="pt-10"
+	bind:open
+	hasScrollingContent
+	primaryButtonDisabled
+	size="lg"
+>
 	{#await getPlanWeek(playerId, weekNumber)}
 		<DataTableSkeleton />
 	{:then planWeek}

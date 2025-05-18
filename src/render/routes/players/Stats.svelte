@@ -25,6 +25,7 @@
 	let subtechIds: { [key: string]: number } = {};
 	let impact: string | undefined;
 	let impacts: { [key: string]: string } = {};
+	let title: string = $state('Статистика по гравцю');
 
 	let chartComponent: PieChart | undefined = $state();
 
@@ -46,6 +47,7 @@
 			});
 		} else if (diagramDepth === 1 && techId !== undefined) {
 			let data = await getTechStats(playerId, techId);
+			title = `${title} / ${Object.keys(techIds).find((name) => techIds[name] === techId)}`;
 			chartData = data.subtechTop.map((el: SubtechSum) => {
 				let record = {
 					group: el.nameWithId.name,
@@ -56,6 +58,7 @@
 			});
 		} else if (diagramDepth == 2 && techId !== undefined && subtechId !== undefined) {
 			let data = await getSubtechStats(playerId, techId, subtechId);
+			title = `${title} / ${Object.keys(subtechIds).find((name) => subtechIds[name] === subtechId)}`;
 			chartData = data.impactTop.map((el: ImpactSum) => {
 				let record = {
 					group: Impact[el.impact],
@@ -71,6 +74,7 @@
 			impact !== undefined
 		) {
 			let data = await getImpactStats(playerId, techId, subtechId, impact);
+			title = `${title} / ${Object.keys(impacts).find((name) => impacts[name] === impact)}`;
 			chartData = data.zoneTop.map((el: ZoneSum) => {
 				let record = {
 					group: el.zone,
@@ -112,6 +116,11 @@
 		passiveModal={diagramDepth == 0}
 		on:click:button--primary={() => {
 			diagramDepth -= 1;
+			if (diagramDepth === 0) {
+				title = 'Статистика по гравцю';
+			} else {
+				title = title.split(' / ').slice(0, diagramDepth).join(' / ');
+			}
 		}}
 	>
 		{#await getPlayerChartData()}
@@ -119,7 +128,7 @@
 				data={[]}
 				options={{
 					theme: 'g90',
-					title: 'Статистика по гравцю',
+					title: title,
 					resizable: true,
 					data: {
 						loading: true,
@@ -144,7 +153,7 @@
 				}}
 				options={{
 					theme: 'g90',
-					title: 'Статистика по гравцю',
+					title: title,
 					resizable: true,
 					legend: {
 						alignment: 'center',
