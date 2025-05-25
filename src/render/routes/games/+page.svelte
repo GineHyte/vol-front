@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { run } from 'svelte/legacy';
 
-	import SideList from '$lib/ui/SideList.svelte';
 	import {
 		SkeletonPlaceholder,
 		Content,
@@ -12,35 +11,25 @@
 		DataTableSkeleton,
 		Pagination,
 		Button,
-		Tile,
 	} from 'carbon-components-svelte';
 	import {
-		getGames,
 		getGame,
-		createGame,
-		deleteGame,
 		getActions,
 		getAction,
 		getSubtechs,
-		getTeams,
 		getTechs,
 		createAction,
 		deleteAction,
 	} from '$lib/scripts/endpoints';
 	import { Game, Action } from '$lib/scripts/models';
 	import { PaginationProps } from '$lib/scripts/pagination';
-	import ModalCreate from '$lib/ui/ModalCreate.svelte';
 	import { pushNotification } from '$lib/utils/utils';
 	import Field from '@/render/routes/games/Field.svelte';
 	import ContextMenu from '@/render/lib/ui/ContextMenu.svelte';
 	import { Impact, Side } from '$lib/utils/utils';
-	import ModalCreateRelation from '$lib/ui/ModalCreateRelation.svelte';
-	import CreateGame from '@/render/routes/games/CreateGame.svelte';
 	import SideListGame from '@/render/routes/games/SideListGame.svelte';
-	import EditGame from './EditGame.svelte';
 
 	let selectedGameId: number | undefined = $state(undefined);
-	let createOpen = $state(false);
 	let selectedTech: number = $state(-1);
 	let selectedSubtech: number = $state(-1);
 	let selectedImpact: string = $state('');
@@ -55,10 +44,6 @@
 	let actionOrder = $state(0);
 	let teamA = $state(0);
 	let teamB = $state(0);
-	let selectTeamAOpen = false;
-	let editOpen = $state(false);
-	let editGame: number | undefined = undefined;
-	let selectTeamBOpen = false;
 
 	let localGame: Game | undefined = undefined;
 
