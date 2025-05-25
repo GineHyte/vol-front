@@ -30,7 +30,6 @@
 	import { PaginationProps } from '$lib/scripts/pagination';
 	import ContextMenu from '$lib/ui/ContextMenu.svelte';
 	import { error } from '@sveltejs/kit';
-	import { t } from '$lib/i18n/utils';
 
 	let techId: number | undefined = $state(undefined);
 	let createOpen = $state(false);
@@ -119,62 +118,24 @@
 	}
 </script>
 
-<Content>
-	<Grid fullWidth>
-		<Row>
-			<Column>
-				<div bind:this={targetForTechs}>
-					{#key techTableUpdater}
-						{#await getTechs(new PaginationProps(techPage, techPageSize))}
-							<DataTableSkeleton />
-						{:then techs}
-							<DataTable
-								sortable
-								headers={techs.getHeaders(['id'])}
-								rows={techs.getRows()}
-							>
-								{#snippet cell({ cell, row })}
-									<div class="w-full h-full" id={row.id}>
-										{cell.value}
-									</div>
-								{/snippet}
-								<Toolbar>
-									<ToolbarContent>
-										<Button
-											on:click={() => {
-												createTechOpen = true;
-											}}
-											class="w-full"
-										>
-											+ {$t('titles.tech')}
-										</Button>
-									</ToolbarContent>
-								</Toolbar>
-							</DataTable>
-							<Pagination
-								pageSizes={[5, 10, 20, 50]}
-								bind:pageSize={techPageSize}
-								bind:page={techPage}
-								totalItems={techs.total}
-							/>
-						{/await}
-					{/key}
-				</div>
-				<ContextMenu
-					target={targetForTechs}
-					deleteFunc={removeTech}
-					duplicateFunc={duplicateTech}
-					updateFunc={() => (techTableUpdater = !techTableUpdater)}
-				/>
-			</Column>
-			<Column>
-				{#if selectedTech}
-					<Tile>
-						<p>{$t('common.name')}: {selectedTech.name}</p>
-					</Tile>
-					<div bind:this={targetForSubtechs}>
-						{#key subtechTableUpdater}
-							{#await getSubtechs(selectedTech.id, new PaginationProps(subtechPage, subtechPageSize))}
+{#if techId}
+	<Content>
+		<Grid>
+			{#await getTech(techId)}
+				<Row class="min-h-96 m-4">
+					<Column>
+						<SkeletonText paragraph lines={8} />
+					</Column>
+				</Row>
+			{:then tech}
+				<Row>
+					<Column>
+						<p>Назва: {tech.name}</p>
+					</Column>
+					<div class="h-[12rem]"></div>
+					<div class="w-full h-full mt-8" bind:this={targetForSubtechs}>
+						{#key [subtechTableUpdate, createSubtechOpen]}
+							{#await getSubtechs(techId, new PaginationProps(subtechPage, subtechPageSize))}
 								<DataTableSkeleton />
 							{:then subtechs}
 								<DataTable
@@ -188,14 +149,12 @@
 										</div>
 									{/snippet}
 									<Toolbar>
-										<ToolbarContent>
+										<ToolbarContent class="w-full">
 											<Button
-												on:click={() => {
-													createSubtechOpen = true;
-												}}
+												on:click={() => (createSubtechOpen = true)}
 												class="w-full"
 											>
-												+ {$t('titles.subtech')}
+												+ Підтехніка
 											</Button>
 										</ToolbarContent>
 									</Toolbar>
@@ -215,42 +174,33 @@
 						duplicateFunc={duplicateSubtech}
 						updateFunc={() => (subtechTableUpdate = !subtechTableUpdate)}
 					/>
-				{/if}
-			</Column>
-		</Row>
-	</Grid>
-</Content>
+				</Row>
+			{/await}
+		</Grid>
+	</Content>
+{/if}
 
 <ModalCreate
-	title={$t('titles.tech')}
+	title="Техніка"
 	model={new Tech()}
 	handleSubmit={createTechRenderer}
-	bind:open={createTechOpen}
+	bind:open={createOpen}
+	requiredFields={['name']}
 />
 
 <ModalCreate
-	title={$t('titles.subtech')}
+	title="Підтехніка"
 	model={new Subtech()}
 	handleSubmit={createSubtechRenderer}
 	bind:open={createSubtechOpen}
-/>
-
-<ModalCreateRelation
-	title={$t('titles.tech')}
-	getFunc={getTechs}
-	bind:open={selectionTechOpen}
-	on:submit={(e) => {
-		selectedTech = e.detail;
-		selectionTechOpen = false;
-	}}
-	headers={[{ key: 'name', value: $t('common.name') }]}
-	excludeHeaders={['id']}
+	requiredFields={['name']}
+	exclude={['tech']}
 />
 
 {#key createOpen}
 	<SideList
 		bind:selectedId={techId}
-		title={$t('titles.tech')}
+		title="Техніка"
 		deleteFunc={removeTech}
 		duplicateFunc={duplicateTech}
 		editFunc={() => {}}
@@ -258,6 +208,6 @@
 			createOpen = true;
 		}}
 		getFunc={getTechs}
-		headers={[{ key: 'name', value: $t('common.name') }]}
+		headers={[{ key: 'name', value: 'Назва' }]}
 	/>
 {/key}
