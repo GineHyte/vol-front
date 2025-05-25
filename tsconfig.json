@@ -8,6 +8,7 @@
 		"types": ["vite/client", "node", "jest"],
 		"typeRoots": ["node_modules/@types"],
 		"lib": ["ESNext", "DOM"],
+		"resolveJsonModule": true,
 		/**
 			svelte-preprocess cannot figure out whether you have a value or a type, so tell TypeScript
 			to enforce using \`import type\` instead of \`import\` for Types.
@@ -15,7 +16,7 @@
 		"verbatimModuleSyntax": true,
 		"isolatedModules": true,
 		/**
-			To have warnings/errors of the Svelte compiler at the correct position,
+			To have warnings/errors of the correct position,
 			enable source maps by default.
 		*/
 		"sourceMap": true,

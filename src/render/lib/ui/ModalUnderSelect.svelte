@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { Modal, TileGroup, RadioTile } from 'carbon-components-svelte';
 	import { createEventDispatcher } from 'svelte';
+	import { t } from '$lib/i18n/utils';
 
 	interface Props {
 		open?: boolean;
@@ -17,7 +18,7 @@
 <Modal
 	size={'lg'}
 	bind:open
-	primaryButtonText="Готово"
+	primaryButtonText={$t('common.done')}
 	modalHeading={title}
 	on:submit={() => {
 		open = false;

@@ -5,6 +5,8 @@
 	import ModalCreate from '$lib/ui/ModalCreate.svelte';
 	import ModalCreateRelation from '$lib/ui/ModalCreateRelation.svelte';
 	import { pushNotification } from '$lib/utils/utils';
+	import { t } from '$lib/i18n/utils';
+	import { PaginationProps } from '$lib/scripts/pagination';
 
 	interface Props {
 		createOpen?: boolean;
@@ -41,22 +43,19 @@
 </script>
 
 <ModalCreate
-	title="Гра"
+	title={$t('titles.game')}
 	model={new Game()}
 	handleSubmit={createGameRenderer}
 	bind:open={createOpen}
-	requiredFields={['name']}
+	requiredFields={['name', 'description']}
+	exclude={['teamA', 'teamB', 'finished', 'stats']}
 >
 	{#snippet createRelationField()}
 		{#if teamA}
-			<Tile>
-				Команда А: {teamA.name}
-			</Tile>
+			<Tile>{$t('buttons.selectTeamA')}: {teamA.name}</Tile>
 		{/if}
 		{#if teamB}
-			<Tile>
-				Команда Б: {teamB.name}
-			</Tile>
+			<Tile>{$t('buttons.selectTeamB')}: {teamB.name}</Tile>
 		{/if}
 		<Button
 			class="mt-4"
@@ -64,39 +63,43 @@
 				selectTeamAOpen = true;
 			}}
 		>
-			Вибрати команду А
+			{$t('buttons.selectTeamA')}
 		</Button>
 		<Button
 			class="mt-4"
 			on:click={() => {
 				selectTeamBOpen = true;
 			}}
+			disabled={!teamA}
 		>
-			Вибрати команду Б
+			{$t('buttons.selectTeamB')}
 		</Button>
 	{/snippet}
 	{#snippet modalCreateRelation()}
 		<ModalCreateRelation
-			title="КомандаА"
+			title={$t('buttons.selectTeamA')}
 			getFunc={getTeams}
 			bind:open={selectTeamAOpen}
 			on:submit={(e) => {
 				teamA = e.detail;
 				selectTeamAOpen = false;
+				selectTeamBOpen = true;
 			}}
-			alreadySelectedIds={[teamA.id, teamB.id]}
-			excludeHeaders={['players', 'id']}
+			excludeHeaders={['id']}
 		/>
-		<ModalCreateRelation
-			title="Гравець"
-			getFunc={getTeams}
-			bind:open={selectTeamBOpen}
-			on:submit={(e) => {
-				teamB = e.detail;
-				selectTeamBOpen = false;
-			}}
-			alreadySelectedIds={[teamA.id, teamB.id]}
-			excludeHeaders={['players', 'id']}
-		/>
+		{#if teamA}
+			<ModalCreateRelation
+				title={$t('buttons.selectTeamB')}
+				getFunc={async () => {
+					return await getTeams(new PaginationProps(1, 100));
+				}}
+				bind:open={selectTeamBOpen}
+				on:submit={(e) => {
+					teamB = e.detail;
+					selectTeamBOpen = false;
+				}}
+				excludeHeaders={['id']}
+			/>
+		{/if}
 	{/snippet}
 </ModalCreate>

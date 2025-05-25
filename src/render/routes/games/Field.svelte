@@ -6,7 +6,8 @@
 	import { getTeam } from '$lib/scripts/endpoints';
 	import PlayerElement from './Player.svelte';
 	import SideZones from './SideZones.svelte';
-	import { Side, Amplua } from '$lib/utils/utils';
+	import { Side, getAmplua } from '$lib/utils/utils';
+	import { t } from '$lib/i18n/utils';
 
 	interface Props {
 		game?: any;
@@ -95,7 +96,7 @@
 								<PlayerElement
 									top="50"
 									left="160"
-									title={Amplua[team.players[0].amplua][0]}
+									title={getAmplua()[team.players[0].amplua][0]}
 									on:select={() => {
 										selectedPlayer = team.players[0].player.id;
 										selectedSide = Side.LEFT;
@@ -107,7 +108,7 @@
 								<PlayerElement
 									top="170"
 									left="90"
-									title={Amplua[team.players[1].amplua][0]}
+									title={getAmplua()[team.players[1].amplua][0]}
 									on:select={() => {
 										selectedPlayer = team.players[1].player.id;
 										selectedSide = Side.LEFT;
@@ -128,7 +129,7 @@
 								<PlayerElement
 									top="170"
 									left="90"
-									title={Amplua[team.players[0].amplua][0]}
+									title={getAmplua()[team.players[0].amplua][0]}
 									on:select={() => {
 										selectedPlayer = team.players[0].player.id;
 										selectedSide = Side.RIGHT;
@@ -140,7 +141,7 @@
 								<PlayerElement
 									top="50"
 									left="160"
-									title={Amplua[team.players[1].amplua][0]}
+									title={getAmplua()[team.players[1].amplua][0]}
 									on:select={() => {
 										selectedPlayer = team.players[1].player.id;
 										selectedSide = Side.RIGHT;
@@ -155,14 +156,14 @@
 		</div>
 		<ExpandableTile>
 			{#snippet above()}
-				<div><h1 class="text-lg font-bold">Легенда поля:</h1></div>
+				<div><h1 class="text-lg font-bold">{$t('fieldLegend.title')}</h1></div>
 			{/snippet}
 			{#snippet below()}
 				<div>
 					<ul>
-						<li>Н - Нападник</li>
-						<li>З - Захисник</li>
-						<li>У - Універсальний</li>
+						<li>{$t('fieldLegend.attacker')}</li>
+						<li>{$t('fieldLegend.defender')}</li>
+						<li>{$t('fieldLegend.universal')}</li>
 					</ul>
 				</div>
 			{/snippet}

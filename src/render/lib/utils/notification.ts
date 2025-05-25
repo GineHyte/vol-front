@@ -1,259 +1,262 @@
+import { t } from '$lib/i18n/utils';
+import { get } from 'svelte/store';
+
 const NOTIFICATIONS = {
-	duplicatePlayerSuccess: {
-		title: 'Успіх!',
-		message: 'Гравець дубльований.',
+	duplicatePlayerSuccess: () => ({
+		title: get(t)('notifications.success'),
+		message: get(t)('notifications.playerDuplicated'),
 		kind: 'success',
-	},
-	duplicatePlayerError: {
-		title: 'Помилка!',
-		message: 'Гравець не може бути дубльований.',
+	}),
+	duplicatePlayerError: () => ({
+		title: get(t)('notifications.error'),
+		message: get(t)('notifications.playerCannotBeDuplicated'),
 		kind: 'error',
-	},
-	removePlayerSuccess: {
-		title: 'Успіх!',
-		message: 'Гравець видалений.',
+	}),
+	removePlayerSuccess: () => ({
+		title: get(t)('notifications.success'),
+		message: get(t)('notifications.playerRemoved'),
 		kind: 'success',
-	},
-	removePlayerError: {
-		title: 'Помилка!',
-		message: 'Гравець не може бути видалений.',
+	}),
+	removePlayerError: () => ({
+		title: get(t)('notifications.error'),
+		message: get(t)('notifications.playerCannotBeRemoved'),
 		kind: 'error',
-	},
-	createPlayerSuccess: {
-		title: 'Успіх!',
-		message: 'Ви створили нового гравця.',
+	}),
+	createPlayerSuccess: () => ({
+		title: get(t)('notifications.success'),
+		message: get(t)('notifications.playerCreated'),
 		kind: 'success',
-	},
-	createPlayerError: {
-		title: 'Помилка!',
-		message: 'Гравець не може бути створений.',
+	}),
+	createPlayerError: () => ({
+		title: get(t)('notifications.error'),
+		message: get(t)('notifications.playerCannotBeCreated'),
 		kind: 'error',
-	},
-	settingsSaveSuccess: {
-		title: 'Успіх!',
-		message: 'Налаштування збережено.',
+	}),
+	settingsSaveSuccess: () => ({
+		title: get(t)('notifications.success'),
+		message: get(t)('notifications.settingsSaved'),
 		kind: 'success',
-	},
-	duplicateTeamSuccess: {
-		title: 'Успіх!',
-		message: 'Команда дубльована.',
+	}),
+	duplicateTeamSuccess: () => ({
+		title: get(t)('notifications.success'),
+		message: get(t)('notifications.teamDuplicated'),
 		kind: 'success',
-	},
-	duplicateTeamError: {
-		title: 'Помилка!',
-		message: 'Команда не може бути дубльована.',
+	}),
+	duplicateTeamError: () => ({
+		title: get(t)('notifications.error'),
+		message: get(t)('notifications.teamCannotBeDuplicated'),
 		kind: 'error',
-	},
-	removeTeamSuccess: {
-		title: 'Успіх!',
-		message: 'Команда видалена.',
+	}),
+	removeTeamSuccess: () => ({
+		title: get(t)('notifications.success'),
+		message: get(t)('notifications.teamRemoved'),
 		kind: 'success',
-	},
-	removeTeamError: {
-		title: 'Помилка!',
-		message: 'Команда не може бути видалена.',
+	}),
+	removeTeamError: () => ({
+		title: get(t)('notifications.error'),
+		message: get(t)('notifications.teamCannotBeRemoved'),
 		kind: 'error',
-	},
-	createTeamSuccess: {
-		title: 'Успіх!',
-		message: 'Ви створили нову команду.',
+	}),
+	createTeamSuccess: () => ({
+		title: get(t)('notifications.success'),
+		message: get(t)('notifications.teamCreated'),
 		kind: 'success',
-	},
-	createTeamError: {
-		title: 'Помилка!',
-		message: 'Команда не може бути створена.',
+	}),
+	createTeamError: () => ({
+		title: get(t)('notifications.error'),
+		message: get(t)('notifications.teamCannotBeCreated'),
 		kind: 'error',
-	},
-	duplicateTechSuccess: {
-		title: 'Успіх!',
-		message: 'Техніка дубльована.',
+	}),
+	duplicateTechSuccess: () => ({
+		title: get(t)('notifications.success'),
+		message: get(t)('notifications.techDuplicated'),
 		kind: 'success',
-	},
-	duplicateTechError: {
-		title: 'Помилка!',
-		message: 'Техніка не може бути дубльована.',
+	}),
+	duplicateTechError: () => ({
+		title: get(t)('notifications.error'),
+		message: get(t)('notifications.techCannotBeDuplicated'),
 		kind: 'error',
-	},
-	removeTechSuccess: {
-		title: 'Успіх!',
-		message: 'Техніка видалена.',
+	}),
+	removeTechSuccess: () => ({
+		title: get(t)('notifications.success'),
+		message: get(t)('notifications.techRemoved'),
 		kind: 'success',
-	},
-	removeTechError: {
-		title: 'Помилка!',
-		message: 'Техніка не може бути видалена.',
+	}),
+	removeTechError: () => ({
+		title: get(t)('notifications.error'),
+		message: get(t)('notifications.techCannotBeRemoved'),
 		kind: 'error',
-	},
-	createTechSuccess: {
-		title: 'Успіх!',
-		message: 'Ви створили нову техніку.',
+	}),
+	createTechSuccess: () => ({
+		title: get(t)('notifications.success'),
+		message: get(t)('notifications.techCreated'),
 		kind: 'success',
-	},
-	createTechError: {
-		title: 'Помилка!',
-		message: 'Техніка не може бути створена.',
+	}),
+	createTechError: () => ({
+		title: get(t)('notifications.error'),
+		message: get(t)('notifications.techCannotBeCreated'),
 		kind: 'error',
-	},
-	duplicateSubtechSuccess: {
-		title: 'Успіх!',
-		message: 'Підтехніка дубльована.',
+	}),
+	duplicateSubtechSuccess: () => ({
+		title: get(t)('notifications.success'),
+		message: get(t)('notifications.subtechDuplicated'),
 		kind: 'success',
-	},
-	duplicateSubtechError: {
-		title: 'Помилка!',
-		message: 'Підтехніка не може бути дубльована.',
+	}),
+	duplicateSubtechError: () => ({
+		title: get(t)('notifications.error'),
+		message: get(t)('notifications.subtechCannotBeDuplicated'),
 		kind: 'error',
-	},
-	removeSubtechSuccess: {
-		title: 'Успіх!',
-		message: 'Підтехніка видалена.',
+	}),
+	removeSubtechSuccess: () => ({
+		title: get(t)('notifications.success'),
+		message: get(t)('notifications.subtechRemoved'),
 		kind: 'success',
-	},
-	removeSubtechError: {
-		title: 'Помилка!',
-		message: 'Підтехніка не може бути видалена.',
+	}),
+	removeSubtechError: () => ({
+		title: get(t)('notifications.error'),
+		message: get(t)('notifications.subtechCannotBeRemoved'),
 		kind: 'error',
-	},
-	createSubtechSuccess: {
-		title: 'Успіх!',
-		message: 'Ви створили нову підтехніку.',
+	}),
+	createSubtechSuccess: () => ({
+		title: get(t)('notifications.success'),
+		message: get(t)('notifications.subtechCreated'),
 		kind: 'success',
-	},
-	createSubtechError: {
-		title: 'Помилка!',
-		message: 'Підтехніка не може бути створена. ({errorDetail})',
+	}),
+	createSubtechError: () => ({
+		title: get(t)('notifications.error'),
+		message: get(t)('notifications.subtechCannotBeCreated'),
 		kind: 'error',
-	},
-	settingsServerIPError: {
-		title: 'Помилка!',
-		message: 'Налаштування не знайдено. Будь ласка, вкажіть IP адрес сервера в налаштуваннях.',
+	}),
+	settingsServerIPError: () => ({
+		title: get(t)('notifications.error'),
+		message: get(t)('notifications.settingsNotFound'),
 		kind: 'error',
-	},
-	apiError: {
-		title: 'Помилка!',
+	}),
+	apiError: () => ({
+		title: get(t)('notifications.error'),
 		timeout: -1,
-		message: 'Помилка в комунікації з сервером: {status} - {statusText}\n{url}\n{body}',
+		message: get(t)('notifications.serverCommunicationError'),
 		kind: 'error',
-	},
-	duplicateGameSuccess: {
-		title: 'Успіх!',
-		message: 'Гра дубльована.',
+	}),
+	duplicateGameSuccess: () => ({
+		title: get(t)('notifications.success'),
+		message: get(t)('notifications.gameDuplicated'),
 		kind: 'success',
-	},
-	duplicateGameError: {
-		title: 'Помилка!',
-		message: 'Гра не може бути дубльована.',
+	}),
+	duplicateGameError: () => ({
+		title: get(t)('notifications.error'),
+		message: get(t)('notifications.gameCannotBeDuplicated'),
 		kind: 'error',
-	},
-	removeGameSuccess: {
-		title: 'Успіх!',
-		message: 'Гра видалена.',
+	}),
+	removeGameSuccess: () => ({
+		title: get(t)('notifications.success'),
+		message: get(t)('notifications.gameRemoved'),
 		kind: 'success',
-	},
-	removeGameError: {
-		title: 'Помилка!',
-		message: 'Гра не може бути видалена.',
+	}),
+	removeGameError: () => ({
+		title: get(t)('notifications.error'),
+		message: get(t)('notifications.gameCannotBeRemoved'),
 		kind: 'error',
-	},
-	createGameSuccess: {
-		title: 'Успіх!',
-		message: 'Ви створили нову гру.',
+	}),
+	createGameSuccess: () => ({
+		title: get(t)('notifications.success'),
+		message: get(t)('notifications.gameCreated'),
 		kind: 'success',
-	},
-	createGameError: {
-		title: 'Помилка!',
-		message: 'Гра не може бути створена.',
+	}),
+	createGameError: () => ({
+		title: get(t)('notifications.error'),
+		message: get(t)('notifications.gameCannotBeCreated'),
 		kind: 'error',
-	},
-	duplicateActionSuccess: {
-		title: 'Успіх!',
-		message: 'Дія дубльована.',
+	}),
+	duplicateActionSuccess: () => ({
+		title: get(t)('notifications.success'),
+		message: get(t)('notifications.actionDuplicated'),
 		kind: 'success',
-	},
-	duplicateActionError: {
-		title: 'Помилка!',
-		message: 'Дія не може бути дубльована.',
+	}),
+	duplicateActionError: () => ({
+		title: get(t)('notifications.error'),
+		message: get(t)('notifications.actionCannotBeDuplicated'),
 		kind: 'error',
-	},
-	removeActionSuccess: {
-		title: 'Успіх!',
-		message: 'Дія видалена.',
+	}),
+	removeActionSuccess: () => ({
+		title: get(t)('notifications.success'),
+		message: get(t)('notifications.actionRemoved'),
 		kind: 'success',
-	},
-	removeActionError: {
-		title: 'Помилка!',
-		message: 'Дія не може бути видалена.',
+	}),
+	removeActionError: () => ({
+		title: get(t)('notifications.error'),
+		message: get(t)('notifications.actionCannotBeRemoved'),
 		kind: 'error',
-	},
-	createActionSuccess: {
-		title: 'Успіх!',
-		message: 'Ви створили нову дію.',
+	}),
+	createActionSuccess: () => ({
+		title: get(t)('notifications.success'),
+		message: get(t)('notifications.actionCreated'),
 		kind: 'success',
-	},
-	createActionError: {
-		title: 'Помилка!',
-		message: 'Дія не може бути створена.',
+	}),
+	createActionError: () => ({
+		title: get(t)('notifications.error'),
+		message: get(t)('notifications.actionCannotBeCreated'),
 		kind: 'error',
-	},
-	duplicateExerciseSuccess: {
-		title: 'Успіх!',
-		message: 'Вправа дубльована.',
+	}),
+	duplicateExerciseSuccess: () => ({
+		title: get(t)('notifications.success'),
+		message: get(t)('notifications.exerciseDuplicated'),
 		kind: 'success',
-	},
-	duplicateExerciseError: {
-		title: 'Помилка!',
-		message: 'Вправа не може бути дубльована.',
+	}),
+	duplicateExerciseError: () => ({
+		title: get(t)('notifications.error'),
+		message: get(t)('notifications.exerciseCannotBeDuplicated'),
 		kind: 'error',
-	},
-	removeExerciseSuccess: {
-		title: 'Успіх!',
-		message: 'Вправа видалена.',
+	}),
+	removeExerciseSuccess: () => ({
+		title: get(t)('notifications.success'),
+		message: get(t)('notifications.exerciseRemoved'),
 		kind: 'success',
-	},
-	removeExerciseError: {
-		title: 'Помилка!',
-		message: 'Вправа не може бути видалена.',
+	}),
+	removeExerciseError: () => ({
+		title: get(t)('notifications.error'),
+		message: get(t)('notifications.exerciseCannotBeRemoved'),
 		kind: 'error',
-	},
-	createExerciseSuccess: {
-		title: 'Успіх!',
-		message: 'Ви створили нову вправу.',
+	}),
+	createExerciseSuccess: () => ({
+		title: get(t)('notifications.success'),
+		message: get(t)('notifications.exerciseCreated'),
 		kind: 'success',
-	},
-	createExerciseError: {
-		title: 'Помилка!',
-		message: 'Вправа не може бути створена.',
+	}),
+	createExerciseError: () => ({
+		title: get(t)('notifications.error'),
+		message: get(t)('notifications.exerciseCannotBeCreated'),
 		kind: 'error',
-	},
-	generatePlanSuccess: {
-		title: 'Успіх!',
-		message: 'План згенеровано.',
+	}),
+	generatePlanSuccess: () => ({
+		title: get(t)('notifications.success'),
+		message: get(t)('notifications.planGenerated'),
 		kind: 'success',
-	},
-	generatePlanError: {
-		title: 'Помилка!',
-		message: 'План не може бути згенерований: гравця не знайдено.',
+	}),
+	generatePlanError: () => ({
+		title: get(t)('notifications.error'),
+		message: get(t)('notifications.planCannotBeGenerated'),
 		kind: 'error',
-	},
-	calculatePlayerStatsSuccess: {
-		title: 'Успіх!',
-		message: 'Статистика гравця розрахована.',
+	}),
+	calculatePlayerStatsSuccess: () => ({
+		title: get(t)('notifications.success'),
+		message: get(t)('notifications.playerStatsCalculated'),
 		kind: 'success',
-	},
-	calculatePlayerStatsNoActionError: {
-		title: 'Помилка!',
-		message: 'Статистика гравця не може бути розрахована: немає дій.',
+	}),
+	calculatePlayerStatsNoActionError: () => ({
+		title: get(t)('notifications.error'),
+		message: get(t)('notifications.playerStatsCannotBeCalculatedNoActions'),
 		kind: 'error',
-	},
-	calculatePlayerStatsNoPlayerError: {
-		title: 'Помилка!',
-		message: 'Статистика гравця не може бути розрахована: гравця не знайдено.',
+	}),
+	calculatePlayerStatsNoPlayerError: () => ({
+		title: get(t)('notifications.error'),
+		message: get(t)('notifications.playerStatsCannotBeCalculatedNoPlayer'),
 		kind: 'error',
-	},
+	}),
 };
 
 export default function getNotification(name: string, params: { [key: string]: string } = {}) {
-	let notification = NOTIFICATIONS[name as keyof typeof NOTIFICATIONS];
+	let notification = NOTIFICATIONS[name as keyof typeof NOTIFICATIONS]();
 	Object.keys(params).forEach((key) => {
 		notification.title = notification.title.replace(`{${key}}`, params[key]);
 		notification.message = notification.message.replace(`{${key}}`, params[key]);

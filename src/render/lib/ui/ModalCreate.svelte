@@ -16,6 +16,7 @@
 	import Model from '$lib/scripts/model';
 	import Field from '$lib/scripts/field';
 	import { createEventDispatcher } from 'svelte';
+	import { t } from '$lib/i18n/utils';
 
 	interface Props {
 		title?: string;
@@ -36,7 +37,7 @@
 		open = $bindable(false),
 		exclude = [],
 		createRelationField,
-		modalCreateRelation
+		modalCreateRelation,
 	}: Props = $props();
 
 	let inputData: any = $state({});
@@ -149,7 +150,7 @@
 		</ModalBody>
 		{#key inputData}
 			<ModalFooter
-				primaryButtonText="Готово"
+				primaryButtonText={$t('common.done')}
 				primaryButtonDisabled={getPrimaryButtonDisabled()}
 			/>
 		{/key}

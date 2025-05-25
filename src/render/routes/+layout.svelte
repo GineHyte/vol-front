@@ -5,6 +5,10 @@
 	import 'carbon-components-svelte/css/all.css';
 	import '$lib/_global.css';
 
+	// Initialize i18n
+	import '$lib/i18n';
+	import { t } from '$lib/i18n/utils';
+
 	import {
 		Header,
 		HeaderNav,
@@ -22,6 +26,7 @@
 	import { settingsRenderer, versionRenderer } from '@/render/lib/utils/store';
 	import Notifications from '$lib/ui/Notifications.svelte';
 	import ModalCreate from '$lib/ui/ModalCreate.svelte';
+	import LanguageSelector from '$lib/ui/LanguageSelector.svelte';
 	import { pushNotification } from '../lib/utils/utils';
 	interface Props {
 		children?: import('svelte').Snippet;
@@ -72,31 +77,31 @@
 
 	let routes = [
 		{
-			title: 'Головна',
+			title: $t('navigation.home'),
 			path: '/',
 		},
 		{
-			title: 'Ігри',
+			title: $t('navigation.games'),
 			path: '/games',
 		},
 		{
-			title: 'Гравці',
+			title: $t('navigation.players'),
 			path: '/players',
 		},
 		{
-			title: 'Команди',
+			title: $t('navigation.teams'),
 			path: '/teams',
 		},
 		{
-			title: 'Технічні навички',
+			title: $t('navigation.techs'),
 			path: '/techs',
 		},
 		{
-			title: 'Вправи',
+			title: $t('navigation.exercises'),
 			path: '/exercises',
 		},
 		{
-			title: 'Налаштування',
+			title: $t('navigation.settings'),
 			path: '/settings',
 		},
 	];
@@ -107,7 +112,7 @@
 </script>
 
 <Header
-	platformName="Технічні навички в пляжному волейболі"
+	platformName={$t('titles.appTitle')}
 	bind:isSideNavOpen
 	class="w-full"
 	style="-webkit-app-region: drag;"
@@ -118,12 +123,13 @@
 		<SkipToContent />
 	</svelte:fragment>
 	<HeaderNav style="display:block">
+		<LanguageSelector />
 		<Button
 			kind={theme === 'g100' ? 'ghost' : 'secondary'}
 			on:click={() => {
 				theme = theme === 'g100' ? 'white' : 'g100';
 			}}
-			iconDescription="Тема"
+			iconDescription={$t('buttons.theme')}
 			icon={theme === 'g100' ? LightFilled : Light}
 		/>
 		{#key currentWindowState}
@@ -131,7 +137,7 @@
 				icon={Subtract}
 				kind="secondary"
 				size="small"
-				iconDescription="Мінімізувати"
+				iconDescription={$t('buttons.minimize')}
 				on:click={() => setWindowState({ minimize: true })}
 			/>
 			<Button
@@ -140,7 +146,7 @@
 					: Maximize}
 				kind="secondary"
 				size="small"
-				iconDescription="Свернути"
+				iconDescription={$t('buttons.maximize')}
 				on:click={() =>
 					setWindowState({
 						maximize: !(
@@ -152,7 +158,7 @@
 				icon={Close}
 				kind="danger"
 				size="small"
-				iconDescription="Закрити"
+				iconDescription={$t('common.close')}
 				on:click={() => setWindowState({ close: true })}
 			/>
 		{/key}

@@ -28,6 +28,7 @@
 	import ContextMenu from '@/render/lib/ui/ContextMenu.svelte';
 	import { Impact, Side } from '$lib/utils/utils';
 	import SideListGame from '@/render/routes/games/SideListGame.svelte';
+	import { t } from '$lib/i18n/utils';
 
 	let selectedGameId: number | undefined = $state(undefined);
 	let selectedTech: number = $state(-1);
@@ -135,7 +136,7 @@
 								{:then techs}
 									<DataTable
 										useStaticWidth
-										headers={[{ key: 'name', value: 'Технічна навичка' }]}
+										headers={[{ key: 'name', value: $t('navigation.techs') }]}
 										rows={techs.getRows()}
 									>
 										{#snippet cell({ cell, row })}
@@ -156,7 +157,7 @@
 								{:then subtechs}
 									<DataTable
 										useStaticWidth
-										headers={[{ key: 'name', value: 'Під-техніка' }]}
+										headers={[{ key: 'name', value: $t('titles.subtech') }]}
 										rows={subtechs.getRows()}
 									>
 										{#snippet cell({ cell, row })}
@@ -173,7 +174,9 @@
 								{/await}
 							{:else if actionOrder === 3}
 								<DataTable
-									headers={[{ key: 'impact', value: 'Якісний показник гри' }]}
+									headers={[
+										{ key: 'impact', value: $t('fields.qualityIndicator') },
+									]}
 									rows={Object.entries(Impact).map(([key, value]) => ({
 										id: key,
 										impact: value,
@@ -206,11 +209,11 @@
 					</Column>
 					<Column class="relative">
 						{#if game.description}
-							<span>Опис: {game.description}</span>
+							<span>{$t('common.description')}: {game.description}</span>
 						{/if}
 						{#if actionOrder > 0}
 							<Button class="absolute bottom-4 left-4" on:click={goBack}>
-								Назад
+								{$t('common.back')}
 							</Button>
 						{/if}
 					</Column>

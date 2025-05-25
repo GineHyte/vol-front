@@ -11,6 +11,7 @@
 	} from 'carbon-pictograms-svelte';
 	import { fade, fly, scale } from 'svelte/transition';
 	import AnimTile from './AnimTile.svelte';
+	import { t } from '$lib/i18n/utils';
 </script>
 
 <Content>
@@ -18,11 +19,10 @@
 		<Row>
 			<Column>
 				<h1 class="text-3xl font-bold mb-4">
-					Ласкаво просимо до системи аналізу технічних навичок у пляжному волейболі
+					{$t('titles.appTitle')}
 				</h1>
 				<p class="mb-6">
-					Ця програма допоможе вам аналізувати, відстежувати та вдосконалювати технічні
-					навички гравців.
+					{$t('descriptions.homeDescription')}
 				</p>
 			</Column>
 		</Row>
@@ -31,8 +31,8 @@
 			<Column sm={4} md={4} lg={4} class="mb-4">
 				<AnimTile
 					href="/games"
-					title="Ігри"
-					text="Створюйте та аналізуйте ігри, відстежуйте дії гравців та технічні показники."
+					title={$t('navigation.games')}
+					text={$t('descriptions.gamesDescription')}
 				>
 					{#snippet pentogram()}
 						<AcceleratedComputing />
@@ -43,9 +43,8 @@
 			<Column sm={4} md={4} lg={4} class="mb-4">
 				<AnimTile
 					href="/players"
-					title="Гравці"
-					text="Управління профілями гравців, перегляд статистики та створення
-						індивідуальних планів тренувань."
+					title={$t('navigation.players')}
+					text={$t('descriptions.playersDescription')}
 				>
 					{#snippet pentogram()}
 						<KeyUsers />
@@ -56,8 +55,8 @@
 			<Column sm={4} md={4} lg={4} class="mb-4">
 				<AnimTile
 					href="/teams"
-					title="Команди"
-					text="Створюйте та керуйте командами, додавайте гравців та аналізуйте командну продуктивність."
+					title={$t('navigation.teams')}
+					text={$t('descriptions.teamsDescription')}
 				>
 					{#snippet pentogram()}
 						<RenewTeam />
@@ -70,8 +69,8 @@
 			<Column sm={4} md={4} lg={4} class="mb-4">
 				<AnimTile
 					href="/techs"
-					title="Технічні навички"
-					text="Керування базою технічних навичок та підтехнік для детального аналізу гри."
+					title={$t('navigation.techs')}
+					text={$t('descriptions.techsDescription')}
 				>
 					{#snippet pentogram()}
 						<AssessmentUsed />
@@ -82,8 +81,8 @@
 			<Column sm={4} md={4} lg={4} class="mb-4">
 				<AnimTile
 					href="/exercises"
-					title="Вправи"
-					text="Створюйте та використовуйте вправи для розвитку технічних навичок гравців."
+					title={$t('navigation.exercises')}
+					text={$t('descriptions.exercisesDescription')}
 				>
 					{#snippet pentogram()}
 						<DesignLeadership />
@@ -94,8 +93,8 @@
 			<Column sm={4} md={4} lg={4} class="mb-4">
 				<AnimTile
 					href="/settings"
-					title="Налаштування"
-					text="Налаштуйте програму відповідно до своїх потреб."
+					title={$t('navigation.settings')}
+					text={$t('descriptions.settingsDescription')}
 				>
 					{#snippet pentogram()}
 						<GpuComputing />

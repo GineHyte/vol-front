@@ -26,18 +26,23 @@
 	import { PaginationProps } from '$lib/scripts/pagination';
 	import { Player } from '$lib/scripts/models';
 	import ModalCreate from '$lib/ui/ModalCreate.svelte';
+	import ModalEdit from '$lib/ui/ModalEdit.svelte';
 	import { pushNotification } from '$lib/utils/utils';
 	import Stats from './Stats.svelte';
 	import Plan from './Plan.svelte';
+	import { t } from '$lib/i18n/utils';
 
 	let selectedPlayerId: number | undefined = $state(undefined);
 	let createOpen = $state(false);
+	let editOpen = $state(false);
 	let sideListUpdater: boolean = $state(false);
 	let showStatistics = $state(false);
 	let showPlan = $state(false);
 	let playerName = $state('');
 	let generatePlanLoading = $state(false);
 	let calculatePlayerStatsLoading = $state(false);
+	let selectionPlayerOpen = $state(false);
+	let selectedPlayer: Player | undefined = $state(undefined);
 
 	async function onGeneratePlan() {
 		if (selectedPlayerId) {
@@ -114,6 +119,22 @@
 		updateSideList();
 	}
 
+	async function updatePlayerRenderer(inputData: any) {
+		let player = new Player();
+		Object.keys(inputData).forEach((key) => {
+			// @ts-ignore
+			player[key as keyof Player] = inputData[key];
+		});
+		let status = await createPlayer(player);
+		if (status.status === 'success') {
+			pushNotification('updatePlayerSuccess');
+		} else {
+			pushNotification('updatePlayerError');
+		}
+		editOpen = false;
+		updateSideList();
+	}
+
 	async function getPlayerAndSaveName(playerId: number) {
 		let player = await getPlayer(playerId);
 		playerName = `${player.firstName} ${player.lastName}`;
@@ -137,11 +158,11 @@
 						<ImageLoader class="size-96" ratio="4x3" fadeIn alt="Player`s photo" />
 					</Column>
 					<Column>
-						<p>Ім'я: {player.firstName}</p>
-						<p>Прізвище: {player.lastName}</p>
-						<p>Вік: {player.age}</p>
-						<p>Зріст: {player.height ? player.height : ''}</p>
-						<p>Вага: {player.weight ? player.weight : ''}</p>
+						<p>{$t('fields.firstName')}: {player.firstName}</p>
+						<p>{$t('fields.lastName')}: {player.lastName}</p>
+						<p>{$t('fields.age')}: {player.age}</p>
+						<p>{$t('fields.height')}: {player.height ? player.height : ''}</p>
+						<p>{$t('fields.weight')}: {player.weight ? player.weight : ''}</p>
 					</Column>
 					<Column>
 						<div>
@@ -150,23 +171,23 @@
 									showStatistics = !showStatistics;
 								}}
 							>
-								Статистика
+								{$t('buttons.statistics')}
 							</Button>
 							{#if calculatePlayerStatsLoading}
-								<Button kind="ghost" iconDescription="Завантаження...">
+								<Button kind="ghost" iconDescription={$t('common.loading')}>
 									{#snippet icon()}
 										<Loading
 											class="text-transparent"
 											small
 											withOverlay={false}
-											description="Завантаження..."
+											description={$t('common.loading')}
 										/>
 									{/snippet}
 								</Button>
 							{:else}
 								<Button
 									kind="ghost"
-									iconDescription="Розрахувати статистику"
+									iconDescription={$t('buttons.calculateStats')}
 									icon={ChartStacked}
 									on:click={onCalculatePlayerStats}
 								></Button>
@@ -178,23 +199,23 @@
 									showPlan = !showPlan;
 								}}
 							>
-								План тренувань
+								{$t('buttons.plan')}
 							</Button>
 							{#if generatePlanLoading}
-								<Button kind="ghost" iconDescription="Завантаження...">
+								<Button kind="ghost" iconDescription={$t('common.loading')}>
 									{#snippet icon()}
 										<Loading
 											class="text-transparent"
 											small
 											withOverlay={false}
-											description="Завантаження..."
+											description={$t('common.loading')}
 										/>
 									{/snippet}
 								</Button>
 							{:else}
 								<Button
 									kind="ghost"
-									iconDescription="План тренувань"
+									iconDescription={$t('buttons.trainingPlan')}
 									icon={MachineLearningModel}
 									on:click={onGeneratePlan}
 								></Button>
@@ -218,7 +239,7 @@
 
 {#if createOpen}
 	<ModalCreate
-		title="Гравець"
+		title={$t('navigation.players')}
 		model={new Player()}
 		handleSubmit={createPlayerRenderer}
 		bind:open={createOpen}
@@ -226,10 +247,18 @@
 		exclude={['teams', 'imageFile']}
 	></ModalCreate>
 {/if}
+{#if editOpen && selectedPlayer}
+	<ModalEdit
+		title={$t('navigation.players')}
+		model={selectedPlayer}
+		handleSubmit={updatePlayerRenderer}
+		bind:open={editOpen}
+	></ModalEdit>
+{/if}
 {#key sideListUpdater}
 	<SideList
 		bind:selectedId={selectedPlayerId}
-		title="Гравець"
+		title={$t('navigation.players')}
 		deleteFunc={removePlayer}
 		duplicateFunc={duplicatePlayer}
 		newFunc={() => {
@@ -239,7 +268,7 @@
 		editFunc={(currentId: number) => {
 			selectedPlayerId = currentId;
 		}}
-		headers={[{ key: 'firstName', value: "Ім'я" }]}
+		headers={[{ key: 'firstName', value: $t('fields.firstName') }]}
 	/>
 {/key}
 {#if showStatistics && selectedPlayerId}

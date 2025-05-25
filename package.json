@@ -48,6 +48,7 @@
 		"electron-squirrel-startup": "^1.0.1",
 		"electron-window-state": "^5.0.3",
 		"electron-winstaller": "^5.4.0",
+		"svelte-i18n": "^4.0.1",
 		"ts-jest": "^29.2.5",
 		"ts-node": "^10.9.2",
 		"update-electron-app": "^3.1.0"

@@ -6,6 +6,7 @@
 	import ModalCreateRelation from '$lib/ui/ModalCreateRelation.svelte';
 	import { pushNotification } from '$lib/utils/utils';
 	import { PaginationProps } from '@/render/lib/scripts/pagination';
+	import { t } from '$lib/i18n/utils';
 
 	type Props = {
 		createOpen?: boolean;
@@ -39,7 +40,7 @@
 </script>
 
 <ModalCreate
-	title="Вправа"
+	title={$t('titles.exercise')}
 	model={new Exercise()}
 	handleSubmit={createExerciseRenderer}
 	bind:open={createOpen}
@@ -48,10 +49,10 @@
 >
 	{#snippet createRelationField()}
 		{#if selectedTech}
-			<Tile>Техніка: {selectedTech.name}</Tile>
+			<Tile>{$t('titles.tech')}: {selectedTech.name}</Tile>
 		{/if}
 		{#if selectedSubtech}
-			<Tile>Підтехніка: {selectedSubtech.name}</Tile>
+			<Tile>{$t('titles.subtech')}: {selectedSubtech.name}</Tile>
 		{/if}
 		<Button
 			class="mt-4"
@@ -59,7 +60,7 @@
 				selectionTechOpen = true;
 			}}
 		>
-			Вибрати техніку
+			{$t('buttons.selectTech')}
 		</Button>
 		<Button
 			class="mt-4"
@@ -68,12 +69,12 @@
 			}}
 			disabled={!selectedTech}
 		>
-			Вибрати підтехніку
+			{$t('buttons.selectSubtech')}
 		</Button>
 	{/snippet}
 	{#snippet modalCreateRelation()}
 		<ModalCreateRelation
-			title="Техніка"
+			title={$t('titles.tech')}
 			getFunc={getTechs}
 			bind:open={selectionTechOpen}
 			on:submit={(e) => {
@@ -85,7 +86,7 @@
 		/>
 		{#if selectedTech}
 			<ModalCreateRelation
-				title="Підехніка"
+				title={$t('titles.subtech')}
 				getFunc={async () => {
 					return await getSubtechs(selectedTech?.id, new PaginationProps(1, 100));
 				}}

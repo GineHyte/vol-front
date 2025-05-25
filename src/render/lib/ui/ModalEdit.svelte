@@ -15,6 +15,7 @@
 
 	import Model from '$lib/scripts/model';
 	import Field from '$lib/scripts/field';
+	import { t } from '$lib/i18n/utils';
 
 	interface Props {
 		title?: string;
@@ -142,7 +143,7 @@
 		</ModalBody>
 		{#key model}
 			<ModalFooter
-				primaryButtonText="Готово"
+				primaryButtonText={$t('common.done')}
 				primaryButtonDisabled={getPrimaryButtonDisabled()}
 			/>
 		{/key}

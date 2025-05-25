@@ -10,6 +10,7 @@
 	} from '@/render/lib/scripts/endpoints';
 	import type { TechSum, SubtechSum, ImpactSum, ZoneSum } from '@/render/lib/scripts/models';
 	import { Impact } from '@/render/lib/utils/utils';
+	import { t } from '$lib/i18n/utils';
 
 	interface Props {
 		open: boolean;
@@ -25,7 +26,7 @@
 	let subtechIds: { [key: string]: number } = {};
 	let impact: string | undefined;
 	let impacts: { [key: string]: string } = {};
-	let title: string = $state('Статистика по гравцю');
+	let title: string = $state($t('titles.playerStats'));
 
 	let chartComponent: PieChart | undefined = $state();
 
@@ -106,22 +107,25 @@
 			diagramDepth += 1;
 		}
 	}
+
+	function goBack() {
+		title = $t('titles.playerStats');
+		diagramDepth -= 1;
+		if (diagramDepth === 0) {
+			title = $t('titles.playerStats');
+		} else {
+			title = title.split(' / ').slice(0, diagramDepth).join(' / ');
+		}
+	}
 </script>
 
 {#key diagramDepth}
 	<Modal
 		bind:open
 		hasScrollingContent
-		primaryButtonText="Назад"
+		primaryButtonText={$t('common.back')}
 		passiveModal={diagramDepth == 0}
-		on:click:button--primary={() => {
-			diagramDepth -= 1;
-			if (diagramDepth === 0) {
-				title = 'Статистика по гравцю';
-			} else {
-				title = title.split(' / ').slice(0, diagramDepth).join(' / ');
-			}
-		}}
+		on:click:button--primary={goBack}
 	>
 		{#await getPlayerChartData()}
 			<PieChart
