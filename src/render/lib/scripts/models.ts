@@ -447,3 +447,19 @@ export class PlanWeek extends Model {
 		return this.proxify();
 	}
 }
+
+export class Login extends Model {
+	accessToken: any;
+	refreshToken: any;
+	expiresIn: any;
+
+	constructor() {
+		super();
+
+		this.accessToken = new Field('access_token', String, 'Токен доступу');
+		this.refreshToken = new Field('refresh_token', String, 'Токен оновлення');
+		this.expiresIn = new Field('expires_in', Number, 'Термін дії токена');
+
+		return this.proxify();
+	}
+}

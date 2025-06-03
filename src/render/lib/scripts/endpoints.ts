@@ -1,5 +1,5 @@
 import { ApiImpl } from './api';
-import { Player, Team, Game, Status, Action, Tech, Subtech, Exercise, PlayerStats, TechStats, SubtechStats, ImpactStats, PlanWeek } from '$lib/scripts/models';
+import { Player, Team, Game, Status, Action, Tech, Subtech, Exercise, PlayerStats, TechStats, SubtechStats, ImpactStats, PlanWeek, Login } from '$lib/scripts/models';
 import { Pagination, PaginationProps } from '$lib/scripts/pagination';
 
 const Api = new ApiImpl();
@@ -261,5 +261,17 @@ export async function getPlanWeek(
 ): Promise<PlanWeek> {
 	return Api.get(`/algorithm/plan/${playerId}/${weekNumber}`).then((data: any) => {
 		return new PlanWeek().deserialize(data) as PlanWeek;
+	});
+}
+
+export async function login(username: string, password: string): Promise<Login> {
+	return Api.post('/login/', { username, password }).then((data: any) => {
+		return new Login().deserialize(data) as Login;
+	});
+}
+
+export async function token(refreshToken: string, username: string): Promise<Login> {
+	return Api.post('/token/', { refresh_token: refreshToken, username }).then((data: any) => {
+		return new Login().deserialize(data) as Login;
 	});
 }
