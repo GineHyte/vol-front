@@ -1,5 +1,7 @@
-import { t } from '$lib/i18n/utils';
+import { t as translate } from '$lib/i18n/utils';
 import { get } from 'svelte/store';
+
+const t = (key: string) => get(translate)(key);
 
 const NOTIFICATIONS = {
 	duplicatePlayerSuccess: () => ({

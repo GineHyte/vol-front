@@ -36,6 +36,7 @@ export class ApiImpl implements Api {
 	async get(
 		url: string,
 		paginationProps: PaginationProps | null = null,
+		accessTokenNeeded: boolean = false,
 		headers: any = {},
 	): Promise<any> {
 		if (!isLoaded) {
@@ -50,6 +51,7 @@ export class ApiImpl implements Api {
 				method: 'GET',
 				headers: {
 					'Content-Type': 'application/json',
+					'Authorization': accessTokenNeeded ? `Bearer ${localStorage.getItem('accessToken')}` : '',
 					...headers,
 				},
 			})
@@ -66,12 +68,13 @@ export class ApiImpl implements Api {
 		});
 	}
 
-	async post(url: string, data: any, headers: any = {}): Promise<any> {
+	async post(url: string, data: any, accessTokenNeeded: boolean = false, headers: any = {}): Promise<any> {
 		return new Promise((resolve, reject) => {
 			fetch(`${apiUrl}${apiVersion}${url}`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
+					'Authorization': accessTokenNeeded ? `Bearer ${localStorage.getItem('accessToken')}` : '',
 					...headers,
 				},
 				body: JSON.stringify(data),

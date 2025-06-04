@@ -12,21 +12,16 @@
 	import {
 		Header,
 		HeaderNav,
-		HeaderNavItem,
 		Content,
 		Button,
 		SideNav,
 		SideNavItems,
 		SideNavLink,
-		SideNavMenu,
 		SkipToContent,
-		SideNavMenuItem,
 	} from 'carbon-components-svelte';
 	import { Close, Minimize, Maximize, Subtract, LightFilled, Light } from 'carbon-icons-svelte';
 	import { settingsRenderer, versionRenderer } from '@/render/lib/utils/store';
 	import Notifications from '$lib/ui/Notifications.svelte';
-	import ModalCreate from '$lib/ui/ModalCreate.svelte';
-	import LanguageSelector from '$lib/ui/LanguageSelector.svelte';
 	import { pushNotification } from '../lib/utils/utils';
 	interface Props {
 		children?: import('svelte').Snippet;
@@ -123,7 +118,6 @@
 		<SkipToContent />
 	</svelte:fragment>
 	<HeaderNav style="display:block">
-		<LanguageSelector />
 		<Button
 			kind={theme === 'g100' ? 'ghost' : 'secondary'}
 			on:click={() => {
