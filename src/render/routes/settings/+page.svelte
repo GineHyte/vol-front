@@ -15,6 +15,7 @@
 			apiUrl: settings.apiUrl,
 			trunicate: settings.trunicate,
 			locale: settings.locale,
+			loaded: true,
 		};
 
 		settingsRenderer.set(settingsToSave);

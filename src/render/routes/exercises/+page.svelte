@@ -100,7 +100,7 @@
 								</Toolbar>
 							</DataTable>
 							<Pagination
-								pageSizes={[10, 50, 100]}
+								pageSizes={[10, 50, 100, 1000]}
 								bind:pageSize
 								bind:page
 								totalItems={exercises.total}
