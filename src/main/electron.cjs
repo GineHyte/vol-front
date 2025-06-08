@@ -103,10 +103,14 @@ app.on('window-all-closed', () => {
 
 function ipcInit() {
 	ipcMain.on('set-settings', (event, data) => {
-		settingsManager.set('settings', data);
-		// if (data.apiUrl) {
-		//   autoUpdater.setFeedURL(`${data.apiUrl}:8000/update/${app.getVersion()}`);
-		// }
+		// will only update settings, so if setting is undefined =>
+		// will not set and leave old value
+		const current = settingsManager.getSync('settings') || {}
+		const filtered = Object.fromEntries(
+			Object.entries(data).filter(([, value]) => value !== undefined)
+		)
+		const updated = { ...current, ...filtered }
+		settingsManager.setSync('settings', updated)
 	});
 
 	ipcMain.handle('get-version', () => {
@@ -114,7 +118,7 @@ function ipcInit() {
 	});
 
 	ipcMain.handle('get-settings', () => {
-		return settingsManager.get('settings');
+		return settingsManager.getSync('settings');
 	});
 
 	ipcMain.on('set-window-state', (event, data) => {

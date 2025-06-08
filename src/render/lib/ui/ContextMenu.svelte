@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { ContextMenu, ContextMenuOption } from 'carbon-components-svelte';
-	import { t } from '$lib/i18n/utils';
+	import { t } from '$lib/utils/utils';
 
 	interface Props {
 		target: any;
@@ -30,7 +30,7 @@
 			<ContextMenuOption
 				indented
 				kind="danger"
-				labelText={$t('common.delete')}
+				labelText={t('common.delete')}
 				on:click={async () => {
 					if (currentId) await deleteFunc(currentId);
 					updateFunc();
@@ -40,7 +40,7 @@
 		{#if duplicateFunc}
 			<ContextMenuOption
 				indented
-				labelText={$t('common.duplicate')}
+				labelText={t('common.duplicate')}
 				on:click={async () => {
 					if (currentId) await duplicateFunc(currentId);
 					updateFunc();
@@ -50,13 +50,13 @@
 		{#if editFunc}
 			<ContextMenuOption
 				indented
-				labelText={$t('common.edit')}
+				labelText={t('common.edit')}
 				on:click={async () => {
 					if (currentId) await editFunc(currentId);
 					updateFunc();
 				}}
 			/>
 		{/if}
-		<ContextMenuOption indented labelText={$t('common.update')} on:click={updateFunc} />
+		<ContextMenuOption indented labelText={t('common.update')} on:click={updateFunc} />
 	</ContextMenu>
 {/if}

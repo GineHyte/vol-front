@@ -4,7 +4,7 @@
 	import { DataTable, DataTableSkeleton, Modal } from 'carbon-components-svelte';
 	import { createEventDispatcher } from 'svelte';
 	import { Pagination, PaginationProps } from '$lib/scripts/pagination';
-	import { t } from '$lib/i18n/utils';
+	import { t } from '$lib/utils/utils';
 
 	interface Props {
 		open?: boolean;
@@ -38,7 +38,7 @@
 <Modal
 	size={'lg'}
 	bind:open
-	primaryButtonText={$t('common.done')}
+	primaryButtonText={t('common.done')}
 	modalHeading={title}
 	primaryButtonDisabled={localSelectedRow.id === undefined}
 	on:submit={() => {

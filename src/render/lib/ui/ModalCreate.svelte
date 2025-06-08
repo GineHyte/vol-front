@@ -16,7 +16,7 @@
 	import Model from '$lib/scripts/model';
 	import Field from '$lib/scripts/field';
 	import { createEventDispatcher } from 'svelte';
-	import { t } from '$lib/i18n/utils';
+	import { t } from '$lib/utils/utils';
 
 	interface Props {
 		title?: string;
@@ -150,7 +150,7 @@
 		</ModalBody>
 		{#key inputData}
 			<ModalFooter
-				primaryButtonText={$t('common.done')}
+				primaryButtonText={t('common.done')}
 				primaryButtonDisabled={getPrimaryButtonDisabled()}
 			/>
 		{/key}

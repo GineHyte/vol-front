@@ -30,7 +30,7 @@
 	import { pushNotification } from '$lib/utils/utils';
 	import Stats from './Stats.svelte';
 	import Plan from './Plan.svelte';
-	import { t } from '$lib/i18n/utils';
+	import { t } from '$lib/utils/utils';
 
 	let selectedPlayerId: number | undefined = $state(undefined);
 	let createOpen = $state(false);
@@ -158,11 +158,11 @@
 						<ImageLoader class="size-96" ratio="4x3" fadeIn alt="Player`s photo" />
 					</Column>
 					<Column>
-						<p>{$t('fields.firstName')}: {player.firstName}</p>
-						<p>{$t('fields.lastName')}: {player.lastName}</p>
-						<p>{$t('fields.age')}: {player.age}</p>
-						<p>{$t('fields.height')}: {player.height ? player.height : ''}</p>
-						<p>{$t('fields.weight')}: {player.weight ? player.weight : ''}</p>
+						<p>{t('fields.firstName')}: {player.firstName}</p>
+						<p>{t('fields.lastName')}: {player.lastName}</p>
+						<p>{t('fields.age')}: {player.age}</p>
+						<p>{t('fields.height')}: {player.height ? player.height : ''}</p>
+						<p>{t('fields.weight')}: {player.weight ? player.weight : ''}</p>
 					</Column>
 					<Column>
 						<div>
@@ -171,23 +171,23 @@
 									showStatistics = !showStatistics;
 								}}
 							>
-								{$t('buttons.statistics')}
+								{t('buttons.statistics')}
 							</Button>
 							{#if calculatePlayerStatsLoading}
-								<Button kind="ghost" iconDescription={$t('common.loading')}>
+								<Button kind="ghost" iconDescription={t('common.loading')}>
 									{#snippet icon()}
 										<Loading
 											class="text-transparent"
 											small
 											withOverlay={false}
-											description={$t('common.loading')}
+											description={t('common.loading')}
 										/>
 									{/snippet}
 								</Button>
 							{:else}
 								<Button
 									kind="ghost"
-									iconDescription={$t('buttons.calculateStats')}
+									iconDescription={t('buttons.calculateStats')}
 									icon={ChartStacked}
 									on:click={onCalculatePlayerStats}
 								></Button>
@@ -199,23 +199,23 @@
 									showPlan = !showPlan;
 								}}
 							>
-								{$t('buttons.plan')}
+								{t('buttons.plan')}
 							</Button>
 							{#if generatePlanLoading}
-								<Button kind="ghost" iconDescription={$t('common.loading')}>
+								<Button kind="ghost" iconDescription={t('common.loading')}>
 									{#snippet icon()}
 										<Loading
 											class="text-transparent"
 											small
 											withOverlay={false}
-											description={$t('common.loading')}
+											description={t('common.loading')}
 										/>
 									{/snippet}
 								</Button>
 							{:else}
 								<Button
 									kind="ghost"
-									iconDescription={$t('buttons.trainingPlan')}
+									iconDescription={t('buttons.trainingPlan')}
 									icon={MachineLearningModel}
 									on:click={onGeneratePlan}
 								></Button>
@@ -239,7 +239,7 @@
 
 {#if createOpen}
 	<ModalCreate
-		title={$t('navigation.players')}
+		title={t('navigation.players')}
 		model={new Player()}
 		handleSubmit={createPlayerRenderer}
 		bind:open={createOpen}
@@ -249,7 +249,7 @@
 {/if}
 {#if editOpen && selectedPlayer}
 	<ModalEdit
-		title={$t('navigation.players')}
+		title={t('navigation.players')}
 		model={selectedPlayer}
 		handleSubmit={updatePlayerRenderer}
 		bind:open={editOpen}
@@ -258,7 +258,7 @@
 {#key sideListUpdater}
 	<SideList
 		bind:selectedId={selectedPlayerId}
-		title={$t('navigation.players')}
+		title={t('navigation.players')}
 		deleteFunc={removePlayer}
 		duplicateFunc={duplicatePlayer}
 		newFunc={() => {
@@ -268,7 +268,7 @@
 		editFunc={(currentId: number) => {
 			selectedPlayerId = currentId;
 		}}
-		headers={[{ key: 'firstName', value: $t('fields.firstName') }]}
+		headers={[{ key: 'firstName', value: t('fields.firstName') }]}
 	/>
 {/key}
 {#if showStatistics && selectedPlayerId}

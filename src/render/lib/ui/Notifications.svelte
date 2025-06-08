@@ -12,9 +12,11 @@
 			notificationsLocal = value;
 			setTimeout(
 				() => {
-					notifications.set(value.slice(1, -1));
+					notifications.set(value.slice(0, -1));
 				},
-				value.timeout ? value.timeout : DEFAULT_TIMEOUT,
+				notificationsLocal[notificationsLocal.length - 1].timeout > 0
+					? notificationsLocal[notificationsLocal.length - 1].timeout
+					: DEFAULT_TIMEOUT,
 			);
 		});
 	});

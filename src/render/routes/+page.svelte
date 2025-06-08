@@ -11,7 +11,7 @@
 	} from 'carbon-pictograms-svelte';
 	import { fade, fly, scale } from 'svelte/transition';
 	import AnimTile from './AnimTile.svelte';
-	import { t } from '$lib/i18n/utils';
+	import { t } from '$lib/utils/utils';
 </script>
 
 <Content>
@@ -19,10 +19,10 @@
 		<Row>
 			<Column>
 				<h1 class="text-3xl font-bold mb-4">
-					{$t('titles.appTitle')}
+					{t('titles.appTitle')}
 				</h1>
 				<p class="mb-6">
-					{$t('descriptions.homeDescription')}
+					{t('descriptions.homeDescription')}
 				</p>
 			</Column>
 		</Row>
@@ -31,8 +31,8 @@
 			<Column sm={4} md={4} lg={4} class="mb-4">
 				<AnimTile
 					href="/games"
-					title={$t('navigation.games')}
-					text={$t('descriptions.gamesDescription')}
+					title={t('navigation.games')}
+					text={t('descriptions.gamesDescription')}
 				>
 					{#snippet pentogram()}
 						<AcceleratedComputing />
@@ -43,8 +43,8 @@
 			<Column sm={4} md={4} lg={4} class="mb-4">
 				<AnimTile
 					href="/players"
-					title={$t('navigation.players')}
-					text={$t('descriptions.playersDescription')}
+					title={t('navigation.players')}
+					text={t('descriptions.playersDescription')}
 				>
 					{#snippet pentogram()}
 						<KeyUsers />
@@ -55,8 +55,8 @@
 			<Column sm={4} md={4} lg={4} class="mb-4">
 				<AnimTile
 					href="/teams"
-					title={$t('navigation.teams')}
-					text={$t('descriptions.teamsDescription')}
+					title={t('navigation.teams')}
+					text={t('descriptions.teamsDescription')}
 				>
 					{#snippet pentogram()}
 						<RenewTeam />
@@ -69,8 +69,8 @@
 			<Column sm={4} md={4} lg={4} class="mb-4">
 				<AnimTile
 					href="/techs"
-					title={$t('navigation.techs')}
-					text={$t('descriptions.techsDescription')}
+					title={t('navigation.techs')}
+					text={t('descriptions.techsDescription')}
 				>
 					{#snippet pentogram()}
 						<AssessmentUsed />
@@ -81,8 +81,8 @@
 			<Column sm={4} md={4} lg={4} class="mb-4">
 				<AnimTile
 					href="/exercises"
-					title={$t('navigation.exercises')}
-					text={$t('descriptions.exercisesDescription')}
+					title={t('navigation.exercises')}
+					text={t('descriptions.exercisesDescription')}
 				>
 					{#snippet pentogram()}
 						<DesignLeadership />
@@ -93,8 +93,8 @@
 			<Column sm={4} md={4} lg={4} class="mb-4">
 				<AnimTile
 					href="/settings"
-					title={$t('navigation.settings')}
-					text={$t('descriptions.settingsDescription')}
+					title={t('navigation.settings')}
+					text={t('descriptions.settingsDescription')}
 				>
 					{#snippet pentogram()}
 						<GpuComputing />

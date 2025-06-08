@@ -13,7 +13,9 @@
     "loading": "Laden...",
     "noData": "Keine Daten",
     "name": "Name",
-    "description": "Beschreibung"
+    "description": "Beschreibung",
+    "yes": "Ja",
+    "no": "Nein"
   },
   "navigation": {
     "home": "Startseite",
@@ -29,7 +31,8 @@
     "game": "Spiel",
     "exercise": "Übung",
     "tech": "Technik",
-    "subtech": "Untertechnik"
+    "subtech": "Untertechnik",
+    "playerStats": "Spielerstatistiken"
   },
   "fields": {
     "firstName": "Vorname",
@@ -51,14 +54,20 @@
     "selectTech": "Technik auswählen",
     "selectSubtech": "Untertechnik auswählen",
     "selectTeamA": "Team A auswählen",
-    "selectTeamB": "Team B auswählen"
+    "selectTeamB": "Team B auswählen",
+    "statistics": "Statistiken",
+    "calculateStats": "Statistiken berechnen",
+    "plan": "Plan",
+    "trainingPlan": "Trainingsplan"
   },
   "descriptions": {
     "homeDescription": "Diese Anwendung hilft Ihnen bei der Analyse, Verfolgung und Verbesserung der technischen Fähigkeiten der Spieler.",
     "gamesDescription": "Erstellen und analysieren Sie Spiele, verfolgen Sie Spieleraktionen und technische Indikatoren.",
     "playersDescription": "Verwalten Sie Spielerprofile, betrachten Sie Statistiken und erstellen Sie individuelle Trainingspläne.",
     "teamsDescription": "Erstellen und verwalten Sie Teams, fügen Sie Spieler hinzu und analysieren Sie die Teamleistung.",
-    "settingsDescription": "Konfigurieren Sie die Anwendung nach Ihren Bedürfnissen."
+    "settingsDescription": "Konfigurieren Sie die Anwendung nach Ihren Bedürfnissen.",
+    "techsDescription": "Verwalten Sie die Datenbank technischer Fähigkeiten und Untertechniken für detaillierte Spielanalysen.",
+    "exercisesDescription": "Erstellen und verwenden Sie Übungen zur Entwicklung der technischen Fähigkeiten der Spieler."
   },
   "amplua": {
     "DEFENDER": "Verteidiger",
@@ -136,5 +145,6 @@
     "playerStatsCannotBeCalculatedNoActions": "Spielerstatistiken können nicht berechnet werden: keine Aktionen.",
     "playerStatsCannotBeCalculatedNoPlayer": "Spielerstatistiken können nicht berechnet werden: Spieler nicht gefunden."
   },
-  "weeks": "Woche"
+  "weeks": "Woche",
+  "timeUnit": "Min"
 }

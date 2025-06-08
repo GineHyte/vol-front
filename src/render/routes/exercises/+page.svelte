@@ -21,7 +21,7 @@
 	import ContextMenu from '@/render/lib/ui/ContextMenu.svelte';
 	import { PaginationProps } from '@/render/lib/scripts/pagination';
 	import CreateExercise from './CreateExercise.svelte';
-	import { t } from '$lib/i18n/utils';
+	import { t } from '$lib/utils/utils';
 
 	let createOpen = $state(false);
 
@@ -94,7 +94,7 @@
 											}}
 											class="w-full"
 										>
-											+ {$t('titles.exercise')}
+											+ {t('titles.exercise')}
 										</Button>
 									</ToolbarContent>
 								</Toolbar>

@@ -7,7 +7,7 @@
 
 	// Initialize i18n
 	import '$lib/i18n';
-	import { t } from '$lib/i18n/utils';
+	import { t } from '$lib/utils/utils';
 
 	import {
 		Header,
@@ -43,6 +43,7 @@
 			if (settings) {
 				settings.loaded = true;
 				settingsRenderer.set(settings);
+				console.log('Settings loaded:', settings);
 			}
 		});
 		window.electron.getVersion().then((version: any) => {
@@ -72,31 +73,31 @@
 
 	let routes = [
 		{
-			title: $t('navigation.home'),
+			title: t('navigation.home'),
 			path: '/',
 		},
 		{
-			title: $t('navigation.games'),
+			title: t('navigation.games'),
 			path: '/games',
 		},
 		{
-			title: $t('navigation.players'),
+			title: t('navigation.players'),
 			path: '/players',
 		},
 		{
-			title: $t('navigation.teams'),
+			title: t('navigation.teams'),
 			path: '/teams',
 		},
 		{
-			title: $t('navigation.techs'),
+			title: t('navigation.techs'),
 			path: '/techs',
 		},
 		{
-			title: $t('navigation.exercises'),
+			title: t('navigation.exercises'),
 			path: '/exercises',
 		},
 		{
-			title: $t('navigation.settings'),
+			title: t('navigation.settings'),
 			path: '/settings',
 		},
 	];
@@ -107,7 +108,7 @@
 </script>
 
 <Header
-	platformName={$t('titles.appTitle')}
+	platformName={t('titles.appTitle')}
 	bind:isSideNavOpen
 	class="w-full"
 	style="-webkit-app-region: drag;"
@@ -123,7 +124,7 @@
 			on:click={() => {
 				theme = theme === 'g100' ? 'white' : 'g100';
 			}}
-			iconDescription={$t('buttons.theme')}
+			iconDescription={t('buttons.theme')}
 			icon={theme === 'g100' ? LightFilled : Light}
 		/>
 		{#key currentWindowState}
@@ -131,7 +132,7 @@
 				icon={Subtract}
 				kind="secondary"
 				size="small"
-				iconDescription={$t('buttons.minimize')}
+				iconDescription={t('buttons.minimize')}
 				on:click={() => setWindowState({ minimize: true })}
 			/>
 			<Button
@@ -140,7 +141,7 @@
 					: Maximize}
 				kind="secondary"
 				size="small"
-				iconDescription={$t('buttons.maximize')}
+				iconDescription={t('buttons.maximize')}
 				on:click={() =>
 					setWindowState({
 						maximize: !(
@@ -152,7 +153,7 @@
 				icon={Close}
 				kind="danger"
 				size="small"
-				iconDescription={$t('common.close')}
+				iconDescription={t('common.close')}
 				on:click={() => setWindowState({ close: true })}
 			/>
 		{/key}

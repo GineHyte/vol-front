@@ -31,7 +31,8 @@
     "game": "Game",
     "exercise": "Exercise",
     "tech": "Technique",
-    "subtech": "Sub-technique"
+    "subtech": "Sub-technique",
+    "playerStats": "Player Statistics"
   },
   "fields": {
     "firstName": "First Name",
@@ -53,14 +54,20 @@
     "selectTech": "Select Technique",
     "selectSubtech": "Select Sub-technique",
     "selectTeamA": "Select Team A",
-    "selectTeamB": "Select Team B"
+    "selectTeamB": "Select Team B",
+    "statistics": "Statistics",
+    "calculateStats": "Calculate Statistics",
+    "plan": "Plan",
+    "trainingPlan": "Training Plan"
   },
   "descriptions": {
     "homeDescription": "This application will help you analyze, track and improve players' technical skills.",
     "gamesDescription": "Create and analyze games, track player actions and technical indicators.",
     "playersDescription": "Manage player profiles, view statistics and create individual training plans.",
     "teamsDescription": "Create and manage teams, add players and analyze team performance.",
-    "settingsDescription": "Configure the application according to your needs."
+    "settingsDescription": "Configure the application according to your needs.",
+    "techsDescription": "Manage the database of technical skills and sub-techniques for detailed game analysis.",
+    "exercisesDescription": "Create and use exercises to develop players' technical skills."
   },
   "amplua": {
     "DEFENDER": "Defender",

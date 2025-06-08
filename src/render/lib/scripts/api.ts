@@ -7,16 +7,17 @@ var apiUrl = '';
 var apiVersion = '';
 var isLoaded = false;
 
-settingsRenderer.subscribe((settings: any) => {
+settingsRenderer.subscribe((settings: SettingsType) => {
 	isLoaded = settings.loaded;
 	if (isLoaded === true) {
+		if (!settings.apiUrl) {
+			pushNotification('settingsServerIPError');
+			return;
+		}
 		apiUrl = settings.apiUrl.trim() || '';
 		apiVersion = settings.apiVersion || '';
 		const isDev = apiUrl.includes('localhost');
 		console.log(settings);
-		if (apiUrl === '') {
-			pushNotification('settingsServerIPError');
-		}
 		if (isDev) {
 			apiUrl = 'http://' + apiUrl;
 		} else {

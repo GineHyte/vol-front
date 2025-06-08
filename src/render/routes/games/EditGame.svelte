@@ -5,7 +5,7 @@
 	import ModalCreateRelation from '$lib/ui/ModalCreateRelation.svelte';
 	import ModalEdit from '@/render/lib/ui/ModalEdit.svelte';
 	import { pushNotification } from '$lib/utils/utils';
-	import { t } from '$lib/i18n/utils';
+	import { t } from '$lib/utils/utils';
 	import { PaginationProps } from '$lib/scripts/pagination';
 
 	interface Props {
@@ -45,7 +45,7 @@
 </script>
 
 <ModalEdit
-	title={$t('titles.game')}
+	title={t('titles.game')}
 	bind:model={game}
 	onSubmit={editGameRenderer}
 	bind:open={createOpen}
@@ -54,10 +54,10 @@
 >
 	{#snippet createRelationField()}
 		{#if teamA}
-			<Tile>{$t('buttons.selectTeamA')}: {teamA.name}</Tile>
+			<Tile>{t('buttons.selectTeamA')}: {teamA.name}</Tile>
 		{/if}
 		{#if teamB}
-			<Tile>{$t('buttons.selectTeamB')}: {teamB.name}</Tile>
+			<Tile>{t('buttons.selectTeamB')}: {teamB.name}</Tile>
 		{/if}
 		<Button
 			class="mt-4"
@@ -65,7 +65,7 @@
 				selectTeamAOpen = true;
 			}}
 		>
-			{$t('buttons.selectTeamA')}
+			{t('buttons.selectTeamA')}
 		</Button>
 		<Button
 			class="mt-4"
@@ -74,12 +74,12 @@
 			}}
 			disabled={!teamA}
 		>
-			{$t('buttons.selectTeamB')}
+			{t('buttons.selectTeamB')}
 		</Button>
 	{/snippet}
 	{#snippet modalCreateRelation()}
 		<ModalCreateRelation
-			title={$t('buttons.selectTeamA')}
+			title={t('buttons.selectTeamA')}
 			getFunc={getTeams}
 			bind:open={selectTeamAOpen}
 			on:submit={(e) => {
@@ -91,7 +91,7 @@
 		/>
 		{#if teamA}
 			<ModalCreateRelation
-				title={$t('buttons.selectTeamB')}
+				title={t('buttons.selectTeamB')}
 				getFunc={async () => {
 					return await getTeams(new PaginationProps(1, 100));
 				}}

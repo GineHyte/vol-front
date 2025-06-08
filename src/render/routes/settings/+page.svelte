@@ -1,42 +1,23 @@
 <script lang="ts">
 	import { Button, Checkbox, TextInput, Dropdown } from 'carbon-components-svelte';
-	import { pushNotification } from '$lib/utils/utils';
+	import { pushNotification, languages } from '$lib/utils/utils';
 	import { settingsRenderer, versionRenderer } from '@/render/lib/utils/store';
-	import { languages, changeLanguage, currentLanguage } from '$lib/i18n/utils';
 
-	let selectedLanguage = $state('uk');
+	let settings: SettingsType = $state({});
 
-	// Subscribe to current language changes
-	currentLanguage.subscribe((value: string) => {
-		selectedLanguage = value;
-	});
-
-	function handleLanguageChange(event: any) {
-		const newLanguage = event.detail.selectedId;
-		changeLanguage(newLanguage);
-	}
-
-	let settings: any = $state({});
 	settingsRenderer.subscribe((v: any) => {
 		settings = v;
 	});
 
 	function saveSettings(e: Event) {
 		pushNotification('settingsSaveSuccess');
-
-		window.electron.setSettings({
+		const settingsToSave: SettingsType = {
 			apiUrl: settings.apiUrl,
-			apiVersion: settings.apiVersion,
 			trunicate: settings.trunicate,
-			loaded: true,
-		});
+			locale: settings.locale,
+		};
 
-		settingsRenderer.set({
-			...settings,
-			apiUrl: settings.apiUrl,
-			apiVersion: settings.apiVersion,
-			trunicate: settings.trunicate,
-		});
+		settingsRenderer.set(settingsToSave);
 	}
 
 	function checkUpdate() {
@@ -65,8 +46,7 @@
 		id: lang.code,
 		text: lang.name,
 	}))}
-	selectedId={selectedLanguage}
-	on:select={handleLanguageChange}
+	bind:selectedId={settings.locale}
 	style="min-width: 120px;"
 />
 <!-- <TextInput

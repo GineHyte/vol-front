@@ -10,7 +10,7 @@
 	} from '@/render/lib/scripts/endpoints';
 	import type { TechSum, SubtechSum, ImpactSum, ZoneSum } from '@/render/lib/scripts/models';
 	import { Impact } from '@/render/lib/utils/utils';
-	import { t } from '$lib/i18n/utils';
+	import { t } from '$lib/utils/utils';
 
 	interface Props {
 		open: boolean;
@@ -26,7 +26,7 @@
 	let subtechIds: { [key: string]: number } = {};
 	let impact: string | undefined;
 	let impacts: { [key: string]: string } = {};
-	let title: string = $state($t('titles.playerStats'));
+	let title: string = $state(t('titles.playerStats'));
 
 	let chartComponent: PieChart | undefined = $state();
 
@@ -109,10 +109,10 @@
 	}
 
 	function goBack() {
-		title = $t('titles.playerStats');
+		title = t('titles.playerStats');
 		diagramDepth -= 1;
 		if (diagramDepth === 0) {
-			title = $t('titles.playerStats');
+			title = t('titles.playerStats');
 		} else {
 			title = title.split(' / ').slice(0, diagramDepth).join(' / ');
 		}
@@ -123,7 +123,7 @@
 	<Modal
 		bind:open
 		hasScrollingContent
-		primaryButtonText={$t('common.back')}
+		primaryButtonText={t('common.back')}
 		passiveModal={diagramDepth == 0}
 		on:click:button--primary={goBack}
 	>

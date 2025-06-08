@@ -7,7 +7,7 @@
 	import PlayerElement from './Player.svelte';
 	import SideZones from './SideZones.svelte';
 	import { Side, getAmplua } from '$lib/utils/utils';
-	import { t } from '$lib/i18n/utils';
+	import { t } from '$lib/utils/utils';
 
 	interface Props {
 		game?: any;
@@ -156,14 +156,14 @@
 		</div>
 		<ExpandableTile>
 			{#snippet above()}
-				<div><h1 class="text-lg font-bold">{$t('fieldLegend.title')}</h1></div>
+				<div><h1 class="text-lg font-bold">{t('fieldLegend.title')}</h1></div>
 			{/snippet}
 			{#snippet below()}
 				<div>
 					<ul>
-						<li>{$t('fieldLegend.attacker')}</li>
-						<li>{$t('fieldLegend.defender')}</li>
-						<li>{$t('fieldLegend.universal')}</li>
+						<li>{t('fieldLegend.attacker')}</li>
+						<li>{t('fieldLegend.defender')}</li>
+						<li>{t('fieldLegend.universal')}</li>
 					</ul>
 				</div>
 			{/snippet}

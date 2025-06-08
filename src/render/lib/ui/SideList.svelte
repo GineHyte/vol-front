@@ -13,7 +13,7 @@
 	import Model from '$lib/scripts/model';
 	import ContextMenu from '@/render/lib/ui/ContextMenu.svelte';
 	import { trunicate } from '../utils/utils';
-	import { t } from '$lib/i18n/utils';
+	import { t } from '$lib/utils/utils';
 
 	interface Props {
 		title?: string;
@@ -67,7 +67,7 @@
 				</Toolbar>
 			</DataTable>
 			{#if model.total === 0}
-				<ClickableTile disabled>{$t('common.noData')}</ClickableTile>
+				<ClickableTile disabled>{t('common.noData')}</ClickableTile>
 			{/if}
 			<CompactPagination bind:page total={model.pages} />
 			<ContextMenu
