@@ -141,6 +141,8 @@
     "exerciseCannotBeRemoved": "Exercise cannot be removed.",
     "exerciseCreated": "You have created a new exercise.",
     "exerciseCannotBeCreated": "Exercise cannot be created.",
+    "exerciseEdited": "Exercise edited.",
+    "exerciseCannotBeEdited": "Exercise cannot be edited.",
     "planGenerated": "Plan generated.",
     "planCannotBeGenerated": "Plan cannot be generated.",
     "playerStatsCalculated": "Player statistics calculated.",

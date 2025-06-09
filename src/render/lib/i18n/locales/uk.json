@@ -141,6 +141,8 @@
     "exerciseCannotBeRemoved": "Вправу не можна видалити.",
     "exerciseCreated": "Ви створили нову вправу.",
     "exerciseCannotBeCreated": "Вправу не можна створити.",
+    "exerciseEdited": "Вправу відредаговано.",
+    "exerciseCannotBeEdited": "Вправу не можна відредагувати.",
     "planGenerated": "План згенеровано.",
     "planCannotBeGenerated": "План не можна згенерувати.",
     "playerStatsCalculated": "Статистику гравця розраховано.",

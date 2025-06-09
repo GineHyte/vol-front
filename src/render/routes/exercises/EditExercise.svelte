@@ -32,6 +32,8 @@
 	async function pullExercise() {
 		if (editExerciseId) {
 			exercise = await getExercise(editExerciseId);
+			selectedTech = exercise.tech;
+			selectedSubtech = exercise.subtech;
 		}
 	}
 

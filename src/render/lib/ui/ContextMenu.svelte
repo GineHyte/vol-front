@@ -52,6 +52,7 @@
 				indented
 				labelText={t('common.edit')}
 				on:click={async () => {
+					console.log('editFunc', currentId);
 					if (currentId) await editFunc(currentId);
 					updateFunc();
 				}}

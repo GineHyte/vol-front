@@ -141,6 +141,8 @@
     "exerciseCannotBeRemoved": "Übung kann nicht entfernt werden.",
     "exerciseCreated": "Sie haben eine neue Übung erstellt.",
     "exerciseCannotBeCreated": "Übung kann nicht erstellt werden.",
+    "exerciseEdited": "Übung bearbeitet.",
+    "exerciseCannotBeEdited": "Übung kann nicht bearbeitet werden.",
     "planGenerated": "Plan generiert.",
     "planCannotBeGenerated": "Plan kann nicht generiert werden.",
     "playerStatsCalculated": "Spielerstatistiken berechnet.",

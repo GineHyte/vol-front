@@ -266,6 +266,16 @@ const NOTIFICATIONS: { [key: string]: () => NotificationType} = {
         message: t('notifications.gameCannotBeEdited'),
         kind: 'error',
     }),
+    editExerciseSuccess: () => ({
+        title: t('notifications.success'),
+        message: t('notifications.exerciseEdited'),
+        kind: 'success',
+    }),
+    editExerciseError: () => ({
+        title: t('notifications.error'),
+        message: t('notifications.exerciseCannotBeEdited'),
+        kind: 'error',
+    }),
 };
 
 export default function getNotification(name: string, params: { [key: string]: string } = {}) {

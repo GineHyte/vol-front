@@ -94,6 +94,9 @@
 								])}
 								rows={exercises.getRows()}
 							>
+								{#snippet cell({ cell, row })}
+									<span id={row.id}>{cell.value}</span>
+								{/snippet}
 								<Toolbar>
 									<ToolbarContent>
 										<Button
