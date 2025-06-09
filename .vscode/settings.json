@@ -12,6 +12,7 @@
 		"python": false,
 		"objectscript-class": true,
 		"svelte": true,
-		"typescript": true
+		"typescript": true,
+		"json": true
 	}
 }

@@ -7,7 +7,7 @@
 	import EditGame from './EditGame.svelte';
 
 	let editOpen = $state(false);
-	let editGame: number | undefined = undefined;
+	let editGame: number | undefined = $state(undefined);
 	let createOpen = $state(false);
 
 	interface Props {
@@ -54,7 +54,7 @@
 	}
 </script>
 
-{#key createOpen}
+{#key [createOpen, editOpen]}
 	<SideList
 		bind:selectedId={selectedGameId}
 		title="Гра"
@@ -69,4 +69,4 @@
 	/>
 {/key}
 <CreateGame bind:createOpen bind:teamA bind:teamB />
-<EditGame bind:editOpen bind:teamA bind:teamB />
+<EditGame editGameId={editGame} bind:editOpen bind:teamA bind:teamB />

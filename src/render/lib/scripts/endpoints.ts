@@ -91,6 +91,12 @@ export async function deleteGame(id: number): Promise<Status> {
 	});
 }
 
+export async function editGame(game: Game): Promise<Status> {
+	return Api.put(`/games/${game.id}`, game.serialize()).then((data: any) => {
+		return new Status().deserialize(data) as Status;
+	});
+}
+
 export async function getActions(
 	gameId: number,
 	paginationProps: PaginationProps = new PaginationProps(),
@@ -197,6 +203,12 @@ export async function createExercise(exercise: Exercise): Promise<Status> {
 
 export async function deleteExercise(id: number): Promise<Status> {
 	return Api.delete(`/exercises/${id}`).then((data: any) => {
+		return new Status().deserialize(data) as Status;
+	});
+}
+
+export async function editExercise(exercise: Exercise): Promise<Status> {
+	return Api.put(`/exercises/${exercise.id}`, exercise.serialize()).then((data: any) => {
 		return new Status().deserialize(data) as Status;
 	});
 }

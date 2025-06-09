@@ -127,6 +127,8 @@
     "gameCannotBeRemoved": "Game cannot be removed.",
     "gameCreated": "You have created a new game.",
     "gameCannotBeCreated": "Game cannot be created.",
+    "gameEdited": "Game edited.",
+    "gameCannotBeEdited": "Game cannot be edited.",
     "actionDuplicated": "Action duplicated.",
     "actionCannotBeDuplicated": "Action cannot be duplicated.",
     "actionRemoved": "Action removed.",
@@ -143,7 +145,8 @@
     "planCannotBeGenerated": "Plan cannot be generated.",
     "playerStatsCalculated": "Player statistics calculated.",
     "playerStatsCannotBeCalculatedNoActions": "Player statistics cannot be calculated: no actions.",
-    "playerStatsCannotBeCalculatedNoPlayer": "Player statistics cannot be calculated: player not found."
+    "playerStatsCannotBeCalculatedNoPlayer": "Player statistics cannot be calculated: player not found.",
+    "notificationNotFound": "Notification not found."
   },
   "weeks": "Week",
   "timeUnit": "min"

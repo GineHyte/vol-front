@@ -21,9 +21,14 @@
 	import ContextMenu from '@/render/lib/ui/ContextMenu.svelte';
 	import { PaginationProps } from '@/render/lib/scripts/pagination';
 	import CreateExercise from './CreateExercise.svelte';
+	import EditExercise from './EditExercise.svelte';
 	import { t } from '$lib/utils/utils';
 
 	let createOpen = $state(false);
+	let editOpen = $state(false);
+	let editExerciseId: number | undefined = $state(undefined);
+	let selectedTech = $state(undefined);
+	let selectedSubtech = $state(undefined);
 
 	let tableUpdater: boolean = $state(false);
 	let targetForExercises: any = $state();
@@ -58,6 +63,14 @@
 			}
 		}
 	}
+
+	async function editExercise(currentId: number) {
+		if (currentId) {
+			console.log('editExercise', currentId);
+			editExerciseId = currentId;
+			editOpen = true;
+		}
+	}
 </script>
 
 <Content>
@@ -81,11 +94,6 @@
 								])}
 								rows={exercises.getRows()}
 							>
-								{#snippet cell({ cell, row })}
-									<div class="w-full h-full" id={row.id}>
-										{cell.value}
-									</div>
-								{/snippet}
 								<Toolbar>
 									<ToolbarContent>
 										<Button
@@ -113,6 +121,7 @@
 					deleteFunc={removeExercise}
 					duplicateFunc={duplicateExercise}
 					updateFunc={updateTable}
+					editFunc={editExercise}
 				/>
 			</Column>
 		</Row>
@@ -121,4 +130,7 @@
 
 {#if createOpen}
 	<CreateExercise bind:createOpen {updateTable} />
+{/if}
+{#if editOpen}
+	<EditExercise bind:editOpen {editExerciseId} {selectedTech} {selectedSubtech} />
 {/if}

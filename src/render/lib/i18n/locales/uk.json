@@ -127,6 +127,8 @@
     "gameCannotBeRemoved": "Гру не можна видалити.",
     "gameCreated": "Ви створили нову гру.",
     "gameCannotBeCreated": "Гру не можна створити.",
+    "gameEdited": "Гру відредаговано.",
+    "gameCannotBeEdited": "Гру не можна відредагувати.",
     "actionDuplicated": "Дію дубльовано.",
     "actionCannotBeDuplicated": "Дію не можна дублювати.",
     "actionRemoved": "Дію видалено.",
@@ -143,7 +145,8 @@
     "planCannotBeGenerated": "План не можна згенерувати.",
     "playerStatsCalculated": "Статистику гравця розраховано.",
     "playerStatsCannotBeCalculatedNoActions": "Статистику гравця не можна розрахувати: немає дій.",
-    "playerStatsCannotBeCalculatedNoPlayer": "Статистику гравця не можна розрахувати: гравець не знайдений."
+    "playerStatsCannotBeCalculatedNoPlayer": "Статистику гравця не можна розрахувати: гравець не знайдений.",
+    "notificationNotFound": "Сповіщення не знайдено."
   },
   "weeks": "Тиждень",
   "timeUnit": "хв"

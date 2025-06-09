@@ -119,24 +119,27 @@
 						on:change={(_) => handleCheckbox(item.key)}
 					/>
 				{:else if item.type === 'datetime'}
-					<DatePicker
-						datePickerType="single"
-						on:change={(_) => handleDatePicker(item.key)}
-					>
-						<DatePickerInput
-							id={item.key + 'date'}
-							labelText={item.title}
-							placeholder="mm/dd/yyyy"
+					<div class="flex w-44 mt-6">
+						<DatePicker
+							datePickerType="simple"
+							on:change={(_) => handleDatePicker(item.key)}
+						>
+							<DatePickerInput
+								id={item.key + 'date'}
+								labelText={item.title}
+								placeholder="mm/dd/yyyy"
+								value={item.value}
+							/>
+						</DatePicker>
+						<TimePicker
+							class="mt-6"
+							id={item.key + 'time'}
 							value={item.value}
+							placeholder="hh:mm"
+							pattern="([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9](\\s)?"
+							on:change={(_) => handleDatePicker(item.key)}
 						/>
-					</DatePicker>
-					<TimePicker
-						id={item.key + 'time'}
-						value={item.value}
-						placeholder="hh:mm"
-						pattern="([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9](\\s)?"
-						on:change={(_) => handleDatePicker(item.key)}
-					/>
+					</div>
 				{/if}
 			{/each}
 			{@render createRelationField?.()}

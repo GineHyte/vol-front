@@ -256,9 +256,27 @@ const NOTIFICATIONS: { [key: string]: () => NotificationType} = {
         message: t('notifications.playerStatsCannotBeCalculatedNoPlayer'),
         kind: 'error',
     }),
+    editGameSuccess: () => ({
+        title: t('notifications.success'),
+        message: t('notifications.gameEdited'),
+        kind: 'success',
+    }),
+    editGameError: () => ({
+        title: t('notifications.error'),
+        message: t('notifications.gameCannotBeEdited'),
+        kind: 'error',
+    }),
 };
 
 export default function getNotification(name: string, params: { [key: string]: string } = {}) {
+    if (!NOTIFICATIONS[name]) {
+        console.warn(`Notification "${name}" does not exist.`);
+        return {
+            title: t('notifications.error'),
+            message: t('notifications.notificationNotFound'),
+            kind: 'error',
+        };
+    }
     let notification: NotificationType = NOTIFICATIONS[name as keyof typeof NOTIFICATIONS]();
     Object.keys(params).forEach((key) => {
         if (!notification.title) notification.title = '{title}';
