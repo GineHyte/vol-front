@@ -19,6 +19,8 @@
 		{ key: 'tech', value: t('titles.tech') },
 		{ key: 'subtech', value: t('titles.subtech') },
 		{ key: 'timePerExercise', value: t('fields.timePerExercise') },
+		{ key: 'fromZone', value: t('fields.fromZone') },
+		{ key: 'toZone', value: t('fields.toZone') },
 	];
 
 	function formatPlanWeek(planWeek: PlanWeek): DataTableRow[] {
@@ -29,9 +31,10 @@
 			tableRow.tech = ex.tech.name;
 			tableRow.subtech = ex.subtech.name;
 			tableRow.timePerExercise = ex.timePerExercise + ' ' + t('timeUnit');
+			tableRow.fromZone = ex.fromZone;
+			tableRow.toZone = ex.toZone;
 			tableData.push(tableRow);
 		});
-		console.log(tableData);
 		return tableData;
 	}
 </script>

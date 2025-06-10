@@ -44,7 +44,9 @@
     "timePerExercise": "Zeit pro Übung",
     "qualityIndicator": "Qualitätsindikator",
     "status": "Status",
-    "details": "Details"
+    "details": "Details",
+    "fromZone": "Von Zone",
+    "toZone": "Zu Zone"
   },
   "buttons": {
     "addPlayer": "Spieler hinzufügen",
