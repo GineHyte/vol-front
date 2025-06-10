@@ -1,6 +1,6 @@
 import { notifications, settingsRenderer } from '$lib/utils/store';
 import getNotification from './notification';
-import { _ } from 'svelte-i18n';
+import { _, locale } from 'svelte-i18n';
 import { get } from 'svelte/store';
 
 
@@ -18,7 +18,11 @@ export function pushNotification(notification: string, params: { [key: string]: 
 // This function will be called on settingsRenderer update
 // It sends the updated settings to the main process
 export function settingsUpdater(settings: any) {
-    console.log('Settings updated:', settings);
+    if (Object.keys(settings).length === 0) return;
+    if (settings.locale) {
+        // Update the locale in the i18n system
+        locale.set(settings.locale);
+    }
     window.electron.setSettings(settings);
 }
 

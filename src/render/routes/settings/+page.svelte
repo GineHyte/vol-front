@@ -20,14 +20,6 @@
 
 		settingsRenderer.set(settingsToSave);
 	}
-
-	function checkUpdate() {
-		window.electron.checkUpdate();
-	}
-
-	function downloadUpdate() {
-		window.electron.downloadUpdate();
-	}
 </script>
 
 <TextInput
