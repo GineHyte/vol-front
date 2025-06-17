@@ -21,6 +21,10 @@
 	import Notifications from '$lib/ui/Notifications.svelte';
 	import { pushNotification } from '../lib/utils/utils';
 	import { isLoading } from 'svelte-i18n';
+	import { loginData } from '$lib/utils/store';
+	import { token } from '$lib/scripts/endpoints';
+	import { get } from 'svelte/store';
+	import { page } from '$app/stores'; // Импорт текущего маршрута
 
 	interface Props {
 		children?: import('svelte').Snippet;
@@ -34,9 +38,34 @@
 	});
 	let theme = $state('g100'); // "white" | "g10" | "g80" | "g90" | "g100"
 	let ready = $state(false);
+	let currentRoute = $page.route.id || '/'; // Default route
+
+	async function checkAccessToken() {
+		const { refreshToken, username } = get(loginData) || {};
+		if (!refreshToken || !username) {
+			pushNotification('errorLoginData');
+			window.location.href = '/login';
+			return;
+		} else {
+			const resp = await token(refreshToken, username);
+			if (!resp.accessToken) {
+				pushNotification('errorLoginData');
+				window.location.href = '/login';
+				return;
+			} else {
+				loginData.set({
+					accessToken: resp.accessToken,
+					refreshToken: resp.refreshToken,
+					username: username,
+				});
+				pushNotification('successLoginData');
+			}
+		}
+	}
 
 	onMount(() => {
 		ready = true;
+		checkAccessToken();
 		window.electron.getSettings().then((settings: any) => {
 			if (settings) {
 				settings.loaded = true;
@@ -173,7 +202,7 @@
 	</Header>
 
 	<Content>
-		{#if ready}
+		{#if ready && currentRoute !== '/login'}
 			{@render children?.()}
 		{/if}
 	</Content>

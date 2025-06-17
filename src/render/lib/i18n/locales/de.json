@@ -150,7 +150,9 @@
     "playerStatsCalculated": "Spielerstatistiken berechnet.",
     "playerStatsCannotBeCalculatedNoActions": "Spielerstatistiken können nicht berechnet werden: keine Aktionen.",
     "playerStatsCannotBeCalculatedNoPlayer": "Spielerstatistiken können nicht berechnet werden: Spieler nicht gefunden.",
-    "notificationNotFound": "Benachrichtigung nicht gefunden."
+    "notificationNotFound": "Benachrichtigung nicht gefunden.",
+    "loginDataError": "Fehler bei den Anmeldedaten. Bitte überprüfen Sie Ihre Eingaben.",
+    "loginDataSuccess": "Anmeldung erfolgreich. Willkommen zurück!"
   },
   "weeks": "Woche",
   "timeUnit": "Min"

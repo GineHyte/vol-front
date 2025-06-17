@@ -19,3 +19,9 @@ declare interface NotificationType {
 	title?: string;
 	message?: string;
 }
+
+declare interface LoginDataType {
+	username?: string;
+	accessToken?: string;
+	refreshToken?: string;
+}

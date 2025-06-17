@@ -1,5 +1,5 @@
-<script>
-	import { login } from '@/render/lib/scripts/endpoints';
+<script lang="ts">
+	import { login, token } from '$lib/scripts/endpoints';
 	import {
 		Form,
 		FormGroup,
@@ -10,12 +10,9 @@
 		SelectItem,
 		Button,
 	} from 'carbon-components-svelte';
-
-	async function checkAccessToken() {
-		if (!localStorage.getItem('accessToken')) {
-			window.location.href = '/login';
-		}
-	}
+	import { loginData } from '$lib/utils/store';
+	import { get } from 'svelte/store';
+	import { pushNotification } from '@/render/lib/utils/utils';
 </script>
 
 <Form on:submit>

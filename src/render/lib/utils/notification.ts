@@ -276,6 +276,16 @@ const NOTIFICATIONS: { [key: string]: () => NotificationType} = {
         message: t('notifications.exerciseCannotBeEdited'),
         kind: 'error',
     }),
+    errorLoginData: () => ({
+        title: t('notifications.error'),
+        message: t('notifications.loginDataError'),
+        kind: 'error',
+    }),
+    successLoginData: () => ({
+        title: t('notifications.success'),
+        message: t('notifications.loginDataSuccess'),
+        kind: 'success',
+    }),
 };
 
 export default function getNotification(name: string, params: { [key: string]: string } = {}) {
