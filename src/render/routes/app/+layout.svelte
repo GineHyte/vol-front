@@ -19,12 +19,11 @@
 	import { Close, Minimize, Maximize, Subtract, LightFilled, Light } from 'carbon-icons-svelte';
 	import { settingsRenderer, versionRenderer } from '@/render/lib/utils/store';
 	import Notifications from '$lib/ui/Notifications.svelte';
-	import { pushNotification } from '../lib/utils/utils';
+	import { pushNotification } from '$lib/utils/utils';
 	import { isLoading } from 'svelte-i18n';
 	import { loginData } from '$lib/utils/store';
 	import { token } from '$lib/scripts/endpoints';
 	import { get } from 'svelte/store';
-	import { page } from '$app/stores'; // Импорт текущего маршрута
 
 	interface Props {
 		children?: import('svelte').Snippet;
@@ -38,30 +37,6 @@
 	});
 	let theme = $state('g100'); // "white" | "g10" | "g80" | "g90" | "g100"
 	let ready = $state(false);
-	let currentRoute = $page.route.id || '/'; // Default route
-
-	async function checkAccessToken() {
-		const { refreshToken, username } = get(loginData) || {};
-		if (!refreshToken || !username) {
-			pushNotification('errorLoginData');
-			window.location.href = '/login';
-			return;
-		} else {
-			const resp = await token(refreshToken, username);
-			if (!resp.accessToken) {
-				pushNotification('errorLoginData');
-				window.location.href = '/login';
-				return;
-			} else {
-				loginData.set({
-					accessToken: resp.accessToken,
-					refreshToken: resp.refreshToken,
-					username: username,
-				});
-				pushNotification('successLoginData');
-			}
-		}
-	}
 
 	onMount(() => {
 		ready = true;
@@ -102,31 +77,31 @@
 		return [
 			{
 				title: t('navigation.home'),
-				path: '/',
+				path: '/app',
 			},
 			{
 				title: t('navigation.games'),
-				path: '/games',
+				path: '/app/games',
 			},
 			{
 				title: t('navigation.players'),
-				path: '/players',
+				path: '/app/players',
 			},
 			{
 				title: t('navigation.teams'),
-				path: '/teams',
+				path: '/app/teams',
 			},
 			{
 				title: t('navigation.techs'),
-				path: '/techs',
+				path: '/app/techs',
 			},
 			{
 				title: t('navigation.exercises'),
-				path: '/exercises',
+				path: '/app/exercises',
 			},
 			{
 				title: t('navigation.settings'),
-				path: '/settings',
+				path: '/app/settings',
 			},
 		];
 	}
@@ -202,7 +177,7 @@
 	</Header>
 
 	<Content>
-		{#if ready && currentRoute !== '/login'}
+		{#if ready}
 			{@render children?.()}
 		{/if}
 	</Content>
