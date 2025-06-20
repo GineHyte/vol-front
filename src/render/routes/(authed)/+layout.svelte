@@ -19,11 +19,33 @@
 	import { Close, Minimize, Maximize, Subtract, LightFilled, Light } from 'carbon-icons-svelte';
 	import { settingsRenderer, versionRenderer } from '@/render/lib/utils/store';
 	import Notifications from '$lib/ui/Notifications.svelte';
-	import { pushNotification } from '$lib/utils/utils';
-	import { isLoading } from 'svelte-i18n';
+	import { get } from 'svelte/store';
 	import { loginData } from '$lib/utils/store';
 	import { token } from '$lib/scripts/endpoints';
-	import { get } from 'svelte/store';
+	import { pushNotification } from '$lib/utils/utils';
+
+	async function checkAccessToken() {
+		const { refreshToken, username } = get(loginData) || {};
+		if (!refreshToken || !username) {
+			pushNotification('errorLoginData');
+			window.location.href = '/login';
+			return;
+		} else {
+			const resp = await token(refreshToken, username);
+			if (!resp.accessToken) {
+				pushNotification('errorLoginData');
+				window.location.href = '/login';
+				return;
+			} else {
+				loginData.set({
+					accessToken: resp.accessToken,
+					refreshToken: resp.refreshToken,
+					username: username,
+				});
+				pushNotification('successLoginData');
+			}
+		}
+	}
 
 	interface Props {
 		children?: import('svelte').Snippet;
@@ -39,8 +61,8 @@
 	let ready = $state(false);
 
 	onMount(() => {
+		alert('Welcome to the app!'); // Initial welcome alert
 		ready = true;
-		checkAccessToken();
 		window.electron.getSettings().then((settings: any) => {
 			if (settings) {
 				settings.loaded = true;
