@@ -3,42 +3,35 @@
 	import {
 		Form,
 		FormGroup,
+		FluidForm,
+		TextInput,
+		PasswordInput,
 		Checkbox,
 		RadioButtonGroup,
 		RadioButton,
 		Select,
 		SelectItem,
+		Tile,
 		Button,
 	} from 'carbon-components-svelte';
 	import { loginData } from '$lib/utils/store';
 	import { get } from 'svelte/store';
 	import { pushNotification } from '@/render/lib/utils/utils';
+	import loginBackground from '$lib/videos/login-back.webm';
 </script>
 
-<Form on:submit>
-	<FormGroup legendText="Checkboxes">
-		<Checkbox id="checkbox-0" labelText="Checkbox Label" checked />
-		<Checkbox id="checkbox-1" labelText="Checkbox Label" />
-		<Checkbox id="checkbox-2" labelText="Checkbox Label" disabled />
-	</FormGroup>
-	<FormGroup legendText="Radio buttons">
-		<RadioButtonGroup name="radio-button-group" selected="default-selected">
-			<RadioButton id="radio-1" value="standard" labelText="Standard Radio Button" />
-			<RadioButton
-				id="radio-2"
-				value="default-selected"
-				labelText="Default Selected Radio Button"
-			/>
-			<RadioButton id="radio-4" value="disabled" labelText="Disabled Radio Button" disabled />
-		</RadioButtonGroup>
-	</FormGroup>
-	<FormGroup>
-		<Select id="select-1" labelText="Select menu">
-			<SelectItem disabled hidden value="placeholder-item" text="Choose an option" />
-			<SelectItem value="option-1" text="Option 1" />
-			<SelectItem value="option-2" text="Option 2" />
-			<SelectItem value="option-3" text="Option 3" />
-		</Select>
-	</FormGroup>
-	<Button type="submit">Submit</Button>
-</Form>
+<video src={loginBackground} autoplay loop muted playsinline class="block h-100vh fixed z-0" />
+
+<Tile class="z-1 fixed right-[6%] top-[30%] w-[40rem] h-[22rem]">
+	<span class="text-3xl">Log in</span>
+	<FluidForm class="mt-10">
+		<TextInput labelText="User name" placeholder="Enter user name..." required />
+		<PasswordInput
+			required
+			type="password"
+			labelText="Password"
+			placeholder="Enter password..."
+		/>
+	</FluidForm>
+	<Button class="absolute right-0 bottom-0 w-60 h-16 text-xl">Submit</Button>
+</Tile>

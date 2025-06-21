@@ -61,7 +61,7 @@
 	let ready = $state(false);
 
 	onMount(() => {
-		alert('Welcome to the app!'); // Initial welcome alert
+		checkAccessToken();
 		ready = true;
 		window.electron.getSettings().then((settings: any) => {
 			if (settings) {
@@ -81,6 +81,7 @@
 				colno: colno?.toString() || '',
 				error: error?.toString() || '',
 			});
+			children;
 		};
 	});
 

@@ -8,11 +8,12 @@
 		"plaintext": false,
 		"markdown": false,
 		"scminput": false,
-		"rust": false,
 		"python": false,
+		"rust": false,
 		"objectscript-class": true,
 		"svelte": true,
 		"typescript": true,
-		"json": true
+		"json": true,
+		"javascript": true
 	}
 }
