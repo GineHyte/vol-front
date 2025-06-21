@@ -1,6 +1,7 @@
 {
   "common": {
     "save": "Save",
+    "submit": "Submit",
     "cancel": "Cancel",
     "delete": "Delete",
     "edit": "Edit",
@@ -32,7 +33,8 @@
     "exercise": "Exercise",
     "tech": "Technique",
     "subtech": "Sub-technique",
-    "playerStats": "Player Statistics"
+    "playerStats": "Player Statistics",
+    "login": "Login"
   },
   "fields": {
     "firstName": "First Name",
@@ -46,7 +48,9 @@
     "status": "Status",
     "details": "Details",
     "fromZone": "From Zone",
-    "toZone": "To Zone"
+    "toZone": "To Zone",
+    "username": "Username",
+    "password": "Password"
   },
   "buttons": {
     "addPlayer": "Add Player",
@@ -150,7 +154,9 @@
     "playerStatsCalculated": "Player statistics calculated.",
     "playerStatsCannotBeCalculatedNoActions": "Player statistics cannot be calculated: no actions.",
     "playerStatsCannotBeCalculatedNoPlayer": "Player statistics cannot be calculated: player not found.",
-    "notificationNotFound": "Notification not found."
+    "notificationNotFound": "Notification not found.",
+    "loginSuccess": "Login successful.",
+    ""
   },
   "weeks": "Week",
   "timeUnit": "min"

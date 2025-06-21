@@ -1,18 +1,9 @@
 <script lang="ts">
 	import 'carbon-components-svelte/css/all.css';
 	import '$lib/_global.css';
-	import {
-		Header,
-		HeaderNav,
-		Content,
-		Button,
-		SideNav,
-		SideNavItems,
-		SideNavLink,
-		SkipToContent,
-	} from 'carbon-components-svelte';
+	import { Content } from 'carbon-components-svelte';
 	import { onMount } from 'svelte';
-	import { read } from '$app/server';
+	import Notifications from '$lib/ui/Notifications.svelte';
 
 	interface Props {
 		children?: import('svelte').Snippet;
@@ -31,3 +22,5 @@
 		{@render children?.()}
 	{/if}
 </Content>
+
+<Notifications />
