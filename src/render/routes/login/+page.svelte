@@ -17,15 +17,35 @@
 	import { loginData } from '$lib/utils/store';
 	import { get } from 'svelte/store';
 	import { pushNotification } from '@/render/lib/utils/utils';
-	import loginBackground from '$lib/videos/login-back.webm';
+	import loginBackground from '$lib/videos/login-back.mp4';
+
+	let videoElementRef: HTMLVideoElement;
+	let videoCurrentTime = $state(0);
+	let doLoginAnimation = $state(false);
+
+	function handleSubmit(event: Event) {
+		videoElementRef.playbackRate = 4.0;
+		doLoginAnimation = true;
+	}
 </script>
 
-<video src={loginBackground} autoplay loop muted playsinline class="block h-100vh fixed z-0" />
+{#key doLoginAnimation}
+	<video
+		bind:currentTime={videoCurrentTime}
+		bind:this={videoElementRef}
+		src={videoCurrentTime === 0 && doLoginAnimation ? '' : loginBackground}
+		autoplay
+		loop
+		muted
+		playsinline
+		class="block h-100vh fixed z-0"
+	/>
+{/key}
 
-<Tile class="z-1 fixed right-[6%] top-[30%] w-[40rem] h-[22rem]">
+<div class="pt-[20%] pr-24 z-1 fixed right-0 w-[45rem] h-[100vh]">
 	<span class="text-3xl">Log in</span>
-	<FluidForm class="mt-10">
-		<TextInput labelText="User name" placeholder="Enter user name..." required />
+	<FluidForm class="mt-10" on:submit={handleSubmit}>
+		<TextInput labelText="Username" placeholder="Enter username..." required />
 		<PasswordInput
 			required
 			type="password"
@@ -33,5 +53,5 @@
 			placeholder="Enter password..."
 		/>
 	</FluidForm>
-	<Button class="absolute right-0 bottom-0 w-60 h-16 text-xl">Submit</Button>
-</Tile>
+	<Button class="absolute mt-10 w-60 h-16 text-xl" on:click={handleSubmit}>Submit</Button>
+</div>
