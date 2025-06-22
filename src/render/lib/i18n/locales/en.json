@@ -164,7 +164,8 @@
     "loginDataError": "Error loading login data. Please check your credentials and try again.",
     "logoutSuccess": "Logout successful. You have been logged out.",
     "newFeature": "New Feature",
-    "welcomeMessage": "Welcome to the application!"
+    "welcomeMessage": "Welcome to the application!",
+    "tokenUpdateSuccess": "Token updated successfully."
   },
   "weeks": "Week",
   "timeUnit": "min"

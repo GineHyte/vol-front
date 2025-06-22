@@ -24,10 +24,10 @@
 	import { Game, Action } from '$lib/scripts/models';
 	import { PaginationProps } from '$lib/scripts/pagination';
 	import { pushNotification } from '$lib/utils/utils';
-	import Field from '@/render/routes/games/Field.svelte';
+	import Field from '@/render/routes/(authed)/games/Field.svelte';
 	import ContextMenu from '@/render/lib/ui/ContextMenu.svelte';
 	import { Impact, Side } from '$lib/utils/utils';
-	import SideListGame from '@/render/routes/games/SideListGame.svelte';
+	import SideListGame from '@/render/routes/(authed)/games/SideListGame.svelte';
 	import { t } from '$lib/utils/utils';
 
 	let selectedGameId: number | undefined = $state(undefined);

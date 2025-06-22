@@ -21,29 +21,41 @@
 	import Notifications from '$lib/ui/Notifications.svelte';
 	import { get } from 'svelte/store';
 	import { loginData } from '$lib/utils/store';
-	import { login, token } from '$lib/scripts/endpoints';
+	import { token } from '$lib/scripts/endpoints';
 	import { pushNotification } from '$lib/utils/utils';
 
 	async function checkAccessToken() {
-		const { refreshToken, username } = get(loginData) || {};
-		if (!refreshToken || !username) {
+		const lLoginData = get(loginData) || {};
+		if (!lLoginData.accessToken) {
 			pushNotification('errorLoginData');
 			window.location.href = '/login';
 			return;
 		} else {
-			const resp = await token(refreshToken, username);
-			if (!resp.accessToken) {
-				pushNotification('errorLoginData');
-				window.location.href = '/login';
-				return;
-			} else {
-				loginData.set({
-					accessToken: resp.accessToken,
-					refreshToken: resp.refreshToken,
-					username: username,
-				});
-				pushNotification('successLoginData');
-			}
+			pushNotification('successLoginData');
+			setInterval(
+				() => {
+					const lLoginData = get(loginData);
+					if (!lLoginData || !lLoginData.refreshToken || !lLoginData.username) {
+						pushNotification('errorTokenUpdate');
+						window.location.href = '/login';
+						return;
+					}
+					token(lLoginData.refreshToken, lLoginData.username)
+						.then((resp) => {
+							// pushNotification('successTokenUpdate');
+							loginData.set({
+								accessToken: resp.accessToken,
+								refreshToken: resp.refreshToken,
+								username: lLoginData.username,
+							});
+						})
+						.catch((error: any) => {
+							pushNotification('errorTokenUpdate', { error: error.toString() });
+							window.location.href = '/login';
+						});
+				},
+				30 * 60 * 1000,
+			); // Update token every 30 minutes
 		}
 	}
 

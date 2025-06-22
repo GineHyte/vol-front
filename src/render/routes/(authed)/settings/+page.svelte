@@ -32,7 +32,7 @@
 <TextInput
 	labelText={t('settings.serverIP')}
 	bind:value={settings.apiUrl}
-	placeholder={t('settings.serverIP')}
+	placeholder={settings.apiUrl}
 	class="mb-4"
 	on:focus={(e) => {
 		const target = e.target as HTMLInputElement;
