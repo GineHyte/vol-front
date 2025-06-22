@@ -156,7 +156,9 @@
     "playerStatsCannotBeCalculatedNoPlayer": "Player statistics cannot be calculated: player not found.",
     "notificationNotFound": "Notification not found.",
     "loginSuccess": "Login successful.",
-    ""
+    "plausibilityPassword": "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character.",
+    "plausibilityUsername": "Username must be at least 3 characters long and contain only letters, numbers, and underscores.",
+    "invalidCredentials": "Invalid username or password."
   },
   "weeks": "Week",
   "timeUnit": "min"

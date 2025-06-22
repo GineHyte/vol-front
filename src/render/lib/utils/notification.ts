@@ -286,6 +286,26 @@ const NOTIFICATIONS: { [key: string]: () => NotificationType} = {
         message: t('notifications.loginDataSuccess'),
         kind: 'success',
     }),
+    errorPasswordPlausibility: () => ({
+        title: t('notifications.error'),
+        message: t('notifications.plausibilityPassword'),
+        kind: 'error',
+    }),
+    errorUsernamePlausibility: () => ({
+        title: t('notifications.error'),
+        message: t('notifications.plausibilityUsername'),
+        kind: 'error',
+    }),
+    errorInvalidCredentials: () => ({
+        title: t('notifications.error'),
+        message: t('notifications.invalidCredentials'),
+        kind: 'error',
+    }),
+    successLogin: () => ({
+        title: t('notifications.success'),
+        message: t('notifications.loginSuccess'),
+        kind: 'success',
+    }),
 };
 
 export default function getNotification(name: string, params: { [key: string]: string } = {}) {

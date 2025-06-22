@@ -150,7 +150,11 @@
     "playerStatsCalculated": "Статистику гравця розраховано.",
     "playerStatsCannotBeCalculatedNoActions": "Статистику гравця не можна розрахувати: немає дій.",
     "playerStatsCannotBeCalculatedNoPlayer": "Статистику гравця не можна розрахувати: гравець не знайдений.",
-    "notificationNotFound": "Сповіщення не знайдено."
+    "notificationNotFound": "Сповіщення не знайдено.",
+    "loginSuccess": "Успішний вхід.",
+    "plausibilityPassword": "Пароль повинен містити принаймні 8 символів, включаючи великі та малі літери, цифри та спеціальні символи.",
+    "plausibilityUsername": "Ім'я користувача повинно містити принаймні 3 символи, включаючи літери та цифри.",
+    "invalidCredentials": "Неправильні облікові дані. Будь ласка, перевірте ім'я користувача та пароль."
   },
   "weeks": "Тиждень",
   "timeUnit": "хв"

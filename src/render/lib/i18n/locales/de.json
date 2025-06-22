@@ -151,8 +151,10 @@
     "playerStatsCannotBeCalculatedNoActions": "Spielerstatistiken können nicht berechnet werden: keine Aktionen.",
     "playerStatsCannotBeCalculatedNoPlayer": "Spielerstatistiken können nicht berechnet werden: Spieler nicht gefunden.",
     "notificationNotFound": "Benachrichtigung nicht gefunden.",
-    "loginDataError": "Fehler bei den Anmeldedaten. Bitte überprüfen Sie Ihre Eingaben.",
-    "loginDataSuccess": "Anmeldung erfolgreich. Willkommen zurück!"
+    "loginSuccess": "Anmeldung erfolgreich.",
+    "plausibilityPassword": "Passwort muss mindestens 6 Zeichen lang sein und mindestens einen Großbuchstaben, einen Kleinbuchstaben, eine Zahl und ein Sonderzeichen enthalten.",
+    "plausibilityUsername": "Benutzername muss mindestens 3 Zeichen lang sein und darf keine Sonderzeichen enthalten.",
+    "invalidCredentials": "Ungültige Anmeldeinformationen. Bitte überprüfen Sie Ihren Benutzernamen und Ihr Passwort."
   },
   "weeks": "Woche",
   "timeUnit": "Min"

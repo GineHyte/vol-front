@@ -277,13 +277,13 @@ export async function getPlanWeek(
 }
 
 export async function login(username: string, password: string): Promise<Login> {
-	return Api.post('/login/', { username, password }).then((data: any) => {
+	return Api.post('/auth/login/', { username, password }).then((data: any) => {
 		return new Login().deserialize(data) as Login;
 	});
 }
 
 export async function token(refreshToken: string, username: string): Promise<Login> {
-	return Api.post('/token/', { refresh_token: refreshToken, username }).then((data: any) => {
+	return Api.post('/auth/token/', { refresh_token: refreshToken, username }).then((data: any) => {
 		return new Login().deserialize(data) as Login;
 	});
 }

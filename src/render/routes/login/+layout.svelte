@@ -4,6 +4,8 @@
 	import { Content } from 'carbon-components-svelte';
 	import { onMount } from 'svelte';
 	import Notifications from '$lib/ui/Notifications.svelte';
+	import { initI18n } from '@/render/lib/i18n';
+	import { settingsRenderer } from '@/render/lib/utils/store';
 
 	interface Props {
 		children?: import('svelte').Snippet;
@@ -14,6 +16,13 @@
 
 	onMount(() => {
 		ready = true;
+		window.electron.getSettings().then((settings: any) => {
+			if (settings) {
+				settings.loaded = true;
+				settingsRenderer.set(settings);
+				initI18n();
+			}
+		});
 	});
 </script>
 

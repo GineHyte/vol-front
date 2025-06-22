@@ -6,6 +6,7 @@
 	import { pushNotification } from '@/render/lib/utils/utils';
 	import loginBackground from '$lib/videos/login-back.mp4';
 	import loginBackgroundFinal from '$lib/videos/login-back-final.mp4';
+	import { t } from '$lib/utils/utils';
 
 	let videoElementRef: HTMLVideoElement;
 	let doLoginAnimation = $state(false);
@@ -16,10 +17,11 @@
 	let errorText = $state('');
 
 	function plausibilityCheck(username: string, password: string): boolean {
-		const passCheck = /^(?=.*[a-z])(?=.*[A-Z])(?=.*d)[a-zA-Zd]{6,}$/.test(password);
-		const userCheck = /^[a-zA-Z0-9_]{3,}$/.test(username);
+		const passCheck = true; ///^(?=.*[a-z])(?=.*[A-Z])(?=.*d)[a-zA-Zd]{8,}$/.test(password);
+		const userCheck = true; ///^[a-zA-Z0-9_]{3,}$/.test(username);
 		if (!passCheck) {
 			passwordInvalid = true;
+			errorText = t('notifications.plausibilityPassword');
 			pushNotification('errorPasswordPlausibility');
 		}
 		if (!userCheck) {
@@ -33,6 +35,7 @@
 		if (plausibilityCheck(username, password)) {
 			login(username, password)
 				.then((resp) => {
+					console.log('Login response:', resp);
 					if (resp.accessToken) {
 						doLoginAnimation = true;
 						loginData.set({
@@ -40,17 +43,17 @@
 							refreshToken: resp.refreshToken,
 							username: username,
 						});
-						pushNotification('successLoginData');
+						pushNotification('successLogin');
 						setTimeout(() => {
-							window.location.href = '/';
+							// window.location.href = '/';
 						}, 1000);
 					} else {
-						pushNotification('errorLoginFailed');
+						pushNotification('errorInvalidCredentials');
 					}
 				})
 				.catch((err) => {
 					console.error(err);
-					pushNotification('errorLoginFailed');
+					pushNotification('errorInvalidCredentials');
 				});
 		} else {
 			doLoginAnimation = false;
@@ -77,8 +80,15 @@
 <div class="pt-[20%] pr-24 z-1 fixed right-0 w-[45rem] h-[100vh]">
 	<span class="text-3xl">Log in</span>
 	<FluidForm class="mt-10" on:submit={handleSubmit}>
-		<TextInput labelText="Username" placeholder="Enter username..." required />
+		<TextInput
+			bind:value={username}
+			invalid={passwordInvalid}
+			labelText="Username"
+			placeholder="Enter username..."
+			required
+		/>
 		<PasswordInput
+			bind:value={password}
 			invalid={passwordInvalid}
 			required
 			type="password"

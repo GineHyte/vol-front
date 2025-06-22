@@ -12,7 +12,7 @@
 			notificationsLocal = value;
 			setTimeout(
 				() => {
-					notifications.set(value.slice(0, -1));
+					notifications.set([]);
 				},
 				notificationsLocal[notificationsLocal.length - 1].timeout > 0
 					? notificationsLocal[notificationsLocal.length - 1].timeout

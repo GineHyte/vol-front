@@ -21,11 +21,13 @@
 	import Notifications from '$lib/ui/Notifications.svelte';
 	import { get } from 'svelte/store';
 	import { loginData } from '$lib/utils/store';
-	import { token } from '$lib/scripts/endpoints';
+	import { login, token } from '$lib/scripts/endpoints';
 	import { pushNotification } from '$lib/utils/utils';
 
 	async function checkAccessToken() {
 		const { refreshToken, username } = get(loginData) || {};
+		console.log('Checking access token', refreshToken, username, get(loginData));
+		alert('Checking access token');
 		if (!refreshToken || !username) {
 			pushNotification('errorLoginData');
 			window.location.href = '/login';
