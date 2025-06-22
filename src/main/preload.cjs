@@ -22,4 +22,10 @@ contextBridge.exposeInMainWorld('electron', {
 	getVersion: () => {
 		return ipcRenderer.invoke('get-version');
 	},
+	setLoginData: (data) => {
+		ipcRenderer.send('set-login-data', data);
+	},
+	getLoginData: () => {
+		return ipcRenderer.invoke('get-login-data');
+	}
 });

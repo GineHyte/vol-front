@@ -64,7 +64,8 @@
     "statistics": "Statistics",
     "calculateStats": "Calculate Statistics",
     "plan": "Plan",
-    "trainingPlan": "Training Plan"
+    "trainingPlan": "Training Plan",
+    "logout": "Logout"
   },
   "descriptions": {
     "homeDescription": "This application will help you analyze, track and improve players' technical skills.",
@@ -158,7 +159,12 @@
     "loginSuccess": "Login successful.",
     "plausibilityPassword": "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character.",
     "plausibilityUsername": "Username must be at least 3 characters long and contain only letters, numbers, and underscores.",
-    "invalidCredentials": "Invalid username or password."
+    "invalidCredentials": "Invalid username or password.",
+    "loginDataSuccess": "Login data loaded successfully. Welcome back!",
+    "loginDataError": "Error loading login data. Please check your credentials and try again.",
+    "logoutSuccess": "Logout successful. You have been logged out.",
+    "newFeature": "New Feature",
+    "welcomeMessage": "Welcome to the application!"
   },
   "weeks": "Week",
   "timeUnit": "min"

@@ -26,6 +26,11 @@ export function settingsUpdater(settings: any) {
     window.electron.setSettings(settings);
 }
 
+export function loginUpdater(loginData: any) {
+    if (Object.keys(loginData).length === 0) return;
+    window.electron.setLoginData(loginData);
+}
+
 export function getTime() {
     let now = new Date();
     return ('0' + now.getHours()).slice(-2) + ':' + ('0' + now.getMinutes()).slice(-2);

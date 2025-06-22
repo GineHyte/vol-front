@@ -306,6 +306,11 @@ const NOTIFICATIONS: { [key: string]: () => NotificationType} = {
         message: t('notifications.loginSuccess'),
         kind: 'success',
     }),
+    successLogout: () => ({
+        title: t('notifications.success'),
+        message: t('notifications.logoutSuccess'),
+        kind: 'success',
+    }),
 };
 
 export default function getNotification(name: string, params: { [key: string]: string } = {}) {

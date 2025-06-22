@@ -26,8 +26,6 @@
 
 	async function checkAccessToken() {
 		const { refreshToken, username } = get(loginData) || {};
-		console.log('Checking access token', refreshToken, username, get(loginData));
-		alert('Checking access token');
 		if (!refreshToken || !username) {
 			pushNotification('errorLoginData');
 			window.location.href = '/login';
@@ -63,7 +61,6 @@
 	let ready = $state(false);
 
 	onMount(() => {
-		checkAccessToken();
 		ready = true;
 		window.electron.getSettings().then((settings: any) => {
 			if (settings) {
@@ -71,6 +68,19 @@
 				settingsRenderer.set(settings);
 				initI18n();
 			}
+			window.electron.getLoginData().then((data: any) => {
+				if (data) {
+					loginData.set({
+						accessToken: data.accessToken,
+						refreshToken: data.refreshToken,
+						username: data.username,
+					});
+				} else {
+					pushNotification('errorLoginData');
+					window.location.href = '/login';
+				}
+				checkAccessToken();
+			});
 		});
 		window.electron.getVersion().then((version: any) => {
 			versionRenderer.set(version);
@@ -102,31 +112,31 @@
 		return [
 			{
 				title: t('navigation.home'),
-				path: '/app',
+				path: '/',
 			},
 			{
 				title: t('navigation.games'),
-				path: '/app/games',
+				path: '/games',
 			},
 			{
 				title: t('navigation.players'),
-				path: '/app/players',
+				path: '/players',
 			},
 			{
 				title: t('navigation.teams'),
-				path: '/app/teams',
+				path: '/teams',
 			},
 			{
 				title: t('navigation.techs'),
-				path: '/app/techs',
+				path: '/techs',
 			},
 			{
 				title: t('navigation.exercises'),
-				path: '/app/exercises',
+				path: '/exercises',
 			},
 			{
 				title: t('navigation.settings'),
-				path: '/app/settings',
+				path: '/settings',
 			},
 		];
 	}

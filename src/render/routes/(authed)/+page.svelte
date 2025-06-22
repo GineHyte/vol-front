@@ -30,7 +30,7 @@
 		<Row>
 			<Column sm={4} md={4} lg={4} class="mb-4">
 				<AnimTile
-					href="/app/games"
+					href="/games"
 					title={t('navigation.games')}
 					text={t('descriptions.gamesDescription')}
 				>
@@ -42,7 +42,7 @@
 
 			<Column sm={4} md={4} lg={4} class="mb-4">
 				<AnimTile
-					href="/app/players"
+					href="/players"
 					title={t('navigation.players')}
 					text={t('descriptions.playersDescription')}
 				>
@@ -54,7 +54,7 @@
 
 			<Column sm={4} md={4} lg={4} class="mb-4">
 				<AnimTile
-					href="/app/teams"
+					href="/teams"
 					title={t('navigation.teams')}
 					text={t('descriptions.teamsDescription')}
 				>
@@ -68,7 +68,7 @@
 		<Row>
 			<Column sm={4} md={4} lg={4} class="mb-4">
 				<AnimTile
-					href="/app/techs"
+					href="/techs"
 					title={t('navigation.techs')}
 					text={t('descriptions.techsDescription')}
 				>
@@ -80,7 +80,7 @@
 
 			<Column sm={4} md={4} lg={4} class="mb-4">
 				<AnimTile
-					href="/app/exercises"
+					href="/exercises"
 					title={t('navigation.exercises')}
 					text={t('descriptions.exercisesDescription')}
 				>
@@ -92,7 +92,7 @@
 
 			<Column sm={4} md={4} lg={4} class="mb-4">
 				<AnimTile
-					href="/app/settings"
+					href="/settings"
 					title={t('navigation.settings')}
 					text={t('descriptions.settingsDescription')}
 				>

@@ -121,6 +121,14 @@ function ipcInit() {
 		return settingsManager.getSync('settings');
 	});
 
+	ipcMain.on('set-login-data', (event, data) => {
+		settingsManager.setSync('loginData', data)
+	});
+
+	ipcMain.handle('get-login-data', () => {
+		return settingsManager.getSync('loginData');
+	});
+
 	ipcMain.on('set-window-state', (event, data) => {
 		if (data.close) {
 			mainWindow.close();

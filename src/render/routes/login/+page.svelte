@@ -43,9 +43,10 @@
 							refreshToken: resp.refreshToken,
 							username: username,
 						});
+						console.log(get(loginData));
 						pushNotification('successLogin');
 						setTimeout(() => {
-							// window.location.href = '/';
+							window.location.href = '/';
 						}, 1000);
 					} else {
 						pushNotification('errorInvalidCredentials');
