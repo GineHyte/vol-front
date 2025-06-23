@@ -23,7 +23,9 @@ export function settingsUpdater(settings: any) {
         // Update the locale in the i18n system
         locale.set(settings.locale);
     }
-    window.electron.setSettings(settings);
+    if (typeof window !== 'undefined' && window.electron) {
+        window.electron.setSettings(settings);
+    }
 }
 
 export function loginUpdater(loginData: any) {

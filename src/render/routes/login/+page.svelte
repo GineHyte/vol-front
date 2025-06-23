@@ -5,6 +5,7 @@
 	import { languages } from '$lib/utils/utils';
 	import LoginForm from './LoginForm.svelte';
 	import RegisterForm from './RegisterForm.svelte';
+	import { CloseLarge } from 'carbon-icons-svelte';
 
 	let videoElementRef = $state<HTMLVideoElement>();
 	let doLoginAnimation = $state(false);
@@ -26,6 +27,10 @@
 		const newLocale = languages.map((l) => l.code)[localeCounter];
 		settingsRenderer.set({ ...settings, locale: newLocale });
 	}
+
+	function setWindowState(data: any) {
+		window.electron.setWindowState(data);
+	}
 </script>
 
 {#key doLoginAnimation}
@@ -40,12 +45,19 @@
 	></video>
 {/key}
 
-<button
-	class="fixed top-0 right-0 z-20 w-10 h-10 mt-4 mr-4 bg-gray-200 hover:bg-gray-300"
-	onclick={handleLocaleChange}
->
-	{settings.locale?.toUpperCase()}
-</button>
+<div class="flex fixed top-0 right-0 mt-4 mr-4 z-20 gap-4">
+	<button class="w-10 h-10 bg-gray-200 hover:bg-gray-300" onclick={handleLocaleChange}>
+		{settings.locale?.toUpperCase()}
+	</button>
+	<button
+		class="w-10 h-10 bg-red-500 hover:bg-gray-300"
+		onclick={() => {
+			setWindowState({ close: true });
+		}}
+	>
+		<CloseLarge class="m-auto" />
+	</button>
+</div>
 
 {#if registerPage}
 	<RegisterForm bind:registerPage bind:doLoginAnimation />

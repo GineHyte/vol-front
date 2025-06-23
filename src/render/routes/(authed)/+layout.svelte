@@ -158,76 +158,77 @@
 	});
 </script>
 
-{#key $locale}
-	<Header
-		platformName={t('titles.appTitle')}
-		bind:isSideNavOpen
-		class="w-full"
-		style="-webkit-app-region: drag;"
-		persistentHamburgerMenu={true}
-	>
-		<!-- @migration-task: migrate this slot by hand, `skip-to-content` is an invalid identifier -->
-		<svelte:fragment slot="skip-to-content">
-			<SkipToContent />
-		</svelte:fragment>
-		<HeaderNav style="display:block">
-			<Button
-				kind={theme === 'g100' ? 'ghost' : 'secondary'}
-				on:click={() => {
-					theme = theme === 'g100' ? 'white' : 'g100';
-				}}
-				iconDescription={t('buttons.theme')}
-				icon={theme === 'g100' ? LightFilled : Light}
-			/>
-			{#key currentWindowState}
+{#if ready}
+	{#key $locale}
+		<Header
+			platformName={t('titles.appTitle')}
+			bind:isSideNavOpen
+			class="w-full"
+			style="-webkit-app-region: drag;"
+			persistentHamburgerMenu={true}
+		>
+			<!-- @migration-task: migrate this slot by hand, `skip-to-content` is an invalid identifier -->
+			<svelte:fragment slot="skip-to-content">
+				<SkipToContent />
+			</svelte:fragment>
+			<HeaderNav style="display:block">
 				<Button
-					icon={Subtract}
-					kind="secondary"
-					size="small"
-					iconDescription={t('buttons.minimize')}
-					on:click={() => setWindowState({ minimize: true })}
+					kind={theme === 'g100' ? 'ghost' : 'secondary'}
+					on:click={() => {
+						theme = theme === 'g100' ? 'white' : 'g100';
+					}}
+					iconDescription={t('buttons.theme')}
+					icon={theme === 'g100' ? LightFilled : Light}
 				/>
-				<Button
-					icon={currentWindowState.isMaximized || currentWindowState.isFullScreen
-						? Minimize
-						: Maximize}
-					kind="secondary"
-					size="small"
-					iconDescription={t('buttons.maximize')}
-					on:click={() =>
-						setWindowState({
-							maximize: !(
-								currentWindowState.isMaximized || currentWindowState.isFullScreen
-							),
-						})}
-				/>
-				<Button
-					icon={Close}
-					kind="danger"
-					size="small"
-					iconDescription={t('common.close')}
-					on:click={() => setWindowState({ close: true })}
-				/>
-			{/key}
-		</HeaderNav>
-		<SideNav bind:isOpen={isSideNavOpen}>
-			<SideNavItems>
-				{#each getRoutes() as route}
-					<SideNavLink
-						href={route.path}
-						text={route.title}
-						on:click={() => (isSideNavOpen = false)}
+				{#key currentWindowState}
+					<Button
+						icon={Subtract}
+						kind="secondary"
+						size="small"
+						iconDescription={t('buttons.minimize')}
+						on:click={() => setWindowState({ minimize: true })}
 					/>
-				{/each}
-			</SideNavItems>
-		</SideNav>
-	</Header>
+					<Button
+						icon={currentWindowState.isMaximized || currentWindowState.isFullScreen
+							? Minimize
+							: Maximize}
+						kind="secondary"
+						size="small"
+						iconDescription={t('buttons.maximize')}
+						on:click={() =>
+							setWindowState({
+								maximize: !(
+									currentWindowState.isMaximized ||
+									currentWindowState.isFullScreen
+								),
+							})}
+					/>
+					<Button
+						icon={Close}
+						kind="danger"
+						size="small"
+						iconDescription={t('common.close')}
+						on:click={() => setWindowState({ close: true })}
+					/>
+				{/key}
+			</HeaderNav>
+			<SideNav bind:isOpen={isSideNavOpen}>
+				<SideNavItems>
+					{#each getRoutes() as route}
+						<SideNavLink
+							href={route.path}
+							text={route.title}
+							on:click={() => (isSideNavOpen = false)}
+						/>
+					{/each}
+				</SideNavItems>
+			</SideNav>
+		</Header>
 
-	<Content>
-		{#if ready}
+		<Content>
 			{@render children?.()}
-		{/if}
-	</Content>
+		</Content>
 
-	<Notifications />
-{/key}
+		<Notifications />
+	{/key}
+{/if}

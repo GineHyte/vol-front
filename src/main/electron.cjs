@@ -123,6 +123,7 @@ function ipcInit() {
 
 	ipcMain.on('set-login-data', (event, data) => {
 		settingsManager.setSync('loginData', data)
+		console.log('set login data (electron): ', JSON.stringify(data));
 	});
 
 	ipcMain.handle('get-login-data', () => {

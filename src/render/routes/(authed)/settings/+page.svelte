@@ -24,7 +24,11 @@
 
 	function logout() {
 		pushNotification('successLogout');
-		loginData.set({});
+		loginData.set({
+			accessToken: '',
+			refreshToken: '',
+			username: '',
+		});
 		window.location.href = '/login';
 	}
 </script>
