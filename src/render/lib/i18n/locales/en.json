@@ -31,10 +31,28 @@
     "appTitle": "Technical Skills in Beach Volleyball",
     "game": "Game",
     "exercise": "Exercise",
-    "tech": "Technique",
-    "subtech": "Sub-technique",
+    "tech": "Technique",    "subtech": "Sub-technique",
     "playerStats": "Player Statistics",
     "login": "Login"
+  },
+  "login": {
+    "title": "Log in",
+    "username": "Username",
+    "password": "Password",
+    "usernamePlaceholder": "Enter username...",
+    "passwordPlaceholder": "Enter password...",
+    "submit": "Submit",
+    "server": "Server",
+    "serverPlaceholder": "Enter server IP address...",
+    "registerText": "Don't have an account?",
+    "registerLink": "Register now!",
+    "registerTitle": "Register",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "lastNamePlaceholder": "Enter last name...",
+    "firstNamePlaceholder": "Enter first name...",
+    "loginText": "Already have an account?",
+    "loginLink": "Log in here!"
   },
   "fields": {
     "firstName": "First Name",
@@ -165,7 +183,10 @@
     "logoutSuccess": "Logout successful. You have been logged out.",
     "newFeature": "New Feature",
     "welcomeMessage": "Welcome to the application!",
-    "tokenUpdateSuccess": "Token updated successfully."
+    "tokenUpdateSuccess": "Token updated successfully.",
+    "passwordMismatch": "Passwords do not match. Please try again.",
+    "registerSuccess": "Registration successful! You can now log in.",
+    "registerError": "Registration failed. Please check your details and try again."
   },
   "weeks": "Week",
   "timeUnit": "min"

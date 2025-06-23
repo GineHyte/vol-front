@@ -8,7 +8,6 @@ var apiVersion = '';
 var isLoaded = false;
 
 settingsRenderer.subscribe((settings: SettingsType) => {
-	console.log('API settings updated:', settings);
 	isLoaded = settings.loaded;
 	if (isLoaded === true) {
 		if (!settings.apiUrl) {
@@ -18,7 +17,6 @@ settingsRenderer.subscribe((settings: SettingsType) => {
 		apiUrl = settings.apiUrl.trim() || '';
 		apiVersion = settings.apiVersion || '';
 		const isDev = apiUrl.includes('localhost');
-		console.log(settings);
 		if (isDev) {
 			apiUrl = 'http://' + apiUrl;
 		} else {
@@ -42,7 +40,6 @@ export class ApiImpl implements Api {
 		headers: any = {},
 	): Promise<any> {
 		if (!isLoaded) {
-			console.log("API not loaded yet, waiting for settings to be applied.", isLoaded);
 			return;
 		}
 		return new Promise((resolve, reject) => {

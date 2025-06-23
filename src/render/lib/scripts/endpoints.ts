@@ -1,5 +1,5 @@
 import { ApiImpl } from './api';
-import { Player, Team, Game, Status, Action, Tech, Subtech, Exercise, PlayerStats, TechStats, SubtechStats, ImpactStats, PlanWeek, Login } from '$lib/scripts/models';
+import { Player, Team, Game, Status, Action, Tech, Subtech, Exercise, PlayerStats, TechStats, SubtechStats, ImpactStats, PlanWeek, Login, Register } from '$lib/scripts/models';
 import { Pagination, PaginationProps } from '$lib/scripts/pagination';
 
 const Api = new ApiImpl();
@@ -285,5 +285,11 @@ export async function login(username: string, password: string): Promise<Login> 
 export async function token(refreshToken: string, username: string): Promise<Login> {
 	return Api.post('/auth/token/', { refresh_token: refreshToken, username }).then((data: any) => {
 		return new Login().deserialize(data) as Login;
+	});
+}
+
+export async function register(register: Register): Promise<Status> {
+	return Api.post('/auth/register/', register.serialize()).then((data: any) => {
+		return new Status().deserialize(data) as Status;
 	});
 }

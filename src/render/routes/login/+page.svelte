@@ -1,68 +1,30 @@
 <script lang="ts">
-	import { login } from '$lib/scripts/endpoints';
-	import { FluidForm, TextInput, PasswordInput, Button } from 'carbon-components-svelte';
-	import { loginData } from '$lib/utils/store';
-	import { get } from 'svelte/store';
-	import { pushNotification } from '@/render/lib/utils/utils';
 	import loginBackground from '$lib/videos/login-back.mp4';
 	import loginBackgroundFinal from '$lib/videos/login-back-final.mp4';
-	import { t } from '$lib/utils/utils';
+	import { settingsRenderer } from '@/render/lib/utils/store';
+	import { languages } from '$lib/utils/utils';
+	import LoginForm from './LoginForm.svelte';
+	import RegisterForm from './RegisterForm.svelte';
 
-	let videoElementRef: HTMLVideoElement;
+	let videoElementRef = $state<HTMLVideoElement>();
 	let doLoginAnimation = $state(false);
-	let password = $state('');
-	let username = $state('');
-	let passwordInvalid = $state(false);
-	let errorUsernameInvalid = $state(false);
-	let errorText = $state('');
+	let settings: SettingsType = $state({});
+	let localeCounter = $state(0);
+	let registerPage = $state(false);
 
-	function plausibilityCheck(username: string, password: string): boolean {
-		const passCheck = true; ///^(?=.*[a-z])(?=.*[A-Z])(?=.*d)[a-zA-Zd]{8,}$/.test(password);
-		const userCheck = true; ///^[a-zA-Z0-9_]{3,}$/.test(username);
-		if (!passCheck) {
-			passwordInvalid = true;
-			errorText = t('notifications.plausibilityPassword');
-			pushNotification('errorPasswordPlausibility');
-		}
-		if (!userCheck) {
-			errorUsernameInvalid = true;
-			pushNotification('errorUsernamePlausibility');
-		}
-		return passCheck && userCheck;
-	}
+	settingsRenderer.subscribe((v: any) => {
+		settings = v;
+		localeCounter = languages.findIndex((l) => l.code === v.locale);
+	});
 
-	function handleSubmit(event: Event) {
-		if (plausibilityCheck(username, password)) {
-			login(username, password)
-				.then((resp) => {
-					console.log('Login response:', resp);
-					if (resp.accessToken) {
-						doLoginAnimation = true;
-						loginData.set({
-							accessToken: resp.accessToken,
-							refreshToken: resp.refreshToken,
-							username: username,
-						});
-						console.log(get(loginData));
-						pushNotification('successLogin');
-						setTimeout(() => {
-							window.location.href = '/';
-						}, 1000);
-					} else {
-						pushNotification('errorInvalidCredentials');
-					}
-				})
-				.catch((err) => {
-					console.error(err);
-					pushNotification('errorInvalidCredentials');
-				});
+	function handleLocaleChange() {
+		if (localeCounter >= Object.keys(languages).length - 1) {
+			localeCounter = 0;
 		} else {
-			doLoginAnimation = false;
-			passwordInvalid = true;
-			setTimeout(() => {
-				passwordInvalid = false;
-			}, 2000);
+			localeCounter += 1;
 		}
+		const newLocale = languages.map((l) => l.code)[localeCounter];
+		settingsRenderer.set({ ...settings, locale: newLocale });
 	}
 </script>
 
@@ -75,30 +37,18 @@
 		muted
 		playsinline
 		class="block h-100vh fixed z-0"
-	/>
+	></video>
 {/key}
 
-<div class="pt-[20%] pr-24 z-1 fixed right-0 w-[45rem] h-[100vh]">
-	<span class="text-3xl">Log in</span>
-	<FluidForm class="mt-10" on:submit={handleSubmit}>
-		<TextInput
-			bind:value={username}
-			invalid={passwordInvalid}
-			labelText="Username"
-			placeholder="Enter username..."
-			required
-		/>
-		<PasswordInput
-			bind:value={password}
-			invalid={passwordInvalid}
-			required
-			type="password"
-			labelText="Password"
-			placeholder="Enter password..."
-		/>
-	</FluidForm>
-	{#if errorText !== ''}
-		<p class="text-red-500 mt-2">{errorText}</p>
-	{/if}
-	<Button class="absolute mt-10 w-60 h-16 text-xl" on:click={handleSubmit}>Submit</Button>
-</div>
+<button
+	class="fixed top-0 right-0 z-20 w-10 h-10 mt-4 mr-4 bg-gray-200 hover:bg-gray-300"
+	onclick={handleLocaleChange}
+>
+	{settings.locale?.toUpperCase()}
+</button>
+
+{#if registerPage}
+	<RegisterForm bind:registerPage bind:doLoginAnimation />
+{:else}
+	<LoginForm bind:registerPage bind:doLoginAnimation />
+{/if}

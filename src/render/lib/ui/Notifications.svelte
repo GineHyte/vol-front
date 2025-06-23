@@ -22,7 +22,7 @@
 	});
 </script>
 
-<div class="absolute right-0 bottom-0">
+<div class="absolute right-0 bottom-0 z-50">
 	{#key notificationsLocal}
 		{#each notificationsLocal as not}
 			<ToastNotification

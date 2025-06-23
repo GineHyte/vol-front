@@ -31,8 +31,26 @@
     "game": "Гра",
     "exercise": "Вправа",
     "tech": "Техніка",
-    "subtech": "Підтехніка",
-    "playerStats": "Статистика по гравцю"
+    "subtech": "Підтехніка",    "playerStats": "Статистика по гравцю"
+  },
+  "login": {
+    "title": "Увійти",
+    "username": "Ім'я користувача",
+    "password": "Пароль",
+    "usernamePlaceholder": "Введіть ім'я користувача...",
+    "passwordPlaceholder": "Введіть пароль...",
+    "submit": "Підтвердити",
+    "server": "Сервер",
+    "serverPlaceholder": "Введіть IP-адресу сервера...",
+    "registerText": "Немає облікового запису?",
+    "registerLink": "Зареєструватися зараз!",
+    "registerTitle": "Реєстрація",
+    "firstName": "Ім'я",
+    "lastName": "Прізвище",
+    "lastNamePlaceholder": "Введіть прізвище...",
+    "firstNamePlaceholder": "Введіть ім'я...",
+    "loginText": "Вже є обліковий запис?",
+    "loginLink": "Увійти тут!"
   },
   "fields": {
     "firstName": "Ім'я",
@@ -159,7 +177,10 @@
     "loginDataSuccess": "Дані для входу успішно завантажено. Ласкаво просимо назад!",
     "loginDataError": "Помилка завантаження даних для входу. Будь ласка, спробуйте ще раз.",
     "logoutSuccess": "Ви вийшли з системи. До зустрічі!",
-    "tokenUpdateSuccess": "Токен успішно оновлено."
+    "tokenUpdateSuccess": "Токен успішно оновлено.",
+    "passwordMismatch": "Паролі не збігаються. Будь ласка, спробуйте ще раз.",
+    "registerSuccess": "Реєстрація успішна! Ви можете увійти в систему.",
+    "registerError": "Помилка реєстрації. Будь ласка, спробуйте ще раз."
   },
   "weeks": "Тиждень",
   "timeUnit": "хв",

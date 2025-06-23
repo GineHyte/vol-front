@@ -463,3 +463,21 @@ export class Login extends Model {
 		return this.proxify();
 	}
 }
+
+export class Register extends Model {
+	username: any;
+	password: any;
+	firstName: any;
+	lastName: any;
+
+	constructor() {
+		super();
+
+		this.username = new Field('username', String, 'Імʼя користувача');
+		this.password = new Field('password', String, 'Пароль');
+		this.firstName = new Field('first_name', String, "Ім'я");
+		this.lastName = new Field('last_name', String, 'Прізвище');
+
+		return this.proxify();
+	}
+}

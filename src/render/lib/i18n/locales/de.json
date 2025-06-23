@@ -31,8 +31,26 @@
     "game": "Spiel",
     "exercise": "Übung",
     "tech": "Technik",
-    "subtech": "Untertechnik",
-    "playerStats": "Spielerstatistiken"
+    "subtech": "Untertechnik",    "playerStats": "Spielerstatistiken"
+  },
+  "login": {
+    "title": "Anmelden",
+    "username": "Benutzername",
+    "password": "Passwort",
+    "usernamePlaceholder": "Benutzername eingeben...",
+    "passwordPlaceholder": "Passwort eingeben...",
+    "submit": "Absenden",
+    "server": "Server",
+    "serverPlaceholder": "Server-IP-Adresse eingeben...",
+    "registerText": "Haben Sie kein Konto?",
+    "registerLink": "Jetzt registrieren!",
+    "registerTitle": "Registrieren",
+    "firstName": "Vorname",
+    "lastName": "Nachname",
+    "lastNamePlaceholder": "Nachname eingeben...",
+    "firstNamePlaceholder": "Vorname eingeben...",
+    "loginText": "Haben Sie bereits ein Konto?",
+    "loginLink": "Hier anmelden!"
   },
   "fields": {
     "firstName": "Vorname",
@@ -159,7 +177,10 @@
     "loginDataSuccess": "Anmeldedaten erfolgreich geladen. Willkommen zurück!",
     "loginDataError": "Fehler beim Laden der Anmeldedaten. Bitte überprüfen Sie Ihre Anmeldeinformationen und versuchen Sie es erneut.",
     "logoutSuccess": "Sie wurden erfolgreich abgemeldet.",
-    "tokenUpdateSuccess": "Token erfolgreich aktualisiert."
+    "tokenUpdateSuccess": "Token erfolgreich aktualisiert.",
+    "passwordMismatch": "Die Passwörter stimmen nicht überein.",
+    "registerSuccess": "Registrierung erfolgreich. Sie können sich jetzt anmelden.",
+    "registerError": "Registrierung fehlgeschlagen. Bitte überprüfen Sie Ihre Eingaben und versuchen Sie es erneut."
   },
   "weeks": "Woche",
   "timeUnit": "Min",

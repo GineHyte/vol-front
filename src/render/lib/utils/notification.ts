@@ -316,6 +316,21 @@ const NOTIFICATIONS: { [key: string]: () => NotificationType} = {
         message: t('notifications.tokenUpdateSuccess'),
         kind: 'success',
     }),
+    errorPasswordMismatch: () => ({
+        title: t('notifications.error'),
+        message: t('notifications.passwordMismatch'),
+        kind: 'error',
+    }),
+    successRegister: () => ({
+        title: t('notifications.success'),
+        message: t('notifications.registerSuccess'),
+        kind: 'success',
+    }),
+    errorRegister: () => ({
+        title: t('notifications.error'),
+        message: t('notifications.registerError'),
+        kind: 'error',
+    }),
 };
 
 export default function getNotification(name: string, params: { [key: string]: string } = {}) {

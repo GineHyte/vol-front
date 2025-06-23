@@ -73,7 +73,6 @@
 	let ready = $state(false);
 
 	onMount(() => {
-		ready = true;
 		window.electron.getSettings().then((settings: any) => {
 			if (settings) {
 				settings.loaded = true;
@@ -92,6 +91,7 @@
 					window.location.href = '/login';
 				}
 				checkAccessToken();
+				ready = true;
 			});
 		});
 		window.electron.getVersion().then((version: any) => {
