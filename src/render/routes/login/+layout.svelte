@@ -21,8 +21,8 @@
 				settings.loaded = true;
 				settingsRenderer.set(settings);
 				initI18n();
-				ready = true;
 			}
+			ready = true;
 		});
 	});
 </script>

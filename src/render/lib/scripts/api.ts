@@ -64,6 +64,7 @@ export class ApiImpl implements Api {
 				.then((data: any) => resolve(data))
 				.catch((error: Error) => {
 					this.__errorHandler(error);
+					return reject(error);
 				});
 		});
 	}
@@ -141,7 +142,6 @@ export class ApiImpl implements Api {
 	}
 
 	private __errorHandler(resp: Response | Error) {
-		return
 		if (resp instanceof Response) {
 			pushNotification('apiError', {
 				body: JSON.stringify(resp.body),

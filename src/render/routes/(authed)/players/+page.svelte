@@ -45,14 +45,30 @@
 	let selectedPlayer: Player | undefined = $state(undefined);
 
 	async function onGeneratePlan() {
-		if (selectedPlayerId) {
-			generatePlanLoading = true;
-			let status = await generatePlan(selectedPlayerId);
+		if (!selectedPlayerId) {
+			return; // Exit early if no player selected
+		}
+
+		generatePlanLoading = true;
+
+		try {
+			const status = await generatePlan(selectedPlayerId);
+
+			if (!status) {
+				pushNotification('generatePlanError');
+				return;
+			}
+
 			if (status.status === 'success') {
 				pushNotification('generatePlanSuccess');
 			} else {
 				pushNotification('generatePlanError');
 			}
+		} catch (error) {
+			pushNotification('generatePlanError');
+		} finally {
+			// This ensures generatePlanLoading is always set to false
+			// regardless of success, errors, or early returns
 			generatePlanLoading = false;
 		}
 	}

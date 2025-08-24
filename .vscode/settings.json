@@ -8,11 +8,11 @@
 		"plaintext": false,
 		"markdown": false,
 		"scminput": false,
-		"python": false,
 		"rust": false,
+		"python": false,
 		"objectscript-class": true,
-		"svelte": true,
-		"typescript": true,
+		"svelte": false,
+		"typescript": false,
 		"json": true,
 		"javascript": true
 	}
