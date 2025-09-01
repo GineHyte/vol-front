@@ -41,10 +41,7 @@
 
 	async function duplicateExercise(currentId: number) {
 		if (currentId) {
-			let exercise = await getExercise(currentId);
-			exercise.tech = exercise.tech.id;
-			exercise.subtech = exercise.subtech.id;
-			let status = await createExercise(exercise);
+			let status = await createExercise(await getExercise(currentId));
 			if (status.status === 'success') {
 				pushNotification('duplicateExerciseSuccess');
 			} else {

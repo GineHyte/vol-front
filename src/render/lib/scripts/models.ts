@@ -184,8 +184,6 @@ export class Exercise extends Model {
 	id: any;
 	name: any;
 	description: any;
-	subtech: any;
-	tech: any;
 	imageUrl: any;
 	videoUrl: any;
 	difficulty: any;
@@ -200,6 +198,7 @@ export class Exercise extends Model {
 	fromZone: any;
 	toZone: any;
 	timePerExercise: any;
+	subtechs: any;
 
 	constructor() {
 		super();
@@ -207,8 +206,7 @@ export class Exercise extends Model {
 		this.id = new Field('id', Number);
 		this.name = new Field('name', String, 'Назва');
 		this.description = new Field('description', BigString, 'Опис');
-		this.tech = new Field('tech', NameWithIdType, 'Техніка', ['name']);
-		this.subtech = new Field('subtech', NameWithIdType, 'Субтехніка', ['name']);
+		this.subtechs = new Field('subtechs', new Datatype([ExerciseSubtech]), 'Підтехніки')
 		this.imageUrl = new Field('image_url', String, 'Посилання на зображення');
 		this.videoUrl = new Field('video_url', String, 'Посилання на відео');
 		this.difficulty = new Field('difficulty', Number, 'Складність');
@@ -477,6 +475,20 @@ export class Register extends Model {
 		this.password = new Field('password', String, 'Пароль');
 		this.firstName = new Field('first_name', String, "Ім'я");
 		this.lastName = new Field('last_name', String, 'Прізвище');
+
+		return this.proxify();
+	}
+}
+
+export class ExerciseSubtech extends Model {
+	exercise: any;
+	subtech: any;
+
+	constructor() {
+		super();
+
+		this.exercise = new Field('exercise', NameWithIdType, 'Вправа', ['name']);
+		this.subtech = new Field('subtech', NameWithIdType, 'Під-техніка', ['name']);
 
 		return this.proxify();
 	}

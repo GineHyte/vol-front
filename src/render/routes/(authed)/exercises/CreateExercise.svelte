@@ -26,8 +26,6 @@
 			// @ts-ignore
 			exercise[key as keyof Exercise] = inputData[key];
 		});
-		exercise.tech = selectedTech?.id;
-		exercise.subtech = selectedSubtech?.id;
 		let status = await createExercise(exercise);
 		if (status.status === 'success') {
 			pushNotification('createExerciseSuccess');
