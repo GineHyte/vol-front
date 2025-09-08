@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { Button, Tile } from 'carbon-components-svelte';
-	import { Exercise } from '$lib/scripts/models';
+	import { Exercise, ExerciseSubtech } from '$lib/scripts/models';
 	import { createExercise, getTechs, getSubtechs } from '$lib/scripts/endpoints';
+	import TrashCan from 'carbon-icons-svelte/lib/TrashCan.svelte';
 	import ModalCreate from '$lib/ui/ModalCreate.svelte';
 	import ModalCreateRelation from '$lib/ui/ModalCreateRelation.svelte';
 	import { pushNotification } from '$lib/utils/utils';
@@ -16,7 +17,7 @@
 	let { createOpen = $bindable(false), updateTable }: Props = $props();
 
 	let selectedTech: { [key: string]: any } | undefined = $state(undefined);
-	let selectedSubtech: { [key: string]: any } | undefined = $state(undefined);
+	let selectedSubtechs: Array<{ [key: string]: any }> = $state([]);
 	let selectionTechOpen: boolean = $state(false);
 	let selectionSubtechOpen: boolean = $state(false);
 
@@ -25,6 +26,11 @@
 		Object.keys(inputData).forEach((key) => {
 			// @ts-ignore
 			exercise[key as keyof Exercise] = inputData[key];
+		});
+		selectedSubtechs.forEach((selectedSubtech) => {
+			let exerciseSubtech = new ExerciseSubtech();
+			exerciseSubtech.subtech = selectedSubtech.id;
+			exercise.subtechs = [...(exercise.subtechs || []), exerciseSubtech];
 		});
 		let status = await createExercise(exercise);
 		if (status.status === 'success') {
@@ -46,11 +52,22 @@
 	exclude={['imageUrl', 'videoUrl']}
 >
 	{#snippet createRelationField()}
-		{#if selectedTech}
-			<Tile>{t('titles.tech')}: {selectedTech.name}</Tile>
-		{/if}
-		{#if selectedSubtech}
-			<Tile>{t('titles.subtech')}: {selectedSubtech.name}</Tile>
+		{#if selectedSubtechs}
+			{#each selectedSubtechs as selectedSubtech}
+				<Tile class="flex align-center gap-4">
+					<span class="mt-4">{t('titles.subtech')}: {selectedSubtech.name}</span>
+					<Button
+						kind="danger-tertiary"
+						iconDescription="Delete"
+						icon={TrashCan}
+						on:click={(e) => {
+							selectedSubtechs = selectedSubtechs.filter(
+								(el) => el.id !== selectedSubtech.id,
+							);
+						}}
+					/>
+				</Tile>
+			{/each}
 		{/if}
 		<Button
 			class="mt-4"
@@ -65,7 +82,6 @@
 			on:click={() => {
 				selectionSubtechOpen = true;
 			}}
-			disabled={!selectedTech}
 		>
 			{t('buttons.selectSubtech')}
 		</Button>
@@ -84,15 +100,19 @@
 		/>
 		{#if selectedTech}
 			<ModalCreateRelation
+				batch
 				title={t('titles.subtech')}
 				getFunc={async () => {
 					return await getSubtechs(selectedTech?.id, new PaginationProps(1, 100));
 				}}
 				bind:open={selectionSubtechOpen}
 				on:submit={(e) => {
-					selectedSubtech = e.detail;
-					selectionSubtechOpen = false;
+					if (selectedSubtechs) {
+						selectedSubtechs = [...selectedSubtechs, ...e.detail];
+						selectionSubtechOpen = false;
+					}
 				}}
+				alreadySelectedIds={selectedSubtechs.map((el) => el.id)}
 				excludeHeaders={['id']}
 			/>
 		{/if}

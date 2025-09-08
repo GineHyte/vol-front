@@ -11,24 +11,28 @@
 		ToolbarContent,
 		Button,
 	} from 'carbon-components-svelte';
+	import type { Pagination as PaginationType } from '@/render/lib/scripts/pagination';
 	import {
 		getExercises,
 		getExercise,
 		createExercise,
 		deleteExercise,
 	} from '$lib/scripts/endpoints';
-	import { pushNotification } from '$lib/utils/utils';
+	import { pushNotification, trunicate } from '$lib/utils/utils';
 	import ContextMenu from '@/render/lib/ui/ContextMenu.svelte';
 	import { PaginationProps } from '@/render/lib/scripts/pagination';
 	import CreateExercise from './CreateExercise.svelte';
 	import EditExercise from './EditExercise.svelte';
 	import { t } from '$lib/utils/utils';
+	import type { Exercise, ExerciseSubtech } from '@/render/lib/scripts/models';
+	import ModalText from '@/render/lib/ui/ModalText.svelte';
 
 	let createOpen = $state(false);
 	let editOpen = $state(false);
 	let editExerciseId: number | undefined = $state(undefined);
-	let selectedTech = $state(undefined);
-	let selectedSubtech = $state(undefined);
+	let exerciseTextOpen = $state(false);
+	let modalTextTitle = $state('');
+	let modalTextText = $state('');
 
 	let tableUpdater: boolean = $state(false);
 	let targetForExercises: any = $state();
@@ -68,6 +72,18 @@
 			editOpen = true;
 		}
 	}
+
+	async function formatRows(object: PaginationType<Exercise>): Promise<PaginationType<Exercise>> {
+		object.items.map((el: Exercise) => {
+			el.subtechs = el.subtechs
+				.map((sub: ExerciseSubtech) => {
+					return sub.subtech.name;
+				})
+				.join(', ');
+		});
+
+		return object;
+	}
 </script>
 
 <Content>
@@ -78,41 +94,53 @@
 					{#key tableUpdater}
 						{#await getExercises(new PaginationProps(page, pageSize))}
 							<DataTableSkeleton />
-						{:then exercises}
-							<DataTable
-								sortable
-								headers={exercises.getHeaders([
-									'imageUrl',
-									'videoUrl',
-									'id',
-									'description',
-									'fromZone',
-									'toZone',
-								])}
-								rows={exercises.getRows()}
-							>
-								{#snippet cell({ cell, row })}
-									<span id={row.id}>{cell.value}</span>
-								{/snippet}
-								<Toolbar>
-									<ToolbarContent>
-										<Button
-											on:click={() => {
-												createOpen = true;
+						{:then raw_exercises}
+							{#await formatRows(raw_exercises) then exercises}
+								<DataTable
+									sortable
+									headers={exercises.getHeaders([
+										'imageUrl',
+										'videoUrl',
+										'id',
+										'description',
+										'fromZone',
+										'toZone',
+									])}
+									rows={exercises.getRows()}
+								>
+									{#snippet cell({ cell, row })}
+										<button
+											onclick={() => {
+												exerciseTextOpen = true;
+												modalTextText = cell.value;
+												modalTextTitle = cell.header;
 											}}
-											class="w-full"
+											class="text-left"
+											id={row.id}
 										>
-											+ {t('titles.exercise')}
-										</Button>
-									</ToolbarContent>
-								</Toolbar>
-							</DataTable>
-							<Pagination
-								pageSizes={[10, 50, 100, 1000]}
-								bind:pageSize
-								bind:page
-								totalItems={exercises.total}
-							/>
+											{trunicate(cell.value)}
+										</button>
+									{/snippet}
+									<Toolbar>
+										<ToolbarContent>
+											<Button
+												on:click={() => {
+													createOpen = true;
+												}}
+												class="w-full"
+											>
+												+ {t('titles.exercise')}
+											</Button>
+										</ToolbarContent>
+									</Toolbar>
+								</DataTable>
+								<Pagination
+									pageSizes={[10, 50, 100, 1000]}
+									bind:pageSize
+									bind:page
+									totalItems={exercises.total}
+								/>
+							{/await}
 						{/await}
 					{/key}
 				</div>
@@ -132,5 +160,8 @@
 	<CreateExercise bind:createOpen {updateTable} />
 {/if}
 {#if editOpen}
-	<EditExercise bind:editOpen {editExerciseId} {selectedTech} {selectedSubtech} />
+	<EditExercise bind:editOpen {editExerciseId} {updateTable} />
+{/if}
+{#if exerciseTextOpen}
+	<ModalText bind:open={exerciseTextOpen} title={modalTextTitle} text={modalTextText} />
 {/if}

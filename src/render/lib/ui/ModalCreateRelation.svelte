@@ -13,6 +13,7 @@
 		getFunc: (pprop: PaginationProps) => Promise<Pagination<any>>;
 		alreadySelectedIds?: number[];
 		modalUnderSelect?: import('svelte').Snippet;
+		batch?: boolean;
 	}
 
 	let {
@@ -22,17 +23,30 @@
 		getFunc,
 		alreadySelectedIds = [],
 		modalUnderSelect,
+		batch = false,
 	}: Props = $props();
 
 	let dispatch = createEventDispatcher();
 	let localSelectedRow: { [key: string]: any } = $state({});
+	let localSelectedRows: Array<{ [key: string]: any }> = $state([]);
+	let localSelectedRowIds: Array<any> = $state([]);
+	let rows: Array<any> = $state([]);
 
 	run(() => {
 		if (!open) {
 			dispatch('close');
-			localSelectedRow = {};
+			if (batch) {
+				localSelectedRows = [];
+			} else {
+				localSelectedRow = {};
+			}
 		}
 	});
+
+	function saveRows(pRows: any) {
+		rows = pRows;
+		return pRows;
+	}
 </script>
 
 <Modal
@@ -40,21 +54,33 @@
 	bind:open
 	primaryButtonText={t('common.done')}
 	modalHeading={title}
-	primaryButtonDisabled={localSelectedRow.id === undefined}
+	primaryButtonDisabled={batch
+		? localSelectedRowIds.length === 0
+		: localSelectedRow.id === undefined}
 	on:submit={() => {
-		dispatch('submit', localSelectedRow);
+		if (batch) {
+			console.log(rows);
+			localSelectedRows = rows.filter((el) => localSelectedRowIds.includes(el.id));
+			dispatch('submit', localSelectedRows);
+		} else {
+			dispatch('submit', localSelectedRow);
+		}
 	}}
 >
 	{#await getFunc(new PaginationProps(1, 100))}
 		<DataTableSkeleton />
 	{:then model}
 		<DataTable
-			radio={true}
+			batchSelection={batch}
+			radio={!batch}
 			nonSelectableRowIds={alreadySelectedIds}
 			headers={model.getHeaders(excludeHeaders)}
-			rows={model.getRows()}
+			bind:selectedRowIds={localSelectedRowIds}
+			rows={saveRows(model.getRows())}
 			on:click:row--select={(e) => {
-				localSelectedRow = e.detail.row;
+				if (!batch) {
+					localSelectedRow = e.detail.row;
+				}
 			}}
 		/>
 	{/await}
