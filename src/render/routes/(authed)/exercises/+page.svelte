@@ -24,7 +24,8 @@
 	import CreateExercise from './CreateExercise.svelte';
 	import EditExercise from './EditExercise.svelte';
 	import { t } from '$lib/utils/utils';
-	import type { Exercise, ExerciseSubtech } from '@/render/lib/scripts/models';
+	import { ExerciseSubtech } from '@/render/lib/scripts/models';
+	import type { Exercise, NameWithId } from '@/render/lib/scripts/models';
 	import ModalText from '@/render/lib/ui/ModalText.svelte';
 
 	let createOpen = $state(false);
@@ -45,7 +46,13 @@
 
 	async function duplicateExercise(currentId: number) {
 		if (currentId) {
-			let status = await createExercise(await getExercise(currentId));
+			let exercise = await getExercise(currentId);
+			exercise.subtechs = exercise.subtechs.map((sub: ExerciseSubtech) => {
+				let relation = new ExerciseSubtech();
+				relation.subtech = sub.subtech.id;
+				return relation;
+			});
+			let status = await createExercise(exercise);
 			if (status.status === 'success') {
 				pushNotification('duplicateExerciseSuccess');
 			} else {

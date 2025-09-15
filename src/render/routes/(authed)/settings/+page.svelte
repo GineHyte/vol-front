@@ -31,6 +31,10 @@
 		});
 		window.location.href = '/login';
 	}
+
+	function checkUpdate() {
+		window.electron.checkUpdate();
+	}
 </script>
 
 <TextInput
@@ -67,7 +71,7 @@
 	placeholder={settings.apiVersion}
 	class="mb-4"
 /> -->
-<!-- <Button class="mb-4" on:click={checkUpdate}>Перевірити оновлення</Button> -->
+<Button class="mt-4" on:click={checkUpdate}>Перевірити оновлення</Button>
 <p>Версія: {$versionRenderer}</p>
 
 <Button class="absolute bottom-4 left-4" on:click={saveSettings}>Зберегти</Button>
