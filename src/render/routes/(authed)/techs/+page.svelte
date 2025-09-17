@@ -26,10 +26,10 @@
 	} from '$lib/scripts/endpoints';
 	import { Tech, Subtech } from '$lib/scripts/models';
 	import ModalCreate from '$lib/ui/ModalCreate.svelte';
-	import { pushNotification } from '$lib/utils/utils';
+	import { pushNotification, trunicate } from '$lib/utils/utils';
 	import { PaginationProps } from '$lib/scripts/pagination';
 	import ContextMenu from '$lib/ui/ContextMenu.svelte';
-	import { error } from '@sveltejs/kit';
+	import ModalText from '@/render/lib/ui/ModalText.svelte';
 
 	let techId: number | undefined = $state(undefined);
 	let createOpen = $state(false);
@@ -38,6 +38,9 @@
 	let subtechPageSize = $state(5);
 	let targetForSubtechs: any = $state();
 	let subtechTableUpdate = $state(false);
+	let techTextOpen = $state(false);
+	let modalTextText = $state('');
+	let modalTextTitle = $state('');
 
 	function selectTech(id: number) {
 		techId = id;
@@ -81,7 +84,7 @@
 	}
 
 	async function removeSubtech(currentId: number) {
-		let a = 1000 / 0;
+		let a = Infinity;
 		if (currentId) {
 			let status = await deleteSubtech(currentId);
 			if (status.status === 'success') {
@@ -144,12 +147,20 @@
 									rows={subtechs.getRows()}
 								>
 									{#snippet cell({ cell, row })}
-										<div class="w-full h-full" id={row.id}>
-											{cell.value}
-										</div>
+										<button
+											onclick={() => {
+												techTextOpen = true;
+												modalTextText = cell.value;
+												modalTextTitle = cell.header;
+											}}
+											class="text-left"
+											id={row.id}
+										>
+											{trunicate(cell.value)}
+										</button>
 									{/snippet}
 									<Toolbar>
-										<ToolbarContent class="w-full">
+										<ToolbarContent>
 											<Button
 												on:click={() => (createSubtechOpen = true)}
 												class="w-full"
@@ -211,3 +222,7 @@
 		headers={[{ key: 'name', value: 'Назва' }]}
 	/>
 {/key}
+
+{#if techTextOpen}
+	<ModalText bind:open={techTextOpen} title={modalTextTitle} text={modalTextText} />
+{/if}
