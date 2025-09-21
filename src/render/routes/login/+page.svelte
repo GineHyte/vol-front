@@ -6,6 +6,7 @@
 	import LoginForm from './LoginForm.svelte';
 	import RegisterForm from './RegisterForm.svelte';
 	import { CloseLarge } from 'carbon-icons-svelte';
+	import { onMount } from 'svelte';
 
 	let videoElementRef = $state<HTMLVideoElement>();
 	let doLoginAnimation = $state(false);
@@ -31,6 +32,12 @@
 	function setWindowState(data: any) {
 		window.electron.setWindowState(data);
 	}
+
+	onMount(() => {
+		if (videoElementRef) {
+			videoElementRef.width = window.innerWidth + 1000;
+		}
+	});
 </script>
 
 {#key doLoginAnimation}
@@ -41,7 +48,7 @@
 		loop={!doLoginAnimation}
 		muted
 		playsinline
-		class="block h-100vh fixed z-0"
+		class="block fixed z-0 overflow-hidden"
 	></video>
 {/key}
 
