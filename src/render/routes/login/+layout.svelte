@@ -28,7 +28,7 @@
 </script>
 
 {#key $locale}
-	<Content class="p-0 h-100vh w-100vw bg-loginBg ">
+	<Content class="p-0 bg-loginBg w-[100vw] h-[100vh]">
 		{#if ready}
 			{@render children?.()}
 		{/if}

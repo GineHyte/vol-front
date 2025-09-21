@@ -1,3 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+video {
+    max-width: none !important;
+    height: -webkit-fill-available;
+}

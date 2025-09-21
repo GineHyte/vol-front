@@ -35,7 +35,14 @@
 
 	onMount(() => {
 		if (videoElementRef) {
-			videoElementRef.width = window.innerWidth + 1000;
+			videoElementRef.height = window.innerHeight;
+			if (window.innerWidth === 1000) {
+				videoElementRef.style.left = '-30rem';
+			} else if (window.innerWidth < 1200) {
+				videoElementRef.style.left = '-20rem';
+			} else if (window.innerWidth < 1400) {
+				videoElementRef.style.left = '-10rem';
+			}
 		}
 	});
 </script>
@@ -47,6 +54,7 @@
 		autoplay
 		loop={!doLoginAnimation}
 		muted
+		width="auto"
 		playsinline
 		class="block fixed z-0 overflow-hidden"
 	></video>

@@ -4,7 +4,7 @@ export default {
 	theme: {
 		extend: {
 			colors: {
-				loginBg: '#3777C7'
+				loginBg: '#FAF9FA'
 			}
 		},
 	},
