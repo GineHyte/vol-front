@@ -95,13 +95,18 @@
 </script>
 
 <div class="pt-[17%] pr-24 z-10 fixed right-0 w-[44rem] h-[100vh]">
-	<p class="text-3xl">{t('login.registerTitle')}</p>
-	<p class="text-sm text-gray-500">
-		{t('login.loginText')}
-		<a class="text-blue-500 underline cursor-pointer" onclick={() => (registerPage = false)}>
-			{t('login.loginLink')}
-		</a>
-	</p>
+	<div class="bg-loginBg p-2">
+		<p class="text-3xl">{t('login.registerTitle')}</p>
+		<p class="text-sm text-gray-500">
+			{t('login.loginText')}
+			<a
+				class="text-blue-500 underline cursor-pointer"
+				onclick={() => (registerPage = false)}
+			>
+				{t('login.loginLink')}
+			</a>
+		</p>
+	</div>
 	<FluidForm class="mt-6" on:submit={handleSubmit}>
 		<TextInput
 			bind:value={username}
