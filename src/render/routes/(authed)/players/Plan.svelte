@@ -1,9 +1,10 @@
 <script lang="ts">
+	import { Pagination } from '$lib/scripts/pagination';
 	import '@carbon/charts-svelte/styles.css';
 	import { getPlanWeek } from '@/render/lib/scripts/endpoints';
 	import { Modal, DataTableSkeleton, DataTable, Dropdown } from 'carbon-components-svelte';
 	import type { DataTableRow } from 'carbon-components-svelte/types/DataTable/DataTable.svelte';
-	import type { Exercise, PlanWeek } from '@/render/lib/scripts/models';
+	import { Exercise, type PlanWeek } from '@/render/lib/scripts/models';
 	import { t } from '$lib/utils/utils';
 
 	interface Props {
@@ -16,8 +17,7 @@
 	let weekNumber: number = $state(1);
 	const tableHeaders = [
 		{ key: 'name', value: t('common.name') },
-		{ key: 'tech', value: t('titles.tech') },
-		{ key: 'subtech', value: t('titles.subtech') },
+		{ key: 'subtechs', value: t('titles.subtech') },
 		{ key: 'timePerExercise', value: t('fields.timePerExercise') },
 		{ key: 'fromZone', value: t('fields.fromZone') },
 		{ key: 'toZone', value: t('fields.toZone') },
@@ -28,8 +28,7 @@
 		planWeek.exercises.forEach((ex: Exercise) => {
 			let tableRow: DataTableRow = { id: ex.id };
 			tableRow.name = ex.name;
-			tableRow.tech = ex.tech.name;
-			tableRow.subtech = ex.subtech.name;
+			tableRow.subtechs = ex.subtechs.map((x: any) => x.subtech.name).join(', ');
 			tableRow.timePerExercise = ex.timePerExercise + ' ' + t('timeUnit');
 			tableRow.fromZone = ex.fromZone;
 			tableRow.toZone = ex.toZone;
