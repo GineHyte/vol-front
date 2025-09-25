@@ -28,7 +28,7 @@
 		meter: {
 			proportional: {
 				total: totalChart,
-				unit: t('timeUnit'),
+				unit: ' вправ',
 			},
 		},
 		color: {
@@ -75,7 +75,7 @@
 			let tableRow: DataTableRow = { id: ex.id.toString() + '-' + i.toString() };
 			tableRow.name = ex.name;
 			tableRow.subtechs = ex.subtechs.map((x: any) => x.subtech.name).join(', ');
-			tableRow.timePerExercise = 1 + ' вправ';
+			tableRow.timePerExercise = ex.timePerExercise + ' ' + t('timeUnit');
 			tableRow.fromZone = ex.fromZone;
 			tableRow.toZone = ex.toZone;
 			newTableData.push(tableRow);

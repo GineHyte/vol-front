@@ -214,7 +214,6 @@
 						<div>
 							<Button
 								on:click={() => {
-									showPlan = true;
 									currentPlanPlayer.set(player.id);
 									currentPlanPlan.set(1);
 									goto('/plans');
