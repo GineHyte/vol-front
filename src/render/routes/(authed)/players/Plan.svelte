@@ -25,8 +25,8 @@
 
 	function formatPlanWeek(planWeek: PlanWeek): DataTableRow[] {
 		let tableData: DataTableRow[] = [];
-		planWeek.exercises.forEach((ex: Exercise) => {
-			let tableRow: DataTableRow = { id: ex.id };
+		planWeek.exercises.forEach((ex: Exercise, i: number) => {
+			let tableRow: DataTableRow = { id: ex.id.toString() + '-' + i.toString() };
 			tableRow.name = ex.name;
 			tableRow.subtechs = ex.subtechs.map((x: any) => x.subtech.name).join(', ');
 			tableRow.timePerExercise = ex.timePerExercise + ' ' + t('timeUnit');

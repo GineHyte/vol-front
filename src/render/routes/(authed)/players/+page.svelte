@@ -31,6 +31,8 @@
 	import Stats from './Stats.svelte';
 	import Plan from './Plan.svelte';
 	import { t } from '$lib/utils/utils';
+	import { goto } from '$app/navigation';
+	import { currentPlanPlan, currentPlanPlayer } from '@/render/lib/utils/store';
 
 	let selectedPlayerId: number | undefined = $state(undefined);
 	let createOpen = $state(false);
@@ -212,7 +214,11 @@
 						<div>
 							<Button
 								on:click={() => {
-									showPlan = !showPlan;
+									showPlan = true;
+									currentPlanPlayer.set(player.id);
+									currentPlanPlan.set(1);
+									goto('/plans');
+									// showPlan = !showPlan;
 								}}
 							>
 								{t('buttons.plan')}

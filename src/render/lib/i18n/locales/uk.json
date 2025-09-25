@@ -31,7 +31,8 @@
     "game": "Гра",
     "exercise": "Вправа",
     "tech": "Техніка",
-    "subtech": "Підтехніка",    "playerStats": "Статистика по гравцю"
+    "subtech": "Підтехніка",    "playerStats": "Статистика по гравцю",
+    "planDistribution": "Розподіл плану тренувань"
   },
   "login": {
     "title": "Увійти",

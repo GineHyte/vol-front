@@ -11,6 +11,7 @@ declare interface SettingsType {
 	apiVersion?: string;
 	loaded?: boolean = false;
 	locale?: string = 'uk';
+	theme?: string = 'g100';
 }
 
 declare interface NotificationType {

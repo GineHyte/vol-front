@@ -6,6 +6,9 @@ export const settingsRenderer = writable<SettingsType>({});
 export const versionRenderer = writable('');
 export const loginData = writable<LoginDataType>({});
 
+export const currentPlanPlayer = writable(-1);
+export const currentPlanPlan = writable(-1);
+
 // ----------------------- GLOBAL UPDATERS -----------------------
 settingsRenderer.subscribe(settingsUpdater);
 loginData.subscribe(loginUpdater);

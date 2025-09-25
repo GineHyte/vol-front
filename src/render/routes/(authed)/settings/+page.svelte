@@ -3,12 +3,23 @@
 	import { pushNotification, languages } from '$lib/utils/utils';
 	import { settingsRenderer, versionRenderer, loginData } from '@/render/lib/utils/store';
 	import { t } from '$lib/utils/utils';
+	import { Theme } from 'carbon-components-svelte';
+	import type { SelectProps } from 'carbon-components-svelte/types/Select/Select.svelte';
 
 	let settings: SettingsType = $state({});
 
 	settingsRenderer.subscribe((v: any) => {
 		settings = v;
 	});
+
+	type CarbonTheme = 'white' | 'g10' | 'g80' | 'g90' | 'g100';
+
+	let themeSelectorOptions: SelectProps & {
+		themes?: CarbonTheme[];
+	} = {
+		labelText: 'Тема',
+		themes: ['white', 'g10', 'g80', 'g90', 'g100'],
+	};
 
 	function saveSettings(e: Event) {
 		pushNotification('settingsSaveSuccess');
@@ -65,6 +76,7 @@
 <Button class="my-4" on:click={logout}>
 	{t('buttons.logout')}
 </Button>
+
 <!-- <TextInput
 	labelText="Версія API"
 	bind:value={apiVersion}
@@ -72,6 +84,15 @@
 	class="mb-4"
 /> -->
 <Button class="mt-4" on:click={checkUpdate}>Перевірити оновлення</Button>
+<Theme
+	on:update={(e) => {
+		console.log(e);
+		settings.theme = e.detail.theme as CarbonTheme;
+	}}
+	render="select"
+	select={themeSelectorOptions}
+/>
+
 <p>Версія: {$versionRenderer}</p>
 
 <Button class="absolute bottom-4 left-4" on:click={saveSettings}>Зберегти</Button>
