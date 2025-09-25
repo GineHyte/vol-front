@@ -19,7 +19,7 @@
 		}}
 	>
 		<ModalHeader {title} />
-		<ModalBody>
+		<ModalBody class="text-2xl">
 			{text}
 		</ModalBody>
 	</ComposedModal>
