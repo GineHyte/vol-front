@@ -31,7 +31,13 @@
     "appTitle": "Technical Skills in Beach Volleyball",
     "game": "Game",
     "exercise": "Exercise",
-    "tech": "Technique",    "subtech": "Sub-technique",
+    "tech": "Technique",
+    "subtech": "Sub-technique",
+    "team": "Team",
+    "teams": "Teams",
+    "player": "Player",
+    "players": "Players",
+    "amplua": "Position",
     "playerStats": "Player Statistics",
     "login": "Login"
   },
@@ -68,7 +74,33 @@
     "fromZone": "From Zone",
     "toZone": "To Zone",
     "username": "Username",
-    "password": "Password"
+    "password": "Password",
+    "description": "Description",
+    "difficulty": "Difficulty",
+    "imageLink": "Image Link",
+    "videoLink": "Video Link",
+    "technicalAction": "Technical Action",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "teamA": "Team A",
+    "teamB": "Team B",
+    "zone": "Zone",
+    "subtech": "Sub-technique",
+    "subtechs": "Sub-techniques",
+    "actionCount": "Action Count",
+    "percentageOfAll": "Percentage of All",
+    "forLearning": "For Learning",
+    "forConsolidation": "For Consolidation",
+    "forImprovement": "For Improvement",
+    "forSimulation": "For Simulation",
+    "withBallOwn": "With Ball Own",
+    "withBallPairs": "With Ball in Pairs",
+    "withBallGroups": "With Ball in Groups",
+    "inDifficultConditions": "In Difficult Conditions",
+    "timePerOneExercise": "Time per One Exercise",
+    "accessToken": "Access Token",
+    "refreshToken": "Refresh Token",
+    "tokenExpiry": "Token Expiry"
   },
   "buttons": {
     "addPlayer": "Add Player",
@@ -83,7 +115,8 @@
     "calculateStats": "Calculate Statistics",
     "plan": "Plan",
     "trainingPlan": "Training Plan",
-    "logout": "Logout"
+    "logout": "Logout",
+    "checkUpdate": "Check Update"
   },
   "descriptions": {
     "homeDescription": "This application will help you analyze, track and improve players' technical skills.",
@@ -189,5 +222,6 @@
     "registerError": "Registration failed. Please check your details and try again."
   },
   "weeks": "Week",
-  "timeUnit": "min"
+  "timeUnit": "min",
+  "exerciseUnit": "exercises"
 }

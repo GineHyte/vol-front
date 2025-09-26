@@ -69,7 +69,6 @@
 		isMaximized: false,
 		isFullScreen: false,
 	});
-	let theme = $state('g100'); // "white" | "g10" | "g80" | "g90" | "g100"
 	let ready = $state(false);
 
 	onMount(() => {
@@ -152,10 +151,6 @@
 			},
 		];
 	}
-
-	run(() => {
-		document.documentElement.setAttribute('theme', theme);
-	});
 </script>
 
 {#if ready}
@@ -172,14 +167,14 @@
 				<SkipToContent />
 			</svelte:fragment>
 			<HeaderNav style="display:block">
-				<Button
+				<!-- <Button
 					kind={theme === 'g100' ? 'ghost' : 'secondary'}
 					on:click={() => {
 						theme = theme === 'g100' ? 'white' : 'g100';
 					}}
 					iconDescription={t('buttons.theme')}
 					icon={theme === 'g100' ? LightFilled : Light}
-				/>
+				/> -->
 				{#key currentWindowState}
 					<Button
 						icon={Subtract}

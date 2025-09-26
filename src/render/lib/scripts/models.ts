@@ -1,7 +1,7 @@
 import Field from '$lib/scripts/field';
 import Model from '$lib/scripts/model';
 import Datatype from '$lib/scripts/datatype';
-import { Amplua, Impact, TrueFalse } from '$lib/utils/utils';
+import { getAmplua, getImpact, getTrueFalse, t } from '$lib/utils/utils';
 
 let Number = new Datatype('number');
 let String = new Datatype('string');
@@ -17,7 +17,7 @@ export class NameWithId extends Model {
 	constructor() {
 		super();
 		this.id = new Field('id', Number);
-		this.name = new Field('name', String, 'Назва');
+		this.name = new Field('name', String, t('common.name'));
 		return this.proxify();
 	}
 }
@@ -32,9 +32,9 @@ export class PlayerTeam extends Model {
 	constructor() {
 		super();
 
-		this.player = new Field('player', NameWithIdType, 'Гравець', ['name']);
-		this.team = new Field('team', NameWithIdType, 'Команда', ['name']);
-		this.amplua = new Field('amplua', String, 'Амплуа', [], Amplua);
+		this.player = new Field('player', NameWithIdType, t('titles.player'), ['name']);
+		this.team = new Field('team', NameWithIdType, t('titles.team'), ['name']);
+		this.amplua = new Field('amplua', String, t('titles.amplua'), [], getAmplua());
 
 		return this.proxify();
 	}
@@ -53,13 +53,13 @@ export class Player extends Model {
 	constructor() {
 		super();
 		this.id = new Field('id', Number);
-		this.firstName = new Field('first_name', String, "Ім'я");
-		this.lastName = new Field('last_name', String, 'Прізвище');
-		this.age = new Field('age', Number, 'Вік');
-		this.weight = new Field('weight', Number, 'Вага');
-		this.height = new Field('height', Number, 'Зріст');
-		this.imageFile = new Field('image_file', String, 'Посилання на зображення');
-		this.teams = new Field('teams', new Datatype([PlayerTeam]), 'Команди');
+		this.firstName = new Field('first_name', String, t('fields.firstName'));
+		this.lastName = new Field('last_name', String, t('fields.lastName'));
+		this.age = new Field('age', Number, t('fields.age'));
+		this.weight = new Field('weight', Number, t('fields.weight'));
+		this.height = new Field('height', Number, t('fields.height'));
+		this.imageFile = new Field('image_file', String, t('fields.imageLink'));
+		this.teams = new Field('teams', new Datatype([PlayerTeam]), t('titles.teams'));
 		return this.proxify();
 	}
 }
@@ -73,8 +73,8 @@ export class Team extends Model {
 		super();
 
 		this.id = new Field('id', Number);
-		this.name = new Field('name', String, 'Назва');
-		this.players = new Field('players', new Datatype([PlayerTeam]), 'Гравці');
+		this.name = new Field('name', String, t('common.name'));
+		this.players = new Field('players', new Datatype([PlayerTeam]), t('titles.players'));
 
 		return this.proxify();
 	}
@@ -93,12 +93,12 @@ export class Game extends Model {
 		super();
 
 		this.id = new Field('id', Number);
-		this.name = new Field('name', String, 'Назва');
-		this.description = new Field('description', BigString, 'Опис');
-		this.fromDatetime = new Field('from_datetime', Datetime, 'Дата початку');
-		this.toDatetime = new Field('to_datetime', Datetime, 'Дата закінчення');
-		this.teamA = new Field('team_a', NameWithIdType, 'Команда А', ['name']);
-		this.teamB = new Field('team_b', NameWithIdType, 'Команда Б', ['name']);
+		this.name = new Field('name', String, t('common.name'));
+		this.description = new Field('description', BigString, t('fields.description'));
+		this.fromDatetime = new Field('from_datetime', Datetime, t('fields.startDate'));
+		this.toDatetime = new Field('to_datetime', Datetime, t('fields.endDate'));
+		this.teamA = new Field('team_a', NameWithIdType, t('fields.teamA'), ['name']);
+		this.teamB = new Field('team_b', NameWithIdType, t('fields.teamB'), ['name']);
 
 		return this.proxify();
 	}
@@ -111,8 +111,8 @@ export class Status extends Model {
 	constructor() {
 		super();
 
-		this.status = new Field('status', String, 'Статус');
-		this.detail = new Field('detail', String, 'Деталі');
+		this.status = new Field('status', String, t('fields.status'));
+		this.detail = new Field('detail', String, t('fields.details'));
 
 		return this.proxify();
 	}
@@ -132,13 +132,13 @@ export class Action extends Model {
 		super();
 
 		this.id = new Field('id', Number);
-		this.game = new Field('game', NameWithIdType, 'Гра', ['name']);
-		this.team = new Field('team', NameWithIdType, 'Команда', ['name']);
-		this.player = new Field('player', NameWithIdType, 'Гравець', ['name']);
-		this.subtech = new Field('subtech', NameWithIdType, 'Субтехніка', ['name']);
-		this.from_zone = new Field('from_zone', Number, 'Зона від');
-		this.to_zone = new Field('to_zone', Number, 'Зона до');
-		this.impact = new Field('impact', String, 'Якісний показник гри', [], Impact);
+		this.game = new Field('game', NameWithIdType, t('titles.game'), ['name']);
+		this.team = new Field('team', NameWithIdType, t('titles.team'), ['name']);
+		this.player = new Field('player', NameWithIdType, t('titles.player'), ['name']);
+		this.subtech = new Field('subtech', NameWithIdType, t('titles.subtech'), ['name']);
+		this.from_zone = new Field('from_zone', Number, t('fields.fromZone'));
+		this.to_zone = new Field('to_zone', Number, t('fields.toZone'));
+		this.impact = new Field('impact', String, t('fields.qualityIndicator'), [], getImpact());
 
 		return this.proxify();
 	}
@@ -153,8 +153,8 @@ export class Tech extends Model {
 		super();
 
 		this.id = new Field('id', Number);
-		this.name = new Field('name', String, 'Назва');
-		this.description = new Field('description', BigString, 'Опис');
+		this.name = new Field('name', String, t('common.name'));
+		this.description = new Field('description', BigString, t('fields.description'));
 
 		return this.proxify();
 	}
@@ -171,10 +171,10 @@ export class Subtech extends Model {
 		super();
 
 		this.id = new Field('id', Number);
-		this.name = new Field('name', String, 'Назва');
-		this.description = new Field('description', BigString, 'Опис');
-		this.difficulty = new Field('difficulty', Number, 'Складність');
-		this.tech = new Field('tech', NameWithIdType, 'Технічна дія', ['name']);
+		this.name = new Field('name', String, t('common.name'));
+		this.description = new Field('description', BigString, t('fields.description'));
+		this.difficulty = new Field('difficulty', Number, t('fields.difficulty'));
+		this.tech = new Field('tech', NameWithIdType, t('fields.technicalAction'), ['name']);
 
 		return this.proxify();
 	}
@@ -204,71 +204,71 @@ export class Exercise extends Model {
 		super();
 
 		this.id = new Field('id', Number);
-		this.name = new Field('name', String, 'Назва');
-		this.description = new Field('description', BigString, 'Опис');
-		this.subtechs = new Field('subtechs', new Datatype([ExerciseSubtech]), 'Підтехніки')
-		this.imageUrl = new Field('image_url', String, 'Посилання на зображення');
-		this.videoUrl = new Field('video_url', String, 'Посилання на відео');
-		this.difficulty = new Field('difficulty', Number, 'Складність');
+		this.name = new Field('name', String, t('common.name'));
+		this.description = new Field('description', BigString, t('fields.description'));
+		this.subtechs = new Field('subtechs', new Datatype([ExerciseSubtech]), t('fields.subtechs'))
+		this.imageUrl = new Field('image_url', String, t('fields.imageLink'));
+		this.videoUrl = new Field('video_url', String, t('fields.videoLink'));
+		this.difficulty = new Field('difficulty', Number, t('fields.difficulty'));
 		this.exercisesForLearning = new Field(
 			'exercises_for_learning',
 			Boolean,
-			'Для навчання',
+			t('fields.forLearning'),
 			[],
-			TrueFalse,
+			getTrueFalse(),
 		);
 		this.exercisesForConsolidation = new Field(
 			'exercises_for_consolidation',
 			Boolean,
-			'Для закріплення',
+			t('fields.forConsolidation'),
 			[],
-			TrueFalse,
+			getTrueFalse(),
 		);
 		this.exercisesForImprovement = new Field(
 			'exercises_for_improvement',
 			Boolean,
-			'Для покращення',
+			t('fields.forImprovement'),
 			[],
-			TrueFalse,
+			getTrueFalse(),
 		);
 		this.simulationExercises = new Field(
 			'simulation_exercises',
 			Boolean,
-			'Для симуляції',
+			t('fields.forSimulation'),
 			[],
-			TrueFalse,
+			getTrueFalse(),
 		);
 		this.exercisesWithTheBallOnYourOwn = new Field(
 			'exercises_with_the_ball_on_your_own',
 			Boolean,
-			"З м'ячем у власних руках",
+			t('fields.withBallOwn'),
 			[],
-			TrueFalse,
+			getTrueFalse(),
 		);
 		this.exercisesWithTheBallInPairs = new Field(
 			'exercises_with_the_ball_in_pairs',
 			Boolean,
-			"З м'ячем у парах",
+			t('fields.withBallPairs'),
 			[],
-			TrueFalse,
+			getTrueFalse(),
 		);
 		this.exercisesWithTheBallInGroups = new Field(
 			'exercises_with_the_ball_in_groups',
 			Boolean,
-			"З м'ячем у групах",
+			t('fields.withBallGroups'),
 			[],
-			TrueFalse,
+			getTrueFalse(),
 		);
 		this.exercisesInDifficultConditions = new Field(
 			'exercises_in_difficult_conditions',
 			Boolean,
-			'У складних умовах',
+			t('fields.inDifficultConditions'),
 			[],
-			TrueFalse,
+			getTrueFalse(),
 		);
-		this.fromZone = new Field('from_zone', Number, 'Зона від');
-		this.toZone = new Field('to_zone', Number, 'Зона до');
-		this.timePerExercise = new Field('time_per_exercise', Number, 'Час на одну вправу');
+		this.fromZone = new Field('from_zone', Number, t('fields.fromZone'));
+		this.toZone = new Field('to_zone', Number, t('fields.toZone'));
+		this.timePerExercise = new Field('time_per_exercise', Number, t('fields.timePerOneExercise'));
 
 		return this.proxify();
 	}
@@ -283,8 +283,8 @@ export class PlayerSum extends Model {
 		super()
 
 		this.nameWithId = new Field('player', NameWithIdType)
-		this.sumActions = new Field('sum_actions', Number, 'Кількість дій')
-		this.prozent = new Field('prozent', Number, 'Процент від усіх дій')
+		this.sumActions = new Field('sum_actions', Number, t('fields.actionCount'))
+		this.prozent = new Field('prozent', Number, t('fields.percentageOfAll'))
 		
 		return this.proxify();
 	}
@@ -300,9 +300,9 @@ export class TechSum extends Model {
 		super()
 		
 		this.nameWithId = new Field('tech', NameWithIdType)
-		this.player = new Field('player', Number, 'Гравець')
-		this.sumActions = new Field('sum_actions', Number, 'Кількість дій')
-		this.prozent = new Field('prozent', Number, 'Процент від усіх дій')
+		this.player = new Field('player', Number, t('titles.player'))
+		this.sumActions = new Field('sum_actions', Number, t('fields.actionCount'))
+		this.prozent = new Field('prozent', Number, t('fields.percentageOfAll'))
 		
 		return this.proxify();
 	}
@@ -319,10 +319,10 @@ export class SubtechSum extends Model {
 		super()
 		
 		this.nameWithId = new Field('subtech', NameWithIdType)
-		this.tech = new Field('tech', Number, 'Техніка')
-		this.player = new Field('player', Number, 'Гравець')
-		this.sumActions = new Field('sum_actions', Number, 'Кількість дій')
-		this.prozent = new Field('prozent', Number, 'Процент від усіх дій')
+		this.tech = new Field('tech', Number, t('titles.tech'))
+		this.player = new Field('player', Number, t('titles.player'))
+		this.sumActions = new Field('sum_actions', Number, t('fields.actionCount'))
+		this.prozent = new Field('prozent', Number, t('fields.percentageOfAll'))
 		
 		return this.proxify();
 	}
@@ -339,12 +339,12 @@ export class ImpactSum extends Model {
 	constructor() {
 		super()
 		
-		this.impact = new Field('impact', String, 'Якісний показник гри', [], Impact)
-		this.subtech = new Field('subtech', Number, 'Субтехніка')
-		this.tech = new Field('tech', Number, 'Техніка')
-		this.player = new Field('player', Number, 'Гравець')
-		this.sumActions = new Field('sum_actions', Number, 'Кількість дій')
-		this.prozent = new Field('prozent', Number, 'Процент від усіх дій')
+		this.impact = new Field('impact', String, t('fields.qualityIndicator'), [], getImpact())
+		this.subtech = new Field('subtech', Number, t('titles.subtech'))
+		this.tech = new Field('tech', Number, t('titles.tech'))
+		this.player = new Field('player', Number, t('titles.player'))
+		this.sumActions = new Field('sum_actions', Number, t('fields.actionCount'))
+		this.prozent = new Field('prozent', Number, t('fields.percentageOfAll'))
 		
 		return this.proxify();
 	}
@@ -362,13 +362,13 @@ export class ZoneSum extends Model {
 	constructor() {
 		super()
 		
-		this.zone = new Field('zone', String, 'Зона')
-		this.impact = new Field('impact', String, 'Якісний показник гри', [], Impact)
-		this.subtech = new Field('subtech', Number, 'Субтехніка')
-		this.tech = new Field('tech', Number, 'Техніка')
-		this.player = new Field('player', Number, 'Гравець')
-		this.sumActions = new Field('sum_actions', Number, 'Кількість дій')
-		this.prozent = new Field('prozent', Number, 'Процент від усіх дій')
+		this.zone = new Field('zone', String, t('fields.zone'))
+		this.impact = new Field('impact', String, t('fields.qualityIndicator'), [], getImpact())
+		this.subtech = new Field('subtech', Number, t('titles.subtech'))
+		this.tech = new Field('tech', Number, t('titles.tech'))
+		this.player = new Field('player', Number, t('titles.player'))
+		this.sumActions = new Field('sum_actions', Number, t('fields.actionCount'))
+		this.prozent = new Field('prozent', Number, t('fields.percentageOfAll'))
 		
 		return this.proxify();
 	}
@@ -382,7 +382,7 @@ export class PlayerStats extends Model {
 	constructor() {
 		super()
 		
-		this.playerSum = new Field('player_sum', new Datatype(PlayerSum), 'Гравець')
+		this.playerSum = new Field('player_sum', new Datatype(PlayerSum), t('titles.player'))
 		this.techTop = new Field('tech_top', new Datatype([TechSum]))
 		
 		return this.proxify();
@@ -454,9 +454,9 @@ export class Login extends Model {
 	constructor() {
 		super();
 
-		this.accessToken = new Field('access_token', String, 'Токен доступу');
-		this.refreshToken = new Field('refresh_token', String, 'Токен оновлення');
-		this.expiresIn = new Field('expires_in', Number, 'Термін дії токена');
+		this.accessToken = new Field('access_token', String, t('fields.accessToken'));
+		this.refreshToken = new Field('refresh_token', String, t('fields.refreshToken'));
+		this.expiresIn = new Field('expires_in', Number, t('fields.tokenExpiry'));
 
 		return this.proxify();
 	}
@@ -471,10 +471,10 @@ export class Register extends Model {
 	constructor() {
 		super();
 
-		this.username = new Field('username', String, 'Імʼя користувача');
-		this.password = new Field('password', String, 'Пароль');
-		this.firstName = new Field('first_name', String, "Ім'я");
-		this.lastName = new Field('last_name', String, 'Прізвище');
+		this.username = new Field('username', String, t('fields.username'));
+		this.password = new Field('password', String, t('fields.password'));
+		this.firstName = new Field('first_name', String, t('fields.firstName'));
+		this.lastName = new Field('last_name', String, t('fields.lastName'));
 
 		return this.proxify();
 	}
@@ -487,8 +487,8 @@ export class ExerciseSubtech extends Model {
 	constructor() {
 		super();
 
-		this.exercise = new Field('exercise', NameWithIdType, 'Вправа', ['name']);
-		this.subtech = new Field('subtech', NameWithIdType, 'Під-техніка', ['name']);
+		this.exercise = new Field('exercise', NameWithIdType, t('titles.exercise'), ['name']);
+		this.subtech = new Field('subtech', NameWithIdType, t('titles.subtech'), ['name']);
 
 		return this.proxify();
 	}

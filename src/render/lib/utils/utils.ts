@@ -1,4 +1,5 @@
 import { notifications, settingsRenderer } from '$lib/utils/store';
+import type { CarbonTheme } from 'carbon-components-svelte/types/Theme/Theme.svelte';
 import getNotification from './notification';
 import { _, locale } from 'svelte-i18n';
 import { get } from 'svelte/store';
@@ -25,6 +26,9 @@ export function settingsUpdater(settings: any) {
     }
     if (typeof window !== 'undefined' && window.electron) {
         window.electron.setSettings(settings);
+    }
+    if (typeof document !== 'undefined') {
+        document.documentElement.setAttribute('theme', settings.theme);
     }
 }
 

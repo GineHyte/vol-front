@@ -1,7 +1,7 @@
 <!-- Here are all SideList shit and also modals for Editing and Creating Models-->
 <script lang="ts">
 	import { getGame, createGame, deleteGame, getGames } from '$lib/scripts/endpoints';
-	import { pushNotification } from '$lib/utils/utils';
+	import { pushNotification, t } from '$lib/utils/utils';
 	import SideList from '$lib/ui/SideList.svelte';
 	import CreateGame from './CreateGame.svelte';
 	import EditGame from './EditGame.svelte';
@@ -65,7 +65,7 @@
 			createOpen = true;
 		}}
 		getFunc={getGames}
-		headers={[{ key: 'name', value: 'Назва' }]}
+		headers={[{ key: 'name', value: t('common.name') }]}
 	/>
 {/key}
 <CreateGame bind:createOpen bind:teamA bind:teamB />

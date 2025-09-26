@@ -28,7 +28,7 @@
 		meter: {
 			proportional: {
 				total: totalChart,
-				unit: ' вправ',
+				unit: ' ' + t('exerciseUnit'),
 			},
 		},
 		color: {

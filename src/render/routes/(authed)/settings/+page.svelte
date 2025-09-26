@@ -17,7 +17,7 @@
 	let themeSelectorOptions: SelectProps & {
 		themes?: CarbonTheme[];
 	} = {
-		labelText: 'Тема',
+		labelText: t('buttons.theme'),
 		themes: ['white', 'g10', 'g80', 'g90', 'g100'],
 	};
 
@@ -27,6 +27,7 @@
 			apiUrl: settings.apiUrl,
 			trunicate: settings.trunicate,
 			locale: settings.locale,
+			theme: settings.theme,
 			loaded: true,
 		};
 
@@ -83,16 +84,15 @@
 	placeholder={settings.apiVersion}
 	class="mb-4"
 /> -->
-<Button class="mt-4" on:click={checkUpdate}>Перевірити оновлення</Button>
+<Button class="mt-4" on:click={checkUpdate}>{t('buttons.checkUpdate')}</Button>
 <Theme
 	on:update={(e) => {
-		console.log(e);
 		settings.theme = e.detail.theme as CarbonTheme;
 	}}
 	render="select"
 	select={themeSelectorOptions}
 />
 
-<p>Версія: {$versionRenderer}</p>
+<p>{t('settings.version')}: {$versionRenderer}</p>
 
-<Button class="absolute bottom-4 left-4" on:click={saveSettings}>Зберегти</Button>
+<Button class="absolute bottom-4 left-4" on:click={saveSettings}>{t('common.save')}</Button>

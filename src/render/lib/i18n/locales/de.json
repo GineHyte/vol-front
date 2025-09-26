@@ -31,7 +31,13 @@
     "game": "Spiel",
     "exercise": "Übung",
     "tech": "Technik",
-    "subtech": "Untertechnik",    "playerStats": "Spielerstatistiken"
+    "subtech": "Untertechnik",
+    "team": "Team",
+    "teams": "Teams",
+    "player": "Spieler",
+    "players": "Spieler",
+    "amplua": "Position",
+    "playerStats": "Spielerstatistiken"
   },
   "login": {
     "title": "Anmelden",
@@ -64,7 +70,35 @@
     "status": "Status",
     "details": "Details",
     "fromZone": "Von Zone",
-    "toZone": "Zu Zone"
+    "toZone": "Zu Zone",
+    "description": "Beschreibung",
+    "difficulty": "Schwierigkeit",
+    "imageLink": "Bild-Link",
+    "videoLink": "Video-Link",
+    "technicalAction": "Technische Aktion",
+    "startDate": "Startdatum",
+    "endDate": "Enddatum",
+    "teamA": "Team A",
+    "teamB": "Team B",
+    "zone": "Zone",
+    "subtech": "Untertechnik",
+    "subtechs": "Untertechniken",
+    "actionCount": "Aktionsanzahl",
+    "percentageOfAll": "Prozent von allen",
+    "forLearning": "Zum Lernen",
+    "forConsolidation": "Zur Festigung",
+    "forImprovement": "Zur Verbesserung",
+    "forSimulation": "Zur Simulation",
+    "withBallOwn": "Mit Ball eigenständig",
+    "withBallPairs": "Mit Ball zu zweit",
+    "withBallGroups": "Mit Ball in Gruppen",
+    "inDifficultConditions": "Unter schweren Bedingungen",
+    "timePerOneExercise": "Zeit pro eine Übung",
+    "accessToken": "Zugriffstoken",
+    "refreshToken": "Aktualisierungstoken",
+    "tokenExpiry": "Token-Ablauf",
+    "username": "Benutzername",
+    "password": "Passwort"
   },
   "buttons": {
     "addPlayer": "Spieler hinzufügen",
@@ -79,7 +113,8 @@
     "calculateStats": "Statistiken berechnen",
     "plan": "Plan",
     "trainingPlan": "Trainingsplan",
-    "logout": "Abmelden"
+    "logout": "Abmelden",
+    "checkUpdate": "Update prüfen"
   },
   "descriptions": {
     "homeDescription": "Diese Anwendung hilft Ihnen bei der Analyse, Verfolgung und Verbesserung der technischen Fähigkeiten der Spieler.",
@@ -184,6 +219,7 @@
   },
   "weeks": "Woche",
   "timeUnit": "Min",
+  "exerciseUnit": "Übungen",
   "newFeature": "Neue Funktion",
   "welcomeMessage": "Willkommen in der Anwendung!"
 }

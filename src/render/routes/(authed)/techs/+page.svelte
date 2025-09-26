@@ -26,7 +26,7 @@
 	} from '$lib/scripts/endpoints';
 	import { Tech, Subtech } from '$lib/scripts/models';
 	import ModalCreate from '$lib/ui/ModalCreate.svelte';
-	import { pushNotification, trunicate } from '$lib/utils/utils';
+	import { pushNotification, trunicate, t } from '$lib/utils/utils';
 	import { PaginationProps } from '$lib/scripts/pagination';
 	import ContextMenu from '$lib/ui/ContextMenu.svelte';
 	import ModalText from '@/render/lib/ui/ModalText.svelte';
@@ -133,7 +133,7 @@
 			{:then tech}
 				<Row>
 					<Column>
-						<p>Назва: {tech.name}</p>
+						<p>{t('common.name')}: {tech.name}</p>
 					</Column>
 					<div class="h-[12rem]"></div>
 					<div class="w-full h-full mt-8" bind:this={targetForSubtechs}>
@@ -165,7 +165,7 @@
 												on:click={() => (createSubtechOpen = true)}
 												class="w-full"
 											>
-												+ Підтехніка
+												+ {t('titles.subtech')}
 											</Button>
 										</ToolbarContent>
 									</Toolbar>
@@ -192,7 +192,7 @@
 {/if}
 
 <ModalCreate
-	title="Техніка"
+	title={t('titles.tech')}
 	model={new Tech()}
 	handleSubmit={createTechRenderer}
 	bind:open={createOpen}
@@ -200,7 +200,7 @@
 />
 
 <ModalCreate
-	title="Підтехніка"
+	title={t('titles.subtech')}
 	model={new Subtech()}
 	handleSubmit={createSubtechRenderer}
 	bind:open={createSubtechOpen}
@@ -211,7 +211,7 @@
 {#key createOpen}
 	<SideList
 		bind:selectedId={techId}
-		title="Техніка"
+		title={t('titles.tech')}
 		deleteFunc={removeTech}
 		duplicateFunc={duplicateTech}
 		editFunc={() => {}}
@@ -219,7 +219,7 @@
 			createOpen = true;
 		}}
 		getFunc={getTechs}
-		headers={[{ key: 'name', value: 'Назва' }]}
+		headers={[{ key: 'name', value: t('common.name') }]}
 	/>
 {/key}
 

@@ -31,7 +31,13 @@
     "game": "Гра",
     "exercise": "Вправа",
     "tech": "Техніка",
-    "subtech": "Підтехніка",    "playerStats": "Статистика по гравцю",
+    "subtech": "Підтехніка",
+    "team": "Команда",
+    "teams": "Команди",
+    "player": "Гравець",
+    "players": "Гравці",
+    "amplua": "Амплуа",
+    "playerStats": "Статистика по гравцю",
     "planDistribution": "Розподіл плану тренувань"
   },
   "login": {
@@ -65,7 +71,35 @@
     "status": "Статус",
     "details": "Деталі",
     "fromZone": "Від зони",
-    "toZone": "До зони"
+    "toZone": "До зони",
+    "description": "Опис",
+    "difficulty": "Складність",
+    "imageLink": "Посилання на зображення",
+    "videoLink": "Посилання на відео",
+    "technicalAction": "Технічна дія",
+    "startDate": "Дата початку",
+    "endDate": "Дата закінчення",
+    "teamA": "Команда А",
+    "teamB": "Команда Б",
+    "zone": "Зона",
+    "subtech": "Субтехніка",
+    "subtechs": "Підтехніки",
+    "actionCount": "Кількість дій",
+    "percentageOfAll": "Процент від усіх дій",
+    "forLearning": "Для навчання",
+    "forConsolidation": "Для закріплення",
+    "forImprovement": "Для покращення",
+    "forSimulation": "Для симуляції",
+    "withBallOwn": "З м'ячем у власних руках",
+    "withBallPairs": "З м'ячем у парах",
+    "withBallGroups": "З м'ячем у групах",
+    "inDifficultConditions": "У складних умовах",
+    "timePerOneExercise": "Час на одну вправу",
+    "accessToken": "Токен доступу",
+    "refreshToken": "Токен оновлення",
+    "tokenExpiry": "Термін дії токена",
+    "username": "Ім'я користувача",
+    "password": "Пароль"
   },
   "buttons": {
     "addPlayer": "Додати гравця",
@@ -80,7 +114,8 @@
     "calculateStats": "Розрахувати статистику",
     "plan": "План",
     "trainingPlan": "План тренувань",
-    "logout": "Вийти"
+    "logout": "Вийти",
+    "checkUpdate": "Перевірити оновлення"
   },
   "descriptions": {
     "homeDescription": "Ця програма допоможе вам аналізувати, відстежувати та вдосконалювати технічні навички гравців.",
@@ -185,6 +220,7 @@
   },
   "weeks": "Тиждень",
   "timeUnit": "хв",
+  "exerciseUnit": "вправ",
   "newFeature": "Нова функція",
   "welcomeMessage": "Ласкаво просимо до програми!"
 }

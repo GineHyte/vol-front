@@ -22,11 +22,10 @@
 	} from '$lib/scripts/endpoints';
 	import { Team, PlayerTeam, Player } from '$lib/scripts/models';
 	import ModalCreate from '$lib/ui/ModalCreate.svelte';
-	import { pushNotification } from '$lib/utils/utils';
+	import { pushNotification, t, getAmplua } from '$lib/utils/utils';
 	import { Pagination } from '$lib/scripts/pagination';
 	import ModalCreateRelation from '$lib/ui/ModalCreateRelation.svelte';
 	import ModalUnderSelect from '$lib/ui/ModalUnderSelect.svelte';
-	import { Amplua } from '$lib/utils/utils';
 
 	let teamId: number | undefined = $state(undefined);
 	let createOpen = $state(false);
@@ -35,10 +34,6 @@
 	let selectedPlayers: { [key: string]: any }[] = $state([]);
 	let selectionPlayerObject: { [key: string]: any } = $state({});
 	let sideListUpdater: boolean = $state(false);
-
-	function selectTeam(id: number) {
-		teamId = id;
-	}
 
 	function updateSideList() {
 		sideListUpdater = !sideListUpdater;
@@ -111,7 +106,7 @@
 						<ImageLoader class="size-96" ratio="4x3" fadeIn alt="Team`s photo" />
 					</Column>
 					<Column>
-						<p>Назва: {team.name}</p>
+						<p>{t('common.name')}: {team.name}</p>
 					</Column>
 				</Row>
 				<DataTable
@@ -128,7 +123,7 @@
 {/if}
 
 <ModalCreate
-	title="Команда"
+	title={t('titles.team')}
 	model={new Team()}
 	handleSubmit={createTeamRenderer}
 	bind:open={createOpen}
@@ -139,7 +134,7 @@
 			{#each selectedPlayers as selectedPlayer}
 				<Tile>
 					{selectedPlayer.firstName}
-					{selectedPlayer.lastName} - {Amplua[selectedPlayer.amplua]}
+					{selectedPlayer.lastName} - {getAmplua()[selectedPlayer.amplua]}
 				</Tile>
 			{/each}
 		{/key}
@@ -149,12 +144,12 @@
 				selectPlayerOpen = true;
 			}}
 		>
-			Додати гравця
+			{t('buttons.addPlayer')}
 		</Button>
 	{/snippet}
 	{#snippet modalCreateRelation()}
 		<ModalCreateRelation
-			title="Гравець"
+			title={t('titles.player')}
 			getFunc={getPlayers}
 			bind:open={selectPlayerOpen}
 			on:submit={(e) => {
@@ -167,9 +162,9 @@
 		>
 			{#snippet modalUnderSelect()}
 				<ModalUnderSelect
-					title="Амплуа"
-					options={Object.keys(Amplua).map((key) => {
-						return { key: key, value: Amplua[key] };
+					title={t('titles.amplua')}
+					options={Object.keys(getAmplua()).map((key) => {
+						return { key: key, value: getAmplua()[key] };
 					})}
 					bind:open={selectPlayerAmpluaOpen}
 					on:submit={(e) => {
@@ -185,15 +180,15 @@
 
 {#key sideListUpdater}
 	<SideList
+		editFunc={() => {}}
 		bind:selectedId={teamId}
-		title="Команда"
+		title={t('titles.team')}
 		deleteFunc={removeTeam}
 		duplicateFunc={duplicateTeam}
 		newFunc={() => {
 			createOpen = true;
 		}}
 		getFunc={getTeams}
-		selectFunc={selectTeam}
-		headers={[{ key: 'name', value: 'Назва' }]}
+		headers={[{ key: 'name', value: t('common.name') }]}
 	/>
 {/key}
