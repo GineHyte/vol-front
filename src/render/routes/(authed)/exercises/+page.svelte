@@ -9,6 +9,9 @@
 		Column,
 		Toolbar,
 		ToolbarContent,
+		Select,
+		SelectItem,
+		ToolbarSearch,
 		Button,
 	} from 'carbon-components-svelte';
 	import type { Pagination as PaginationType } from '@/render/lib/scripts/pagination';
@@ -27,6 +30,11 @@
 	import { ExerciseSubtech } from '@/render/lib/scripts/models';
 	import type { Exercise, NameWithId } from '@/render/lib/scripts/models';
 	import ModalText from '@/render/lib/ui/ModalText.svelte';
+	import type {
+		DataTableRowId,
+		DataTableRow,
+	} from 'carbon-components-svelte/types/DataTable/DataTable.svelte';
+	import { SmallComponentsMakingALargerWhole } from 'carbon-pictograms-svelte';
 
 	let createOpen = $state(false);
 	let editOpen = $state(false);
@@ -39,6 +47,9 @@
 	let targetForExercises: any = $state();
 	let page = $state(1);
 	let pageSize = $state(10);
+	let selectedFilter = $state('');
+	let filterInput = $state('');
+	let backupRows: DataTableRow[] = $state([]);
 
 	function updateTable() {
 		tableUpdater = !tableUpdater;
@@ -91,6 +102,22 @@
 
 		return object;
 	}
+
+	async function filterFows(object: PaginationType<Exercise>): Promise<PaginationType<Exercise>> {
+		object.items = object.items.filter((row: any) => {
+			if (selectedFilter === '') return true;
+			const rowValue = row[selectedFilter];
+			if (typeof rowValue === 'string') {
+				console.log(
+					rowValue.toLowerCase(),
+					rowValue.toLowerCase().includes(filterInput.toLowerCase()),
+				);
+				return rowValue.toLowerCase().includes(filterInput.toLowerCase());
+			}
+		});
+
+		return object;
+	}
 </script>
 
 <Content>
@@ -101,52 +128,86 @@
 					{#key tableUpdater}
 						{#await getExercises(new PaginationProps(page, pageSize))}
 							<DataTableSkeleton />
-						{:then raw_exercises}
-							{#await formatRows(raw_exercises) then exercises}
-								<DataTable
-									sortable
-									headers={exercises.getHeaders([
-										'imageUrl',
-										'videoUrl',
-										'id',
-										'description',
-										'fromZone',
-										'toZone',
-									])}
-									rows={exercises.getRows()}
-								>
-									{#snippet cell({ cell, row })}
-										<button
-											onclick={() => {
-												exerciseTextOpen = true;
-												modalTextText = cell.value;
-												modalTextTitle = cell.header;
-											}}
-											class="text-left"
-											id={row.id}
-										>
-											{trunicate(cell.value)}
-										</button>
-									{/snippet}
-									<Toolbar>
-										<ToolbarContent>
-											<Button
-												on:click={() => {
-													createOpen = true;
-												}}
-												class="w-full"
+						{:then rawExercises}
+							{#await formatRows(rawExercises) then formatedExercises}
+								{#key filterInput}
+									{JSON.stringify(formatedExercises)}
+									{#await filterFows(formatedExercises) then exercises}
+										<div class="mb-4">
+											<Select
+												labelText="Фільтрувати за"
+												bind:selected={selectedFilter}
 											>
-												+ {t('titles.exercise')}
-											</Button>
-										</ToolbarContent>
-									</Toolbar>
-								</DataTable>
-								<Pagination
-									pageSizes={[10, 50, 100, 1000]}
-									bind:pageSize
-									bind:page
-									totalItems={exercises.total}
-								/>
+												{#each formatedExercises
+													.getHeaders()
+													?.filter((ex) => ex.key !== 'id') as exercise}
+													<SelectItem
+														text={exercise.value}
+														value={exercise.key}
+													/>
+												{/each}
+											</Select>
+										</div>
+										<DataTable
+											sortable
+											headers={formatedExercises.getHeaders([
+												'imageUrl',
+												'videoUrl',
+												'id',
+												'description',
+												'fromZone',
+												'toZone',
+											])}
+											rows={exercises.getRows()}
+										>
+											{#snippet cell({ cell, row })}
+												<button
+													onclick={() => {
+														exerciseTextOpen = true;
+														modalTextText = cell.value;
+														modalTextTitle = cell.header;
+													}}
+													class="text-left"
+													id={row.id}
+												>
+													{trunicate(cell.value)}
+												</button>
+											{/snippet}
+
+											<Toolbar>
+												<ToolbarContent>
+													<ToolbarSearch
+														persistent
+														value={filterInput}
+														on:keydown={(e) => {
+															if (e.key === 'Enter')
+																filterInput = (
+																	e.target as HTMLInputElement
+																).value;
+														}}
+														on:clear={() => {
+															filterInput = '';
+														}}
+													/>
+													<Button
+														on:click={() => {
+															createOpen = true;
+														}}
+														class="w-full"
+													>
+														+ {t('titles.exercise')}
+													</Button>
+												</ToolbarContent>
+											</Toolbar>
+										</DataTable>
+										<Pagination
+											pageSizes={[10, 50, 100, 1000]}
+											bind:pageSize
+											bind:page
+											totalItems={exercises.total}
+										/>
+									{/await}
+								{/key}
 							{/await}
 						{/await}
 					{/key}

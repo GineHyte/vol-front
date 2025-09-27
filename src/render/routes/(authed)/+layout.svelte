@@ -96,16 +96,16 @@
 		window.electron.getVersion().then((version: any) => {
 			versionRenderer.set(version);
 		});
-		window.onerror = (message, source, lineno, colno, error) => {
-			pushNotification('error', {
-				message: message.toString(),
-				source: source || '',
-				lineno: lineno?.toString() || '',
-				colno: colno?.toString() || '',
-				error: error?.toString() || '',
-			});
-			children;
-		};
+		// window.onerror = (message, source, lineno, colno, error) => {
+		// 	pushNotification('error', {
+		// 		message: message.toString(),
+		// 		source: source || '',
+		// 		lineno: lineno?.toString() || '',
+		// 		colno: colno?.toString() || '',
+		// 		error: error?.toString() || '',
+		// 	});
+		// 	children;
+		// };
 	});
 
 	window.electron.getWindowState().then((windowState: any) => {

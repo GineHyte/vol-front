@@ -44,6 +44,7 @@
 				videoElementRef.style.left = '-10rem';
 			}
 		}
+		document.documentElement.setAttribute('theme', 'white');
 	});
 </script>
 

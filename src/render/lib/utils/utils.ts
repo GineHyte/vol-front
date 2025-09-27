@@ -28,6 +28,7 @@ export function settingsUpdater(settings: any) {
         window.electron.setSettings(settings);
     }
     if (typeof document !== 'undefined') {
+        console.log("theme update!", settings.theme);
         document.documentElement.setAttribute('theme', settings.theme);
     }
 }
