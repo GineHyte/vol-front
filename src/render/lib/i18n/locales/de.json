@@ -215,7 +215,9 @@
     "tokenUpdateSuccess": "Token erfolgreich aktualisiert.",
     "passwordMismatch": "Die Passwörter stimmen nicht überein.",
     "registerSuccess": "Registrierung erfolgreich. Sie können sich jetzt anmelden.",
-    "registerError": "Registrierung fehlgeschlagen. Bitte überprüfen Sie Ihre Eingaben und versuchen Sie es erneut."
+    "registerError": "Registrierung fehlgeschlagen. Bitte überprüfen Sie Ihre Eingaben und versuchen Sie es erneut.",
+    "exerciseChecked": "Übung als abgeschlossen markiert.",
+    "exerciseCannotBeChecked": "Übung kann nicht als abgeschlossen markiert werden."
   },
   "weeks": "Woche",
   "timeUnit": "Min",

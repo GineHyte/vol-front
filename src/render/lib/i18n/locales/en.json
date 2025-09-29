@@ -219,7 +219,9 @@
     "tokenUpdateSuccess": "Token updated successfully.",
     "passwordMismatch": "Passwords do not match. Please try again.",
     "registerSuccess": "Registration successful! You can now log in.",
-    "registerError": "Registration failed. Please check your details and try again."
+    "registerError": "Registration failed. Please check your details and try again.",
+    "exerciseChecked": "Exercise marked as completed.",
+    "exerciseCannotBeChecked": "Exercise cannot be marked as completed."
   },
   "weeks": "Week",
   "timeUnit": "min",

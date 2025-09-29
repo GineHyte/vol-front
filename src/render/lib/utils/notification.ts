@@ -331,6 +331,17 @@ const NOTIFICATIONS: { [key: string]: () => NotificationType} = {
         message: t('notifications.registerError'),
         kind: 'error',
     }),
+    checkExerciseSuccess: () => ({
+        title: t('notifications.success'),
+        message: t('notifications.exerciseChecked'),
+        kind: 'success',
+    }),
+    checkExerciseError: () => ({
+        title: t('notifications.error'),
+        message: t('notifications.exerciseCannotBeChecked'),
+        kind: 'error',
+    }),
+    
 };
 
 export default function getNotification(name: string, params: { [key: string]: string } = {}) {

@@ -293,3 +293,13 @@ export async function register(register: Register): Promise<Status> {
 		return new Status().deserialize(data) as Status;
 	});
 }
+
+export async function checkPlanExercise(
+	playerId: number,
+	weekNumber: number,
+	planExerciseId: number,
+): Promise<Status> {
+	return Api.get(`/algorithm/plan/check/${playerId}/${weekNumber}/${planExerciseId}`).then((data: any) => {
+		return new Status().deserialize(data) as Status;
+	});
+}

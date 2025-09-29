@@ -180,7 +180,10 @@ export class Subtech extends Model {
 	}
 }
 
-export class Exercise extends Model {
+
+
+
+export class ExerciseBase extends Model {
 	id: any;
 	name: any;
 	description: any;
@@ -269,10 +272,17 @@ export class Exercise extends Model {
 		this.fromZone = new Field('from_zone', Number, t('fields.fromZone'));
 		this.toZone = new Field('to_zone', Number, t('fields.toZone'));
 		this.timePerExercise = new Field('time_per_exercise', Number, t('fields.timePerOneExercise'));
-
-		return this.proxify();
 	}
 }
+
+export class Exercise extends ExerciseBase {
+	constructor() {
+		super()
+
+		return this.proxify()
+	}
+}
+
 
 export class PlayerSum extends Model {
 	nameWithId: any
@@ -285,7 +295,7 @@ export class PlayerSum extends Model {
 		this.nameWithId = new Field('player', NameWithIdType)
 		this.sumActions = new Field('sum_actions', Number, t('fields.actionCount'))
 		this.prozent = new Field('prozent', Number, t('fields.percentageOfAll'))
-		
+
 		return this.proxify();
 	}
 }
@@ -298,12 +308,12 @@ export class TechSum extends Model {
 
 	constructor() {
 		super()
-		
+
 		this.nameWithId = new Field('tech', NameWithIdType)
 		this.player = new Field('player', Number, t('titles.player'))
 		this.sumActions = new Field('sum_actions', Number, t('fields.actionCount'))
 		this.prozent = new Field('prozent', Number, t('fields.percentageOfAll'))
-		
+
 		return this.proxify();
 	}
 }
@@ -317,13 +327,13 @@ export class SubtechSum extends Model {
 
 	constructor() {
 		super()
-		
+
 		this.nameWithId = new Field('subtech', NameWithIdType)
 		this.tech = new Field('tech', Number, t('titles.tech'))
 		this.player = new Field('player', Number, t('titles.player'))
 		this.sumActions = new Field('sum_actions', Number, t('fields.actionCount'))
 		this.prozent = new Field('prozent', Number, t('fields.percentageOfAll'))
-		
+
 		return this.proxify();
 	}
 }
@@ -338,14 +348,14 @@ export class ImpactSum extends Model {
 
 	constructor() {
 		super()
-		
+
 		this.impact = new Field('impact', String, t('fields.qualityIndicator'), [], getImpact())
 		this.subtech = new Field('subtech', Number, t('titles.subtech'))
 		this.tech = new Field('tech', Number, t('titles.tech'))
 		this.player = new Field('player', Number, t('titles.player'))
 		this.sumActions = new Field('sum_actions', Number, t('fields.actionCount'))
 		this.prozent = new Field('prozent', Number, t('fields.percentageOfAll'))
-		
+
 		return this.proxify();
 	}
 }
@@ -361,7 +371,7 @@ export class ZoneSum extends Model {
 
 	constructor() {
 		super()
-		
+
 		this.zone = new Field('zone', String, t('fields.zone'))
 		this.impact = new Field('impact', String, t('fields.qualityIndicator'), [], getImpact())
 		this.subtech = new Field('subtech', Number, t('titles.subtech'))
@@ -369,7 +379,7 @@ export class ZoneSum extends Model {
 		this.player = new Field('player', Number, t('titles.player'))
 		this.sumActions = new Field('sum_actions', Number, t('fields.actionCount'))
 		this.prozent = new Field('prozent', Number, t('fields.percentageOfAll'))
-		
+
 		return this.proxify();
 	}
 }
@@ -381,10 +391,10 @@ export class PlayerStats extends Model {
 
 	constructor() {
 		super()
-		
+
 		this.playerSum = new Field('player_sum', new Datatype(PlayerSum), t('titles.player'))
 		this.techTop = new Field('tech_top', new Datatype([TechSum]))
-		
+
 		return this.proxify();
 	}
 }
@@ -395,10 +405,10 @@ export class TechStats extends Model {
 
 	constructor() {
 		super()
-		
+
 		this.techTop = new Field('tech_top', new Datatype(TechSum))
 		this.subtechTop = new Field('subtech_top', new Datatype([SubtechSum]))
-		
+
 		return this.proxify();
 	}
 }
@@ -409,10 +419,10 @@ export class SubtechStats extends Model {
 
 	constructor() {
 		super()
-		
+
 		this.subtechTop = new Field('subtech_top', new Datatype(SubtechSum))
 		this.impactTop = new Field('impact_top', new Datatype([ImpactSum]))
-		
+
 		return this.proxify();
 	}
 }
@@ -423,10 +433,10 @@ export class ImpactStats extends Model {
 
 	constructor() {
 		super()
-		
+
 		this.impactTop = new Field('impact_top', new Datatype(ImpactSum))
 		this.zoneTop = new Field('zone_top', new Datatype([ZoneSum]))
-		
+
 		return this.proxify();
 	}
 }
@@ -439,7 +449,7 @@ export class PlanWeek extends Model {
 	constructor() {
 		super()
 
-		this.exercises = new Field('exercises', new Datatype([Exercise]))
+		this.exercises = new Field('exercises', new Datatype([PlanExercise]))
 		this.week = new Field('week', Number)
 
 		return this.proxify();
@@ -489,6 +499,21 @@ export class ExerciseSubtech extends Model {
 
 		this.exercise = new Field('exercise', NameWithIdType, t('titles.exercise'), ['name']);
 		this.subtech = new Field('subtech', NameWithIdType, t('titles.subtech'), ['name']);
+
+		return this.proxify();
+	}
+}
+
+
+export class PlanExercise extends ExerciseBase {
+	planExerciseId: any;
+	checked: any
+
+	constructor() {
+		super();
+
+		this.planExerciseId = new Field('plan_exercise_id', Number);
+		this.checked = new Field('checked', Boolean)
 
 		return this.proxify();
 	}
