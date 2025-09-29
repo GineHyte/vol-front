@@ -1,6 +1,6 @@
 <!-- Here are all SideList shit and also modals for Editing and Creating Models-->
 <script lang="ts">
-	import { getGame, createGame, deleteGame, getGames } from '$lib/scripts/endpoints';
+	import { getGame, createGame, deleteGame, getGames, cloneGame } from '$lib/scripts/endpoints';
 	import { pushNotification, t } from '$lib/utils/utils';
 	import SideList from '$lib/ui/SideList.svelte';
 	import CreateGame from './CreateGame.svelte';
@@ -52,6 +52,17 @@
 			selectedGameId = undefined;
 		}
 	}
+
+	async function deepDuplicateGame(currentId: number) {
+		if (currentId) {
+			const status = await cloneGame(currentId);
+			if (status.status === 'success') {
+				pushNotification('duplicateGameSuccess');
+			} else {
+				pushNotification('duplicateGameError');
+			}
+		}
+	}
 </script>
 
 {#key [createOpen, editOpen]}
@@ -61,6 +72,7 @@
 		deleteFunc={deleteGameRenderer}
 		duplicateFunc={duplicateGameRenderer}
 		editFunc={editGameRenderer}
+		deepDuplicateFunc={deepDuplicateGame}
 		newFunc={() => {
 			createOpen = true;
 		}}

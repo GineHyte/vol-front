@@ -15,7 +15,8 @@
     "name": "Name",
     "description": "Beschreibung",
     "yes": "Ja",
-    "no": "Nein"
+    "no": "Nein",
+    "deepDuplicate": "Tief duplizieren"
   },
   "navigation": {
     "home": "Startseite",

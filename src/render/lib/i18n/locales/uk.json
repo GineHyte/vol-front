@@ -15,7 +15,8 @@
     "name": "Назва",
     "description": "Опис",
     "yes": "Так",
-    "no": "Ні"
+    "no": "Ні",
+    "deepDuplicate": "Глибоке дублювання"
   },
   "navigation": {
     "home": "Головна",

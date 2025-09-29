@@ -6,7 +6,7 @@
 	import ModalEdit from '@/render/lib/ui/ModalEdit.svelte';
 	import { pushNotification } from '$lib/utils/utils';
 	import { t } from '$lib/utils/utils';
-	import { PaginationProps } from '$lib/scripts/pagination';
+	import { Pagination, PaginationProps } from '$lib/scripts/pagination';
 	import ModalSkeleton from '@/render/lib/ui/ModalSkeleton.svelte';
 
 	interface Props {
@@ -43,6 +43,15 @@
 			pushNotification('editGameError');
 		}
 		editOpen = false;
+	}
+
+	async function getTeamsRenderer(pprop: PaginationProps): Promise<Pagination<any>> {
+		let teams = await getTeams(pprop);
+		teams.items = teams.items.map((team: any) => {
+			team.players = team.players.map((player: any) => player.player.name);
+			return team;
+		});
+		return teams;
 	}
 </script>
 
@@ -90,7 +99,7 @@
 			{#snippet modalCreateRelation()}
 				<ModalCreateRelation
 					title={t('buttons.selectTeamA')}
-					getFunc={getTeams}
+					getFunc={getTeamsRenderer}
 					bind:open={selectTeamAOpen}
 					on:submit={(e) => {
 						teamA = e.detail;

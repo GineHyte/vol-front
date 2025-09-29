@@ -240,12 +240,6 @@
 							{/await}
 						{/key}
 					</div>
-					<ContextMenu
-						target={targetForActions}
-						deleteFunc={removeAction}
-						duplicateFunc={duplicateAction}
-						updateFunc={() => (actionTableUpdate = !actionTableUpdate)}
-					/>
 				</Row>
 			{/await}
 		</Grid>
@@ -253,3 +247,10 @@
 {/if}
 
 <SideListGame bind:selectedGameId bind:teamA bind:teamB />
+
+<ContextMenu
+	target={targetForActions}
+	deleteFunc={removeAction}
+	duplicateFunc={duplicateAction}
+	updateFunc={() => (actionTableUpdate = !actionTableUpdate)}
+/>

@@ -16,7 +16,8 @@
     "name": "Name",
     "description": "Description",
     "yes": "Yes",
-    "no": "No"
+    "no": "No",
+    "deepDuplicate": "Deep Duplicate"
   },
   "navigation": {
     "home": "Home",

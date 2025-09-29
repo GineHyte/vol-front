@@ -85,7 +85,6 @@
 
 	async function editExercise(currentId: number) {
 		if (currentId) {
-			console.log('editExercise', currentId);
 			editExerciseId = currentId;
 			editOpen = true;
 		}
@@ -131,7 +130,6 @@
 						{:then rawExercises}
 							{#await formatRows(rawExercises) then formatedExercises}
 								{#key filterInput}
-									{JSON.stringify(formatedExercises)}
 									{#await filterFows(formatedExercises) then exercises}
 										<div class="mb-4">
 											<Select

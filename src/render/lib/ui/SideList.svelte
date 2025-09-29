@@ -21,9 +21,10 @@
 		selectedId?: number | null;
 		getFunc: (props: PaginationProps) => Promise<Pagination<Model>>;
 		newFunc: () => void;
-		editFunc: (currentId: number) => void;
+		editFunc: (currentId: number) => Promise<void>;
 		deleteFunc: (currentId: number) => Promise<void>;
 		duplicateFunc: (currentId: number) => Promise<void>;
+		deepDuplicateFunc?: (currentId: number) => Promise<void>;
 	}
 
 	let {
@@ -35,6 +36,7 @@
 		editFunc,
 		deleteFunc,
 		duplicateFunc,
+		deepDuplicateFunc,
 	}: Props = $props();
 
 	let pageSize = 4;
@@ -75,6 +77,7 @@
 				{deleteFunc}
 				{duplicateFunc}
 				{editFunc}
+				{deepDuplicateFunc}
 				updateFunc={() => (tableUpdate = !tableUpdate)}
 			/>
 		{/await}

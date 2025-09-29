@@ -97,6 +97,12 @@ export async function editGame(game: Game): Promise<Status> {
 	});
 }
 
+export async function cloneGame(id: number): Promise<Status> {
+	return Api.get(`/games/clone/${id}`).then((data: any) => {
+		return new Status().deserialize(data) as Status;
+	});
+}
+
 export async function getActions(
 	gameId: number,
 	paginationProps: PaginationProps = new PaginationProps(),

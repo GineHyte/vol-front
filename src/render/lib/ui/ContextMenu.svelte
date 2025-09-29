@@ -6,13 +6,14 @@
 		target: any;
 		deleteFunc?: (currentId: number) => Promise<void>;
 		duplicateFunc?: (currentId: number) => Promise<void>;
+		deepDuplicateFunc?: (currentId: number) => Promise<void>;
 		editFunc?: (currentId: number) => Promise<void>;
 		updateFunc: () => void;
 	}
 
 	let { ...props }: Props = $props();
 
-	let { target, deleteFunc, duplicateFunc, editFunc, updateFunc } = props;
+	let { target, deleteFunc, duplicateFunc, editFunc, updateFunc, deepDuplicateFunc } = props;
 
 	let currentId: number | null = $state(null);
 </script>
@@ -52,8 +53,17 @@
 				indented
 				labelText={t('common.edit')}
 				on:click={async () => {
-					console.log('editFunc', currentId);
 					if (currentId) await editFunc(currentId);
+					updateFunc();
+				}}
+			/>
+		{/if}
+		{#if deepDuplicateFunc}
+			<ContextMenuOption
+				indented
+				labelText={t('common.deepDuplicate')}
+				on:click={async () => {
+					if (currentId) await deepDuplicateFunc(currentId);
 					updateFunc();
 				}}
 			/>

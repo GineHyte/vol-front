@@ -34,7 +34,6 @@
 
 	async function getTeamLocal(teamId: number) {
 		let team = await getTeam(teamId);
-		console.log(team);
 		if (game.teamA === team.id) {
 			teamALocal = team;
 		} else {

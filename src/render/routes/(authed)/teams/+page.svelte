@@ -26,9 +26,13 @@
 	import { Pagination } from '$lib/scripts/pagination';
 	import ModalCreateRelation from '$lib/ui/ModalCreateRelation.svelte';
 	import ModalUnderSelect from '$lib/ui/ModalUnderSelect.svelte';
+	import ModalEdit from '@/render/lib/ui/ModalEdit.svelte';
+	import EditTeam from './EditTeam.svelte';
 
 	let teamId: number | undefined = $state(undefined);
 	let createOpen = $state(false);
+	let editOpen = $state(false);
+	let editTeamId = $state(0);
 	let selectPlayerOpen = $state(false);
 	let selectPlayerAmpluaOpen = $state(false);
 	let selectedPlayers: { [key: string]: any }[] = $state([]);
@@ -85,6 +89,13 @@
 		createOpen = false;
 		selectedPlayers = [];
 		updateSideList();
+	}
+
+	async function editTeam(currentId: number) {
+		if (currentId) {
+			editOpen = true;
+			editTeamId = currentId;
+		}
 	}
 </script>
 
@@ -178,9 +189,11 @@
 	{/snippet}
 </ModalCreate>
 
+<EditTeam {editTeamId} bind:editOpen />
+
 {#key sideListUpdater}
 	<SideList
-		editFunc={() => {}}
+		editFunc={editTeam}
 		bind:selectedId={teamId}
 		title={t('titles.team')}
 		deleteFunc={removeTeam}
