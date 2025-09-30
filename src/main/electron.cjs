@@ -3,7 +3,7 @@ const { app, BrowserWindow, ipcMain } = require('electron');
 const serve = require('electron-serve');
 const path = require('path');
 const settingsManager = require('electron-settings');
-const { autoUpdater } = require('electron-updater');
+// const { autoUpdater } = require('electron-updater');
 
 const port = 5173;
 const loadURL = serve({ directory: 'build' });
@@ -154,7 +154,7 @@ function ipcInit() {
 	});
 
 	ipcMain.on('check-update', () => {
-	  autoUpdater.checkForUpdatesAndNotify();
+	//   autoUpdater.checkForUpdatesAndNotify();
 	});
 
 	// autoUpdater.on('update-available', (event, releaseNotes, releaseName) => {
