@@ -56,6 +56,12 @@ export async function deleteTeam(id: number): Promise<Status> {
 	});
 }
 
+export async function editTeam(team: Team): Promise<Status> {
+	return Api.put(`/teams/${team.id}`, team.serialize()).then((data: any) => {
+		return new Status().deserialize(data) as Status;
+	});
+}
+
 export async function getGames(
 	paginationProps: PaginationProps = new PaginationProps(),
 	teamId: number | undefined = undefined,

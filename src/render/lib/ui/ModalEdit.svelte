@@ -86,8 +86,8 @@
 </script>
 
 {#if open}
-	<ComposedModal size={'lg'} bind:open on:submit={onSubmit} on:close={onClose}>
-		<ModalHeader {title} />
+	<ComposedModal size={'lg'} bind:open on:submit={onSubmit} on:close={onClose}> <!-- onClose не работает -->
+		<ModalHeader {title} on:click={onClose}/> <!-- onClose работает -->
 		<ModalBody hasForm>
 			{#each model.getCreationArray(exclude) as item}
 				{#if item.type === 'number'}

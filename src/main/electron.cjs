@@ -111,6 +111,7 @@ function ipcInit() {
 		)
 		const updated = { ...current, ...filtered }
 		settingsManager.setSync('settings', updated)
+		console.log('Settings updated:', updated);
 	});
 
 	ipcMain.handle('get-version', () => {
@@ -123,7 +124,6 @@ function ipcInit() {
 
 	ipcMain.on('set-login-data', (event, data) => {
 		settingsManager.setSync('loginData', data)
-		console.log('set login data (electron): ', JSON.stringify(data));
 	});
 
 	ipcMain.handle('get-login-data', () => {

@@ -44,7 +44,7 @@
 		usernameInvalid = false;
 		errorText = '';
 
-		settingsRenderer.set({ ...settings, apiUrl: server });
+		settings.apiUrl = server;
 
 		if (plausibilityCheck(username, password)) {
 			login(username, password)
@@ -59,6 +59,7 @@
 						pushNotification('successLogin');
 						setTimeout(() => {
 							window.location.href = '/';
+							settingsRenderer.set(settings);
 						}, 1000);
 					} else {
 						pushNotification('errorInvalidCredentials');

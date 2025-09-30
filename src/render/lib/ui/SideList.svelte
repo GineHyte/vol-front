@@ -21,9 +21,9 @@
 		selectedId?: number | null;
 		getFunc: (props: PaginationProps) => Promise<Pagination<Model>>;
 		newFunc: () => void;
-		editFunc: (currentId: number) => Promise<void>;
-		deleteFunc: (currentId: number) => Promise<void>;
-		duplicateFunc: (currentId: number) => Promise<void>;
+		editFunc?: (currentId: number) => Promise<void>;
+		deleteFunc?: (currentId: number) => Promise<void>;
+		duplicateFunc?: (currentId: number) => Promise<void>;
 		deepDuplicateFunc?: (currentId: number) => Promise<void>;
 	}
 

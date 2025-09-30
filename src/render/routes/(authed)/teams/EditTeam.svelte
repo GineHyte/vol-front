@@ -1,13 +1,13 @@
 <script lang="ts">
 	import { Button, Tile } from 'carbon-components-svelte';
 	import { Team } from '$lib/scripts/models';
+	import TrashCan from 'carbon-icons-svelte/lib/TrashCan.svelte';
 	import ModalCreateRelation from '$lib/ui/ModalCreateRelation.svelte';
 	import ModalEdit from '@/render/lib/ui/ModalEdit.svelte';
 	import { getAmplua, pushNotification } from '$lib/utils/utils';
 	import { t } from '$lib/utils/utils';
-	import { Pagination, PaginationProps } from '$lib/scripts/pagination';
 	import ModalSkeleton from '@/render/lib/ui/ModalSkeleton.svelte';
-	import { getPlayers, getTeam } from '@/render/lib/scripts/endpoints';
+	import { editTeam, getPlayer, getPlayers, getTeam } from '@/render/lib/scripts/endpoints';
 	import ModalUnderSelect from '@/render/lib/ui/ModalUnderSelect.svelte';
 
 	interface Props {
@@ -26,10 +26,46 @@
 	async function pullTeam() {
 		if (editTeamId) {
 			team = await getTeam(editTeamId);
+			selectedPlayers = await Promise.all(
+				team.players.map(async (playerToTeam: any) => {
+					const playerObj = await getPlayer(playerToTeam.player.id);
+					const amplua = playerObj.teams.find(
+						(playerToTeam: any) => playerToTeam.team.id === team.id,
+					).amplua;
+					return { ...playerObj.__tableData, amplua };
+				}),
+			);
 		}
 	}
 
-	async function editTeamRenderer() {}
+	async function editTeamRenderer() {
+		team.players = team.players.map((playerToTeam: any) => {
+			const selectedPlayer = selectedPlayers.find(
+				(selectedPlayer) => selectedPlayer.id === playerToTeam.player.id,
+			);
+			if (selectedPlayer) {
+				playerToTeam.amplua = selectedPlayer.amplua;
+			} else {
+				return null;
+			}
+			return playerToTeam;
+		});
+		team.players = team.players.filter((playerToTeam: any) => playerToTeam !== null);
+		const status = await editTeam(team);
+		if (status.status === 'success') {
+			pushNotification('editTeamSuccess');
+			editOpen = false;
+		} else {
+			pushNotification('editTeamError');
+		}
+	}
+
+	function teardownVariables() {
+		selectPlayerOpen = false;
+		selectPlayerAmpluaOpen = false;
+		selectedPlayers = [];
+		selectionPlayerObject = {};
+	}
 </script>
 
 {#if editOpen}
@@ -42,17 +78,31 @@
 			onSubmit={editTeamRenderer}
 			bind:open={editOpen}
 			requiredFields={['name']}
+			onClose={teardownVariables}
 		>
 			{#snippet createRelationField()}
 				{#key selectedPlayers}
 					{#each selectedPlayers as selectedPlayer}
-						<Tile>
-							{selectedPlayer.firstName}
-							{selectedPlayer.lastName} - {getAmplua()[selectedPlayer.amplua]}
+						<Tile class="flex align-center gap-4">
+							<span class="mt-4">
+								{selectedPlayer.firstName}
+								{selectedPlayer.lastName} - {getAmplua()[selectedPlayer.amplua]}
+							</span>
+							<Button
+								kind="danger-tertiary"
+								iconDescription="Delete"
+								icon={TrashCan}
+								on:click={(e) => {
+									selectedPlayers = selectedPlayers.filter(
+										(el) => el.id !== selectedPlayer.id,
+									);
+								}}
+							/>
 						</Tile>
 					{/each}
 				{/key}
 				<Button
+					disabled={selectedPlayers.length >= 2}
 					class="mt-4"
 					on:click={() => {
 						selectPlayerOpen = true;

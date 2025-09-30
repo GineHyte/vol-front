@@ -12,21 +12,13 @@
 		Button,
 		SkeletonText,
 	} from 'carbon-components-svelte';
-	import {
-		getTeams,
-		getTeam,
-		getPlayer,
-		createTeam,
-		deleteTeam,
-		getPlayers,
-	} from '$lib/scripts/endpoints';
-	import { Team, PlayerTeam, Player } from '$lib/scripts/models';
+	import { getTeams, getTeam, createTeam, deleteTeam, getPlayers } from '$lib/scripts/endpoints';
+	import { Team, PlayerTeam } from '$lib/scripts/models';
 	import ModalCreate from '$lib/ui/ModalCreate.svelte';
 	import { pushNotification, t, getAmplua } from '$lib/utils/utils';
-	import { Pagination } from '$lib/scripts/pagination';
+	import TrashCan from 'carbon-icons-svelte/lib/TrashCan.svelte';
 	import ModalCreateRelation from '$lib/ui/ModalCreateRelation.svelte';
 	import ModalUnderSelect from '$lib/ui/ModalUnderSelect.svelte';
-	import ModalEdit from '@/render/lib/ui/ModalEdit.svelte';
 	import EditTeam from './EditTeam.svelte';
 
 	let teamId: number | undefined = $state(undefined);
@@ -143,13 +135,26 @@
 	{#snippet createRelationField()}
 		{#key selectedPlayers}
 			{#each selectedPlayers as selectedPlayer}
-				<Tile>
-					{selectedPlayer.firstName}
-					{selectedPlayer.lastName} - {getAmplua()[selectedPlayer.amplua]}
+				<Tile class="flex align-center gap-4">
+					<span class="mt-4">
+						{selectedPlayer.firstName}
+						{selectedPlayer.lastName} - {getAmplua()[selectedPlayer.amplua]}
+					</span>
+					<Button
+						kind="danger-tertiary"
+						iconDescription="Delete"
+						icon={TrashCan}
+						on:click={(e) => {
+							selectedPlayers = selectedPlayers.filter(
+								(el) => el.id !== selectedPlayer.id,
+							);
+						}}
+					/>
 				</Tile>
 			{/each}
 		{/key}
 		<Button
+			disabled={selectedPlayers.length >= 2}
 			class="mt-4"
 			on:click={() => {
 				selectPlayerOpen = true;
@@ -197,7 +202,6 @@
 		bind:selectedId={teamId}
 		title={t('titles.team')}
 		deleteFunc={removeTeam}
-		duplicateFunc={duplicateTeam}
 		newFunc={() => {
 			createOpen = true;
 		}}

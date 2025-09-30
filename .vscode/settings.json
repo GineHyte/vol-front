@@ -1,6 +1,6 @@
 {
 	"[svelte]": {
-		"editor.formatOnSave": true,
+		"editor.formatOnSave": false,
 		"editor.defaultFormatter": "svelte.svelte-vscode"
 	},
 	"github.copilot.enable": {
