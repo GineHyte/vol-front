@@ -10,6 +10,7 @@
 		DataTable,
 		DataTableSkeleton,
 		Pagination,
+		Toolbar,
 		Button,
 	} from 'carbon-components-svelte';
 	import {
@@ -21,6 +22,7 @@
 		createAction,
 		deleteAction,
 	} from '$lib/scripts/endpoints';
+	import type { Pagination as PaginationType } from '$lib/scripts/pagination';
 	import { Game, Action } from '$lib/scripts/models';
 	import { PaginationProps } from '$lib/scripts/pagination';
 	import { pushNotification } from '$lib/utils/utils';
@@ -29,19 +31,25 @@
 	import { Impact, Side } from '$lib/utils/utils';
 	import SideListGame from '@/render/routes/(authed)/games/SideListGame.svelte';
 	import { t } from '$lib/utils/utils';
+	import EditActions from './EditActions.svelte';
+	import type { DataTableRow } from 'carbon-components-svelte/types/DataTable/DataTable.svelte';
 
-	let selectedGameId: number | undefined = $state(undefined);
-	let selectedTech: number = $state(-1);
-	let selectedSubtech: number = $state(-1);
-	let selectedImpact: string = $state('');
-	let selectedZones: number[] = $state([]);
-	let selectedSide: Side = $state(Side.NOTSET);
-	let selectedPlayer: number = $state(-1);
-	let zoneEnabled: number = $state(0);
+	let batchSelectedActions = $state([]);
+	let batchUpdateActive = $state(false);
 	let actionTableUpdate = $state(false);
-	let actionsPage = $state(1);
-	let actionsPageSize = $state(10);
+	let actionsRowsBuffer: DataTableRow[] = $state([]);
 	let targetForActions: any = $state();
+	let selectedSubtech: number = $state(-1);
+	let actionsPageSize = $state(10);
+	let selectedGameId: number | undefined = $state(undefined);
+	let selectedImpact: string = $state('');
+	let selectedPlayer: number = $state(-1);
+	let selectedZones: number[] = $state([]);
+	let batchEditOpen = $state(false);
+	let selectedTech: number = $state(-1);
+	let selectedSide: Side = $state(Side.NOTSET);
+	let zoneEnabled: number = $state(0);
+	let actionsPage = $state(1);
 	let actionOrder = $state(0);
 	let teamA = $state(0);
 	let teamB = $state(0);
@@ -51,6 +59,11 @@
 	async function getGameLocal(gameIdLocal: number) {
 		localGame = await getGame(gameIdLocal);
 		return localGame;
+	}
+
+	function getActionRows(actions: PaginationType<Action>): DataTableRow[] {
+		actionsRowsBuffer = actions.getRows()
+		return actionsRowsBuffer
 	}
 
 	async function submitAction() {
@@ -221,10 +234,32 @@
 								<DataTableSkeleton />
 							{:then actions}
 								<DataTable
+									selectable={batchUpdateActive}
+									bind:selectedRowIds={batchSelectedActions}
 									sortable
 									headers={actions.getHeaders(['id'])}
-									rows={actions.getRows()}
+									rows={getActionRows(actions)}
 								>
+									<Toolbar>
+										<Button
+											kind={batchUpdateActive ? 'primary' : 'secondary'}
+											on:click={() => {
+												batchUpdateActive = !batchUpdateActive;
+											}}
+										>
+											Toggle bactch update
+										</Button>
+										{#if batchUpdateActive}
+											<Button
+												disabled={batchSelectedActions.length == 0}
+												on:click={() => {
+													batchEditOpen = true;
+												}}
+											>
+												Edit selected actions
+											</Button>
+										{/if}
+									</Toolbar>
 									{#snippet cell({ cell, row })}
 										<div class="w-full h-full" id={row.id}>
 											{cell.value}
@@ -253,3 +288,5 @@
 {/if}
 
 <SideListGame bind:selectedGameId bind:teamA bind:teamB />
+
+<EditActions editActions={() => {batchSelectedActions.map((el) => actionsRowsBuffer.find(() => ))}} editOpen={batchEditOpen} {teamA} {teamB} />

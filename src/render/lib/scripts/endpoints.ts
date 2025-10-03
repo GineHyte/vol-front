@@ -1,5 +1,5 @@
 import { ApiImpl } from './api';
-import { Player, Team, Game, Status, Action, Tech, Subtech, Exercise, PlayerStats, TechStats, SubtechStats, ImpactStats, PlanWeek, Login, Register } from '$lib/scripts/models';
+import { Player, Team, Game, Status, Action, Tech, Subtech, Exercise, PlayerStats, TechStats, SubtechStats, ImpactStats, PlanWeek, Login, Register, ActionsBatchUpdateOptions } from '$lib/scripts/models';
 import { Pagination, PaginationProps } from '$lib/scripts/pagination';
 
 const Api = new ApiImpl();
@@ -115,6 +115,14 @@ export async function getActions(
 ): Promise<Pagination<Action>> {
 	return Api.get(`/actions/?game_id=${gameId}`, paginationProps).then((data: any) => {
 		return new Pagination<Action>(data, Action);
+	});
+}
+
+export async function batchEditActions(
+	actionsBatchUpdateOptions: ActionsBatchUpdateOptions
+): Promise<Status> {
+	return Api.put(`/actions/batch_update`, actionsBatchUpdateOptions).then((data: any) => {
+		return new Status().deserialize(data) as Status;
 	});
 }
 

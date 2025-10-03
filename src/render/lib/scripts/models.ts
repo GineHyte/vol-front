@@ -518,3 +518,18 @@ export class PlanExercise extends ExerciseBase {
 		return this.proxify();
 	}
 }
+
+
+export class ActionsBatchUpdateOptions extends Model {
+	actions: any;
+	mainAction: any;
+
+	constructor() {
+		super();
+
+		this.actions = new Field("actions", new Datatype([Number]))
+		this.mainAction = new Field("main_action", new Datatype(Action))
+
+		return this.proxify()
+	}
+}

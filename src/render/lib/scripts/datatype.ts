@@ -1,9 +1,9 @@
 import Model from '$lib/scripts/model';
 
 export default class Datatype {
-	__type: string | { new (): Model } | { new (): Model }[];
+	__type: string | Datatype[] | { new (): Model } | { new (): Model }[];
 
-	constructor(type: string | { new (): Model } | { new (): Model }[]) {
+	constructor(type: string | Datatype[] | { new (): Model } | { new (): Model }[]) {
 		this.__type = type;
 	}
 
@@ -16,6 +16,14 @@ export default class Datatype {
 			return !value || value?.length == 0 || value.every((item: any) => item.isNaN());
 		} else if (this.__type instanceof Model) {
 			return value.isNaN();
+		} else if (Array.isArray(this.__type)) {
+			if (this.__type.length !== 0) {
+				if (this.__type[0] instanceof Model) {
+					return !value || value?.length == 0 || value.every((item: any) => item.isNaN());
+				} else if (this.__type[0] instanceof Datatype) {
+					return this.__type[0].isNaN(value);
+				}
+			}
 		}
 		return false;
 	}
