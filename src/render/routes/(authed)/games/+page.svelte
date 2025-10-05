@@ -62,8 +62,8 @@
 	}
 
 	function getActionRows(actions: PaginationType<Action>): DataTableRow[] {
-		actionsRowsBuffer = actions.getRows()
-		return actionsRowsBuffer
+		actionsRowsBuffer = actions.getRows();
+		return actionsRowsBuffer;
 	}
 
 	async function submitAction() {
@@ -289,4 +289,11 @@
 
 <SideListGame bind:selectedGameId bind:teamA bind:teamB />
 
-<EditActions editActions={() => {batchSelectedActions.map((el) => actionsRowsBuffer.find(() => ))}} editOpen={batchEditOpen} {teamA} {teamB} />
+<EditActions
+	editActions={batchSelectedActions
+		.map((id) => actionsRowsBuffer.find((action) => action.id === id))
+		.filter((actionExists) => !!actionExists)}
+	bind:editOpen={batchEditOpen}
+	{teamA}
+	{teamB}
+/>
