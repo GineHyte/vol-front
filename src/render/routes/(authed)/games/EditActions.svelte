@@ -1,6 +1,14 @@
 <script lang="ts">
 	import { Button, Tile } from 'carbon-components-svelte';
-	import { Action, ActionsBatchUpdateOptions, Game, Team } from '$lib/scripts/models';
+	import {
+		Action,
+		ActionsBatchUpdateOptions,
+		Game,
+		ImpactRow,
+		Player,
+		Subtech,
+		Team,
+	} from '$lib/scripts/models';
 	import {
 		batchEditActions,
 		editGame,
@@ -10,7 +18,7 @@
 	} from '$lib/scripts/endpoints';
 	import ModalCreateRelation from '$lib/ui/ModalCreateRelation.svelte';
 	import ModalEdit from '@/render/lib/ui/ModalEdit.svelte';
-	import { pushNotification } from '$lib/utils/utils';
+	import { getImpact, pushNotification } from '$lib/utils/utils';
 	import { t } from '$lib/utils/utils';
 	import { Pagination, PaginationProps } from '$lib/scripts/pagination';
 	import ModalSkeleton from '@/render/lib/ui/ModalSkeleton.svelte';
@@ -26,7 +34,18 @@
 	let { editActions, editOpen = $bindable(false), teamA, teamB }: Props = $props();
 
 	let mainAction = $state(new Action());
-	let team = $state(new Team());
+
+	// "open" flags
+	let impactSelectionOpen = $state(false);
+	let teamSelectionOpen = $state(false);
+	let playerSelectionOpen = $state(false);
+	let subtechSelectionOpen = $state(false);
+
+	// selected relations
+	let selectedImpact = $state('');
+	let selectedTeam = $state(0);
+	let selectedPlayer = $state(0);
+	let selectedSubtech = $state(0);
 
 	async function pullActions() {
 		if (!editActions) {
@@ -63,6 +82,31 @@
 		}
 		editOpen = false;
 	}
+
+	async function getTeamsPagination() {
+		return new Pagination<Team>(
+			{ page: 1, size: 2, pages: 1, total: 2, items: [teamA, teamB] },
+			Team,
+		);
+	}
+
+	async function getImpactRows() {
+		return new Pagination<ImpactRow>(
+			{
+				page: 1,
+				size: 2,
+				pages: 1,
+				total: 2,
+				items: Object.entries(getImpact).map(([key, value]) => {
+					const row = new ImpactRow();
+					row.id = key;
+					row.impact = value;
+					return row
+				})),
+			},
+			ImpactRow,
+		);
+	}
 </script>
 
 {#await pullActions()}
@@ -76,24 +120,30 @@
 		bind:open={editOpen}
 	>
 		{#snippet createRelationField()}
-			<Tile>{t('buttons.selectTeamB')}: {team.name}</Tile>
+			<Tile>Selected impact: {selectedImpact}</Tile>
 			<Button
 				class="mt-4"
 				on:click={() => {
-					selectTeamAOpen = true;
+					impactSelectionOpen = true;
 				}}
+				disabled={!!selectedImpact}
 			>
-				{t('buttons.selectTeamA')}
+				Select action
 			</Button>
-			<Button
-				class="mt-4"
-				on:click={() => {
-					selectTeamBOpen = true;
-				}}
-				disabled={!teamA}
-			>
-				{t('buttons.selectTeamB')}
-			</Button>
+		{/snippet}
+		{#snippet modalCreateRelation()}
+			{#if impactSelectionOpen}
+				<ModalCreateRelation
+					title={'Impact'}
+					getFunc={getImpactRows}
+					bind:open={impactSelectionOpen}
+					on:submit={(e) => {
+						selectedImpact = e.detail;
+						impactSelectionOpen = false;
+					}}
+					excludeHeaders={['id']}
+				/>
+			{/if}
 		{/snippet}
 	</ModalEdit>
 {/await}

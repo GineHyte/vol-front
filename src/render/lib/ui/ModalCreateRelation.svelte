@@ -59,7 +59,6 @@
 		: localSelectedRow.id === undefined}
 	on:submit={() => {
 		if (batch) {
-			console.log(rows);
 			localSelectedRows = rows.filter((el) => localSelectedRowIds.includes(el.id));
 			dispatch('submit', localSelectedRows);
 		} else {

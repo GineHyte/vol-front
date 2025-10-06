@@ -533,3 +533,19 @@ export class ActionsBatchUpdateOptions extends Model {
 		return this.proxify()
 	}
 }
+
+export class ImpactRow extends Model {
+	id: any;
+	impact: any;
+
+	constructor() {
+		super();
+
+		this.id = new Field("id", String)
+		this.impact = new Field("impact", String)
+
+		return this.proxify()
+	}
+
+
+}
