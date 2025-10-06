@@ -54,7 +54,7 @@
 		// pull the first editAction
 		for (const key in editActions[0]) {
 			// @ts-ignore
-			mainAction[key] = editActions[key];
+			mainAction[key] = editActions[0][key];
 		}
 		// check the integrity of all editActions
 		for (let editAction of editActions) {
@@ -64,7 +64,7 @@
 					if (keyofAction === '__tableData') {
 						continue;
 					}
-					mainAction[keyofAction] = null;
+					mainAction[keyofAction] = "-";
 				}
 			}
 		}
@@ -90,19 +90,19 @@
 		);
 	}
 
-	async function getImpactRows() {
+	async function getImpactPagination() {
 		return new Pagination<ImpactRow>(
 			{
 				page: 1,
 				size: 2,
 				pages: 1,
 				total: 2,
-				items: Object.entries(getImpact).map(([key, value]) => {
+				items: Object.entries(getImpact()).map(([key, value]) => {
 					const row = new ImpactRow();
 					row.id = key;
 					row.impact = value;
 					return row
-				})),
+				}),
 			},
 			ImpactRow,
 		);
@@ -120,7 +120,6 @@
 		bind:open={editOpen}
 	>
 		{#snippet createRelationField()}
-			<Tile>Selected impact: {selectedImpact}</Tile>
 			<Button
 				class="mt-4"
 				on:click={() => {
@@ -128,14 +127,32 @@
 				}}
 				disabled={!!selectedImpact}
 			>
-				Select action
+				{selectedImpact ? "Selected impact: " : "Select impact"}{selectedImpact.impact}
+			</Button>
+			<Button
+				class="mt-4"
+				on:click={() => {
+					teamSelectionOpen = true;
+				}}
+				disabled={!!selectedTeam}
+			>
+				{selectedTeam ? "Selected team: " : "Select team"}{selectedTeam.name}
+			</Button>
+			<Button
+				class="mt-4"
+				on:click={() => {
+					impactSelectionOpen = true;
+				}}
+				disabled={!!selectedImpact}
+			>
+				{selectedImpact ? "Selected impact: " : "Select impact"}{selectedImpact.impact}
 			</Button>
 		{/snippet}
 		{#snippet modalCreateRelation()}
 			{#if impactSelectionOpen}
 				<ModalCreateRelation
 					title={'Impact'}
-					getFunc={getImpactRows}
+					getFunc={getImpactPagination}
 					bind:open={impactSelectionOpen}
 					on:submit={(e) => {
 						selectedImpact = e.detail;
@@ -143,7 +160,31 @@
 					}}
 					excludeHeaders={['id']}
 				/>
+			{:else if teamSelectionOpen}
+				<ModalCreateRelation
+					title={'Team'}
+					getFunc={getTeamsPagination}
+					bind:open={teamSelectionOpen}
+					on:submit={(e) => {
+						selectedTeam = e.detail;
+						teamSelectionOpen = false;
+					}}
+					excludeHeaders={['id']}
+				/>	
+			{:else if playerSelectionOpen}
+				<ModalCreateRelation
+					title={'Player'}
+					getFunc={getTeamsPagination}
+					bind:open={teamSelectionOpen}
+					on:submit={(e) => {
+						selectedTeam = e.detail;
+						teamSelectionOpen = false;
+					}}
+					excludeHeaders={['id']}
+				/>	
+			{:else if subtechSelectionOpen}
 			{/if}
+			
 		{/snippet}
 	</ModalEdit>
 {/await}

@@ -124,8 +124,8 @@ export class Action extends Model {
 	team: any;
 	player: any;
 	subtech: any;
-	from_zone: any;
-	to_zone: any;
+	fromZone: any;
+	toZone: any;
 	impact: any;
 
 	constructor() {
@@ -136,8 +136,8 @@ export class Action extends Model {
 		this.team = new Field('team', NameWithIdType, t('titles.team'), ['name']);
 		this.player = new Field('player', NameWithIdType, t('titles.player'), ['name']);
 		this.subtech = new Field('subtech', NameWithIdType, t('titles.subtech'), ['name']);
-		this.from_zone = new Field('from_zone', Number, t('fields.fromZone'));
-		this.to_zone = new Field('to_zone', Number, t('fields.toZone'));
+		this.fromZone = new Field('from_zone', Number, t('fields.fromZone'));
+		this.toZone = new Field('to_zone', Number, t('fields.toZone'));
 		this.impact = new Field('impact', String, t('fields.qualityIndicator'), [], getImpact());
 
 		return this.proxify();
@@ -542,7 +542,7 @@ export class ImpactRow extends Model {
 		super();
 
 		this.id = new Field("id", String)
-		this.impact = new Field("impact", String)
+		this.impact = new Field("impact", String, t('fields.qualityIndicator'))
 
 		return this.proxify()
 	}

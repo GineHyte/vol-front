@@ -72,8 +72,8 @@
 		action.team = selectedSide === Side.LEFT ? localGame?.teamA : localGame?.teamB;
 		action.player = selectedPlayer;
 		action.subtech = selectedSubtech;
-		action.from_zone = selectedZones[0];
-		action.to_zone = selectedZones[1];
+		action.fromZone = selectedZones[0];
+		action.toZone = selectedZones[1];
 		action.impact = selectedImpact;
 
 		let status = await createAction(action);
@@ -289,6 +289,7 @@
 
 <SideListGame bind:selectedGameId bind:teamA bind:teamB />
 
+{#if batchEditOpen}
 <EditActions
 	editActions={batchSelectedActions
 		.map((id) => actionsRowsBuffer.find((action) => action.id === id))
@@ -297,3 +298,4 @@
 	{teamA}
 	{teamB}
 />
+{/if}

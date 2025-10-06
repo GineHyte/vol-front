@@ -47,6 +47,15 @@
 		rows = pRows;
 		return pRows;
 	}
+
+	function submit() {
+		if (batch) {
+			localSelectedRows = rows.filter((el) => localSelectedRowIds.includes(el.id));
+			dispatch('submit', localSelectedRows);
+		} else {
+			dispatch('submit', localSelectedRow);
+		}
+	}
 </script>
 
 <Modal
@@ -57,14 +66,7 @@
 	primaryButtonDisabled={batch
 		? localSelectedRowIds.length === 0
 		: localSelectedRow.id === undefined}
-	on:submit={() => {
-		if (batch) {
-			localSelectedRows = rows.filter((el) => localSelectedRowIds.includes(el.id));
-			dispatch('submit', localSelectedRows);
-		} else {
-			dispatch('submit', localSelectedRow);
-		}
-	}}
+	on:submit={submit}
 >
 	{#await getFunc(new PaginationProps(1, 100))}
 		<DataTableSkeleton />
