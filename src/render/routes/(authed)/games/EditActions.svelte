@@ -5,6 +5,7 @@
 		ActionsBatchUpdateOptions,
 		Game,
 		ImpactRow,
+		NameWithId,
 		Player,
 		Subtech,
 		Team,
@@ -14,6 +15,8 @@
 		editGame,
 		getAction,
 		getGame,
+		getPlayers,
+		getTeam,
 		getTeams,
 	} from '$lib/scripts/endpoints';
 	import ModalCreateRelation from '$lib/ui/ModalCreateRelation.svelte';
@@ -34,6 +37,8 @@
 	let { editActions, editOpen = $bindable(false), teamA, teamB }: Props = $props();
 
 	let mainAction = $state(new Action());
+	let isLoaded = $state(false);
+	let lastEditActionsId = $state(''); // Track processed actions by ID
 
 	// "open" flags
 	let impactSelectionOpen = $state(false);
@@ -42,38 +47,134 @@
 	let subtechSelectionOpen = $state(false);
 
 	// selected relations
-	let selectedImpact = $state('');
-	let selectedTeam = $state(0);
-	let selectedPlayer = $state(0);
-	let selectedSubtech = $state(0);
+	let selectedImpact = $state(new ImpactRow());
+	let selectedTeam = $state(new NameWithId());
+	let selectedPlayer: DataTableRow | NameWithId = $state(new NameWithId());
+	let selectedSubtech = $state(new NameWithId());
+
+	let selectedTeamPlayerIds: number[] = [];
+	let teamAplayerIds: number[] = [];
+	let teamBplayerIds: number[] = [];
+
+	function actionDataTableRowToModel(editAction: DataTableRow) {
+		let actionModel = new Action();
+		// Copy properties from the first editAction
+		for (const key in editAction) {
+			if (key !== '__tableData' && key !== 'id') {
+				// @ts-ignore
+				actionModel[key] = editAction[key];
+			}
+		}
+		return actionModel;
+	}
+
+	function resolveNameWithId(team: Team) {
+		let playerIds: number[] = [];
+		team.players = team.players.map((player: any) => {
+			playerIds.push(player.player.id);
+			return player.player.name;
+		});
+		return { team, playerIds };
+	}
+
+	async function getTeamsRenderer(pprop: PaginationProps): Promise<Pagination<any>> {
+		if (!teamA || !teamB) throw new Error('team A and team are undefined');
+		let teamAModel = await getTeam(teamA);
+		let teamBModel = await getTeam(teamB);
+
+		({ team: teamAModel, playerIds: teamAplayerIds } = resolveNameWithId(teamAModel));
+		({ team: teamBModel, playerIds: teamBplayerIds } = resolveNameWithId(teamBModel));
+
+		return new Pagination(
+			{ page: 1, size: 2, items: [teamAModel, teamBModel], total: 2, pages: 1 },
+			Team,
+		);
+	}
+
+	function setSelectedTeamPlayerIds(selectedTeamId: number) {
+		if (teamA === selectedTeamId) {
+			selectedTeamPlayerIds = teamAplayerIds;
+		} else if (teamB === selectedTeamId) {
+			selectedTeamPlayerIds = teamBplayerIds;
+		}
+	}
+
+	async function getPlayersRenderer(pprop: PaginationProps): Promise<Pagination<any>> {
+		let players = await getPlayers(pprop);
+		players.items = players.items.filter((player: Player) =>
+			selectedTeamPlayerIds.includes(player.id),
+		);
+		return players;
+	}
+	function onTeamSelectionSubmit(e: CustomEvent) {
+		selectedTeam = e.detail;
+		teamSelectionOpen = false;
+
+		setSelectedTeamPlayerIds(selectedTeam.id);
+	}
+
+	function onPlayerSelectionSubmit(e: CustomEvent) {
+		selectedPlayer = e.detail;
+		playerSelectionOpen = false;
+	}
+
+	function getSelectPlayerButtonTitle() {
+		if (selectedPlayer instanceof NameWithId) {
+			return `Selected player: ${selectedPlayer.name}`;
+		}
+		if (selectedPlayer) {
+			return `Selected player: ${selectedPlayer.firstName} ${selectedPlayer.lastName}`;
+		} else {
+			return 'Select player';
+		}
+	}
 
 	async function pullActions() {
-		if (!editActions) {
+		if (!editActions || editActions.length === 0) {
 			return;
 		}
-		// pull the first editAction
-		for (const key in editActions[0]) {
-			// @ts-ignore
-			mainAction[key] = editActions[0][key];
-		}
+
+		const newAction = actionDataTableRowToModel(editActions[0]);
+
+		// Store selected values before applying to main action
+		let tempSelectedImpact = newAction.impact || '';
+		let tempSelectedTeam = newAction.team || 0;
+		let tempSelectedPlayer = newAction.player || 0;
+		let tempSelectedSubtech = newAction.subtech || 0;
+
 		// check the integrity of all editActions
 		for (let editAction of editActions) {
-			for (const key in editAction) {
-				const keyofAction = key as keyof Action;
-				if (mainAction[keyofAction] != editAction[key]) {
-					if (keyofAction === '__tableData') {
+			for (const editKey in editAction) {
+				const editKeyofAction = editKey as keyof Action;
+				if (newAction[editKeyofAction] != editAction[editKey]) {
+					if (editKeyofAction === '__tableData') {
 						continue;
 					}
-					mainAction[keyofAction] = "-";
+					newAction[editKeyofAction] = '-';
+					// Reset temp values if inconsistent
+					if (editKey === 'impact') tempSelectedImpact = '';
+					if (editKey === 'team') tempSelectedTeam = 0;
+					if (editKey === 'player') tempSelectedPlayer = 0;
+					if (editKey === 'subtech') tempSelectedSubtech = 0;
 				}
 			}
 		}
+
+		// Apply all changes at once to minimize reactivity
+		mainAction = newAction;
+		selectedImpact.impact = tempSelectedImpact;
+		selectedTeam.name = tempSelectedTeam;
+		if (selectedPlayer instanceof NameWithId) {
+			selectedPlayer.name = tempSelectedPlayer;
+		}
+		selectedSubtech.name = tempSelectedSubtech;
+		isLoaded = true;
 	}
 
 	async function batchEditActionsRenderer() {
 		let batchOptions = new ActionsBatchUpdateOptions();
 		batchOptions.actions = editActions;
-		batchOptions.mainAction = mainAction;
+		batchOptions.mainAction = mainAction.serialize();
 		let status = await batchEditActions(batchOptions);
 		if (status.status === 'success') {
 			pushNotification('editGameSuccess');
@@ -81,13 +182,6 @@
 			pushNotification('editGameError');
 		}
 		editOpen = false;
-	}
-
-	async function getTeamsPagination() {
-		return new Pagination<Team>(
-			{ page: 1, size: 2, pages: 1, total: 2, items: [teamA, teamB] },
-			Team,
-		);
 	}
 
 	async function getImpactPagination() {
@@ -101,19 +195,36 @@
 					const row = new ImpactRow();
 					row.id = key;
 					row.impact = value;
-					return row
+					return row;
 				}),
 			},
 			ImpactRow,
 		);
 	}
+
+	// Only trigger when editActions actually changes
+	$effect(() => {
+		if (editActions && editOpen) {
+			// Create a unique ID for this set of editActions to prevent re-processing
+			const currentId = editActions.map((action) => action.id).join(',');
+			if (currentId !== lastEditActionsId) {
+				lastEditActionsId = currentId;
+				isLoaded = false;
+				pullActions();
+			}
+		} else {
+			isLoaded = false;
+			lastEditActionsId = '';
+		}
+	});
 </script>
 
-{#await pullActions()}
+{#if !isLoaded}
 	<ModalSkeleton model={mainAction} title={t('titles.action')} />
-{:then _}
+{:else}
 	<ModalEdit
 		title={t('titles.action')}
+		requiredFields={[]}
 		bind:model={mainAction}
 		onSubmit={batchEditActionsRenderer}
 		exclude={['impact']}
@@ -125,27 +236,27 @@
 				on:click={() => {
 					impactSelectionOpen = true;
 				}}
-				disabled={!!selectedImpact}
 			>
-				{selectedImpact ? "Selected impact: " : "Select impact"}{selectedImpact.impact}
+				{selectedImpact.impact
+					? 'Selected impact: '
+					: 'Select impact'}{selectedImpact.impact}
 			</Button>
 			<Button
 				class="mt-4"
 				on:click={() => {
 					teamSelectionOpen = true;
 				}}
-				disabled={!!selectedTeam}
 			>
-				{selectedTeam ? "Selected team: " : "Select team"}{selectedTeam.name}
+				{selectedTeam.name ? 'Selected team: ' : 'Select team'}{selectedTeam.name}
 			</Button>
 			<Button
 				class="mt-4"
 				on:click={() => {
-					impactSelectionOpen = true;
+					playerSelectionOpen = true;
 				}}
-				disabled={!!selectedImpact}
+				disabled={!selectedTeam}
 			>
-				{selectedImpact ? "Selected impact: " : "Select impact"}{selectedImpact.impact}
+				{getSelectPlayerButtonTitle()}
 			</Button>
 		{/snippet}
 		{#snippet modalCreateRelation()}
@@ -163,28 +274,20 @@
 			{:else if teamSelectionOpen}
 				<ModalCreateRelation
 					title={'Team'}
-					getFunc={getTeamsPagination}
+					getFunc={getTeamsRenderer}
 					bind:open={teamSelectionOpen}
-					on:submit={(e) => {
-						selectedTeam = e.detail;
-						teamSelectionOpen = false;
-					}}
+					on:submit={onTeamSelectionSubmit}
 					excludeHeaders={['id']}
-				/>	
+				/>
 			{:else if playerSelectionOpen}
 				<ModalCreateRelation
 					title={'Player'}
-					getFunc={getTeamsPagination}
-					bind:open={teamSelectionOpen}
-					on:submit={(e) => {
-						selectedTeam = e.detail;
-						teamSelectionOpen = false;
-					}}
-					excludeHeaders={['id']}
-				/>	
-			{:else if subtechSelectionOpen}
-			{/if}
-			
+					getFunc={getPlayersRenderer}
+					bind:open={playerSelectionOpen}
+					on:submit={onPlayerSelectionSubmit}
+					excludeHeaders={['teams', 'imageFile', 'id']}
+				/>
+			{:else if subtechSelectionOpen}{/if}
 		{/snippet}
 	</ModalEdit>
-{/await}
+{/if}

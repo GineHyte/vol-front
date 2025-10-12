@@ -58,6 +58,8 @@
 
 	async function getGameLocal(gameIdLocal: number) {
 		localGame = await getGame(gameIdLocal);
+		teamA = localGame.teamA;
+		teamB = localGame.teamB;
 		return localGame;
 	}
 
