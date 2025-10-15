@@ -37,7 +37,7 @@
 	let batchSelectedActions = $state([]);
 	let batchUpdateActive = $state(false);
 	let actionTableUpdate = $state(false);
-	let actionsRowsBuffer: DataTableRow[] = $state([]);
+	let actionsBuffer: Action[] = $state([]);
 	let targetForActions: any = $state();
 	let selectedSubtech: number = $state(-1);
 	let actionsPageSize = $state(10);
@@ -64,8 +64,8 @@
 	}
 
 	function getActionRows(actions: PaginationType<Action>): DataTableRow[] {
-		actionsRowsBuffer = actions.getRows();
-		return actionsRowsBuffer;
+		actionsBuffer = actions.items
+		return actions.getRows();;
 	}
 
 	async function submitAction() {
@@ -294,7 +294,7 @@
 {#if batchEditOpen}
 <EditActions
 	editActions={batchSelectedActions
-		.map((id) => actionsRowsBuffer.find((action) => action.id === id))
+		.map((id) => actionsBuffer.find((action) => action.id === id))
 		.filter((actionExists) => !!actionExists)}
 	bind:editOpen={batchEditOpen}
 	{teamA}

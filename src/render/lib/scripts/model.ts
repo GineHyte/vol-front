@@ -87,7 +87,9 @@ export default class Model {
 			}
 			if (Array.isArray(value)) {
 				data[skey] = value.map((item: any) => {
-					return item.serialize();
+					if (item instanceof Model)
+						return item.serialize();
+					else return item
 				});
 			} else if (value instanceof Model) {
 				data[skey] = (value as Model).serialize();

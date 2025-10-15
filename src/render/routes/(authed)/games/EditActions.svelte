@@ -1,23 +1,17 @@
 <script lang="ts">
-	import { Button, Tile } from 'carbon-components-svelte';
+	import { Button } from 'carbon-components-svelte';
 	import {
 		Action,
 		ActionsBatchUpdateOptions,
-		Game,
 		ImpactRow,
 		NameWithId,
 		Player,
-		Subtech,
 		Team,
 	} from '$lib/scripts/models';
 	import {
 		batchEditActions,
-		editGame,
-		getAction,
-		getGame,
 		getPlayers,
 		getTeam,
-		getTeams,
 	} from '$lib/scripts/endpoints';
 	import ModalCreateRelation from '$lib/ui/ModalCreateRelation.svelte';
 	import ModalEdit from '@/render/lib/ui/ModalEdit.svelte';
@@ -28,13 +22,15 @@
 	import type { DataTableRow } from 'carbon-components-svelte/types/DataTable/DataTable.svelte';
 
 	interface Props {
-		editActions?: DataTableRow[];
+		editActions?: Action[];
 		editOpen?: boolean;
 		teamA?: number;
 		teamB?: number;
 	}
 
 	let { editActions, editOpen = $bindable(false), teamA, teamB }: Props = $props();
+
+	console.log(editActions)
 
 	let mainAction = $state(new Action());
 	let isLoaded = $state(false);
@@ -55,18 +51,6 @@
 	let selectedTeamPlayerIds: number[] = [];
 	let teamAplayerIds: number[] = [];
 	let teamBplayerIds: number[] = [];
-
-	function actionDataTableRowToModel(editAction: DataTableRow) {
-		let actionModel = new Action();
-		// Copy properties from the first editAction
-		for (const key in editAction) {
-			if (key !== '__tableData' && key !== 'id') {
-				// @ts-ignore
-				actionModel[key] = editAction[key];
-			}
-		}
-		return actionModel;
-	}
 
 	function resolveNameWithId(team: Team) {
 		let playerIds: number[] = [];
@@ -134,7 +118,7 @@
 			return;
 		}
 
-		const newAction = actionDataTableRowToModel(editActions[0]);
+		const newAction = editActions[0];
 
 		// Store selected values before applying to main action
 		let tempSelectedImpact = newAction.impact || '';
@@ -171,10 +155,19 @@
 		isLoaded = true;
 	}
 
+	function updateMainActionWithSelectedModels() {
+		mainAction.impact = selectedImpact.id
+		mainAction.team = selectedTeam.id
+		mainAction.subtech = selectedSubtech.id
+		mainAction.player = selectedPlayer.id
+	}
+
 	async function batchEditActionsRenderer() {
 		let batchOptions = new ActionsBatchUpdateOptions();
-		batchOptions.actions = editActions;
-		batchOptions.mainAction = mainAction.serialize();
+		batchOptions.actions = editActions?.map(action => action.id);
+		batchOptions.mainAction = mainAction;
+		updateMainActionWithSelectedModels()
+		console.log(selectedPlayer, selectedSubtech, selectedTeam)
 		let status = await batchEditActions(batchOptions);
 		if (status.status === 'success') {
 			pushNotification('editGameSuccess');
