@@ -121,7 +121,7 @@ export async function getActions(
 export async function batchEditActions(
 	actionsBatchUpdateOptions: ActionsBatchUpdateOptions
 ): Promise<Status> {
-	return Api.put(`/actions/batch_update`, actionsBatchUpdateOptions).then((data: any) => {
+	return Api.put(`/actions/batch_update`, actionsBatchUpdateOptions.serialize()).then((data: any) => {
 		return new Status().deserialize(data) as Status;
 	});
 }

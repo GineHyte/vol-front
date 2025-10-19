@@ -28,9 +28,9 @@
 		teamB?: number;
 	}
 
-	let { editActions, editOpen = $bindable(false), teamA, teamB }: Props = $props();
+	console.log(teamA)
 
-	console.log(editActions)
+	let { editActions, editOpen = $bindable(false), teamA, teamB }: Props = $props();
 
 	let mainAction = $state(new Action());
 	let isLoaded = $state(false);
@@ -68,6 +68,8 @@
 
 		({ team: teamAModel, playerIds: teamAplayerIds } = resolveNameWithId(teamAModel));
 		({ team: teamBModel, playerIds: teamBplayerIds } = resolveNameWithId(teamBModel));
+
+		console.log(teamAModel, teamAplayerIds)
 
 		return new Pagination(
 			{ page: 1, size: 2, items: [teamAModel, teamBModel], total: 2, pages: 1 },
@@ -134,7 +136,6 @@
 					if (editKeyofAction === '__tableData') {
 						continue;
 					}
-					newAction[editKeyofAction] = '-';
 					// Reset temp values if inconsistent
 					if (editKey === 'impact') tempSelectedImpact = '';
 					if (editKey === 'team') tempSelectedTeam = 0;
@@ -146,10 +147,10 @@
 
 		// Apply all changes at once to minimize reactivity
 		mainAction = newAction;
-		selectedImpact.impact = tempSelectedImpact;
-		selectedTeam.name = tempSelectedTeam;
+		selectedImpact = tempSelectedImpact;
+		selectedTeam = tempSelectedTeam;
 		if (selectedPlayer instanceof NameWithId) {
-			selectedPlayer.name = tempSelectedPlayer;
+			selectedPlayer = tempSelectedPlayer;
 		}
 		selectedSubtech.name = tempSelectedSubtech;
 		isLoaded = true;
@@ -160,6 +161,7 @@
 		mainAction.team = selectedTeam.id
 		mainAction.subtech = selectedSubtech.id
 		mainAction.player = selectedPlayer.id
+		mainAction.game = mainAction.game.id
 	}
 
 	async function batchEditActionsRenderer() {
@@ -167,7 +169,6 @@
 		batchOptions.actions = editActions?.map(action => action.id);
 		batchOptions.mainAction = mainAction;
 		updateMainActionWithSelectedModels()
-		console.log(selectedPlayer, selectedSubtech, selectedTeam)
 		let status = await batchEditActions(batchOptions);
 		if (status.status === 'success') {
 			pushNotification('editGameSuccess');
