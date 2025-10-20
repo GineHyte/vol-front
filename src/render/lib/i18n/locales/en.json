@@ -40,7 +40,9 @@
     "players": "Players",
     "amplua": "Position",
     "playerStats": "Player Statistics",
-    "login": "Login"
+    "login": "Login",
+    "action": "Action",
+    "impact": "Impact"
   },
   "login": {
     "title": "Log in",
@@ -112,6 +114,14 @@
     "selectSubtech": "Select Sub-technique",
     "selectTeamA": "Select Team A",
     "selectTeamB": "Select Team B",
+    "selectImpact": "Select Impact",
+    "selectTeam": "Select Team",
+    "selectPlayer": "Select Player",
+    "selectedImpact": "Selected impact:",
+    "selectedTeam": "Selected team:",
+    "selectedPlayer": "Selected player:",
+    "toggleBatchUpdate": "Toggle Batch Update",
+    "editSelectedActions": "Edit Selected Actions",
     "statistics": "Statistics",
     "calculateStats": "Calculate Statistics",
     "plan": "Plan",

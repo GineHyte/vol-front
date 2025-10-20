@@ -1,6 +1,6 @@
 {
 	"name": "vol-front",
-	"version": "0.1.6",
+	"version": "0.1.7",
 	"private": true,
 	"description": "Technical Skills in Beach Volleyball",
 	"main": "src/main/electron.cjs",

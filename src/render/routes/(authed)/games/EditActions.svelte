@@ -8,11 +8,7 @@
 		Player,
 		Team,
 	} from '$lib/scripts/models';
-	import {
-		batchEditActions,
-		getPlayers,
-		getTeam,
-	} from '$lib/scripts/endpoints';
+	import { batchEditActions, getPlayers, getTeam } from '$lib/scripts/endpoints';
 	import ModalCreateRelation from '$lib/ui/ModalCreateRelation.svelte';
 	import ModalEdit from '@/render/lib/ui/ModalEdit.svelte';
 	import { getImpact, pushNotification } from '$lib/utils/utils';
@@ -22,15 +18,20 @@
 	import type { DataTableRow } from 'carbon-components-svelte/types/DataTable/DataTable.svelte';
 
 	interface Props {
+		actionTableUpdate: boolean;
 		editActions?: Action[];
 		editOpen?: boolean;
 		teamA?: number;
 		teamB?: number;
 	}
 
-	console.log(teamA)
-
-	let { editActions, editOpen = $bindable(false), teamA, teamB }: Props = $props();
+	let {
+		editActions,
+		editOpen = $bindable(false),
+		teamA,
+		teamB,
+		actionTableUpdate = $bindable(false),
+	}: Props = $props();
 
 	let mainAction = $state(new Action());
 	let isLoaded = $state(false);
@@ -69,7 +70,7 @@
 		({ team: teamAModel, playerIds: teamAplayerIds } = resolveNameWithId(teamAModel));
 		({ team: teamBModel, playerIds: teamBplayerIds } = resolveNameWithId(teamBModel));
 
-		console.log(teamAModel, teamAplayerIds)
+		console.log(teamAModel, teamAplayerIds);
 
 		return new Pagination(
 			{ page: 1, size: 2, items: [teamAModel, teamBModel], total: 2, pages: 1 },
@@ -106,12 +107,12 @@
 
 	function getSelectPlayerButtonTitle() {
 		if (selectedPlayer instanceof NameWithId) {
-			return `Selected player: ${selectedPlayer.name}`;
+			return `${t('buttons.selectedPlayer')} ${selectedPlayer.name}`;
 		}
 		if (selectedPlayer) {
-			return `Selected player: ${selectedPlayer.firstName} ${selectedPlayer.lastName}`;
+			return `${t('buttons.selectedPlayer')} ${selectedPlayer.firstName} ${selectedPlayer.lastName}`;
 		} else {
-			return 'Select player';
+			return t('buttons.selectPlayer');
 		}
 	}
 
@@ -157,24 +158,25 @@
 	}
 
 	function updateMainActionWithSelectedModels() {
-		mainAction.impact = selectedImpact.id
-		mainAction.team = selectedTeam.id
-		mainAction.subtech = selectedSubtech.id
-		mainAction.player = selectedPlayer.id
-		mainAction.game = mainAction.game.id
+		mainAction.impact = selectedImpact.id;
+		mainAction.team = selectedTeam.id;
+		mainAction.subtech = selectedSubtech.id;
+		mainAction.player = selectedPlayer.id;
+		mainAction.game = mainAction.game.id;
 	}
 
 	async function batchEditActionsRenderer() {
 		let batchOptions = new ActionsBatchUpdateOptions();
-		batchOptions.actions = editActions?.map(action => action.id);
+		batchOptions.actions = editActions?.map((action) => action.id);
 		batchOptions.mainAction = mainAction;
-		updateMainActionWithSelectedModels()
+		updateMainActionWithSelectedModels();
 		let status = await batchEditActions(batchOptions);
 		if (status.status === 'success') {
 			pushNotification('editGameSuccess');
 		} else {
 			pushNotification('editGameError');
 		}
+		actionTableUpdate = !actionTableUpdate;
 		editOpen = false;
 	}
 
@@ -232,8 +234,8 @@
 				}}
 			>
 				{selectedImpact.impact
-					? 'Selected impact: '
-					: 'Select impact'}{selectedImpact.impact}
+					? t('buttons.selectedImpact')
+					: t('buttons.selectImpact')} {selectedImpact.impact}
 			</Button>
 			<Button
 				class="mt-4"
@@ -241,7 +243,7 @@
 					teamSelectionOpen = true;
 				}}
 			>
-				{selectedTeam.name ? 'Selected team: ' : 'Select team'}{selectedTeam.name}
+				{selectedTeam.name ? t('buttons.selectedTeam') : t('buttons.selectTeam')} {selectedTeam.name}
 			</Button>
 			<Button
 				class="mt-4"
@@ -256,7 +258,7 @@
 		{#snippet modalCreateRelation()}
 			{#if impactSelectionOpen}
 				<ModalCreateRelation
-					title={'Impact'}
+					title={t('titles.impact')}
 					getFunc={getImpactPagination}
 					bind:open={impactSelectionOpen}
 					on:submit={(e) => {
@@ -267,7 +269,7 @@
 				/>
 			{:else if teamSelectionOpen}
 				<ModalCreateRelation
-					title={'Team'}
+					title={t('titles.team')}
 					getFunc={getTeamsRenderer}
 					bind:open={teamSelectionOpen}
 					on:submit={onTeamSelectionSubmit}
@@ -275,7 +277,7 @@
 				/>
 			{:else if playerSelectionOpen}
 				<ModalCreateRelation
-					title={'Player'}
+					title={t('titles.player')}
 					getFunc={getPlayersRenderer}
 					bind:open={playerSelectionOpen}
 					on:submit={onPlayerSelectionSubmit}

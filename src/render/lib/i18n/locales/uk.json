@@ -39,7 +39,9 @@
     "players": "Гравці",
     "amplua": "Амплуа",
     "playerStats": "Статистика по гравцю",
-    "planDistribution": "Розподіл плану тренувань"
+    "planDistribution": "Розподіл плану тренувань",
+    "action": "Дія",
+    "impact": "Вплив"
   },
   "login": {
     "title": "Увійти",
@@ -111,6 +113,14 @@
     "selectSubtech": "Вибрати підтехніку",
     "selectTeamA": "Вибрати команду А",
     "selectTeamB": "Вибрати команду Б",
+    "selectImpact": "Вибрати якісний показник гри",
+    "selectTeam": "Вибрати команду",
+    "selectPlayer": "Вибрати гравця",
+    "selectedImpact": "Обраний якісний показник гри:",
+    "selectedTeam": "Обрана команда:",
+    "selectedPlayer": "Обраний гравець:",
+    "toggleBatchUpdate": "Перемкнути пакетне редагування",
+    "editSelectedActions": "Редагувати обрані дії",
     "statistics": "Статистика",
     "calculateStats": "Розрахувати статистику",
     "plan": "План",

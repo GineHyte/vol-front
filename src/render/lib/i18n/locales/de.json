@@ -38,7 +38,9 @@
     "player": "Spieler",
     "players": "Spieler",
     "amplua": "Position",
-    "playerStats": "Spielerstatistiken"
+    "playerStats": "Spielerstatistiken",
+    "action": "Aktion",
+    "impact": "Auswirkung"
   },
   "login": {
     "title": "Anmelden",
@@ -110,6 +112,14 @@
     "selectSubtech": "Untertechnik auswählen",
     "selectTeamA": "Team A auswählen",
     "selectTeamB": "Team B auswählen",
+    "selectImpact": "Auswirkung auswählen",
+    "selectTeam": "Team auswählen",
+    "selectPlayer": "Spieler auswählen",
+    "selectedImpact": "Ausgewählte Auswirkung:",
+    "selectedTeam": "Ausgewähltes Team:",
+    "selectedPlayer": "Ausgewählter Spieler:",
+    "toggleBatchUpdate": "Stapelaktualisierung umschalten",
+    "editSelectedActions": "Ausgewählte Aktionen bearbeiten",
     "statistics": "Statistiken",
     "calculateStats": "Statistiken berechnen",
     "plan": "Plan",

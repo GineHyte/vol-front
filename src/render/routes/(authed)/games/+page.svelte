@@ -64,8 +64,8 @@
 	}
 
 	function getActionRows(actions: PaginationType<Action>): DataTableRow[] {
-		actionsBuffer = actions.items
-		return actions.getRows();;
+		actionsBuffer = actions.items;
+		return actions.getRows();
 	}
 
 	async function submitAction() {
@@ -247,9 +247,10 @@
 											kind={batchUpdateActive ? 'primary' : 'secondary'}
 											on:click={() => {
 												batchUpdateActive = !batchUpdateActive;
+												batchSelectedActions = [];
 											}}
 										>
-											Toggle bactch update
+											{t('buttons.toggleBatchUpdate')}
 										</Button>
 										{#if batchUpdateActive}
 											<Button
@@ -258,7 +259,7 @@
 													batchEditOpen = true;
 												}}
 											>
-												Edit selected actions
+												{t('buttons.editSelectedActions')}
 											</Button>
 										{/if}
 									</Toolbar>
@@ -274,15 +275,15 @@
 									bind:page={actionsPage}
 									totalItems={actions.total}
 								/>
+								<ContextMenu
+									target={targetForActions}
+									deleteFunc={removeAction}
+									duplicateFunc={duplicateAction}
+									updateFunc={() => (actionTableUpdate = !actionTableUpdate)}
+								/>
 							{/await}
 						{/key}
 					</div>
-					<ContextMenu
-						target={targetForActions}
-						deleteFunc={removeAction}
-						duplicateFunc={duplicateAction}
-						updateFunc={() => (actionTableUpdate = !actionTableUpdate)}
-					/>
 				</Row>
 			{/await}
 		</Grid>
@@ -292,12 +293,13 @@
 <SideListGame bind:selectedGameId bind:teamA bind:teamB />
 
 {#if batchEditOpen}
-<EditActions
-	editActions={batchSelectedActions
-		.map((id) => actionsBuffer.find((action) => action.id === id))
-		.filter((actionExists) => !!actionExists)}
-	bind:editOpen={batchEditOpen}
-	{teamA}
-	{teamB}
-/>
+	<EditActions
+		bind:actionTableUpdate
+		editActions={batchSelectedActions
+			.map((id) => actionsBuffer.find((action) => action.id === id))
+			.filter((actionExists) => !!actionExists)}
+		bind:editOpen={batchEditOpen}
+		{teamA}
+		{teamB}
+	/>
 {/if}

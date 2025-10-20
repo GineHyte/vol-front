@@ -36,6 +36,8 @@
 	}
 
 	async function editGameRenderer() {
+		game.teamA = teamA.id;
+		game.teamB = teamB.id;
 		let status = await editGame(game);
 		if (status.status === 'success') {
 			pushNotification('editGameSuccess');
