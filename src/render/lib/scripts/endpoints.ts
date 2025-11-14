@@ -281,8 +281,9 @@ export async function getImpactStats(
 
 export async function generatePlan(
 	playerId: number,
+	amplua: string,
 ): Promise<Status> {
-	return Api.get(`/algorithm/plan/calculate/${playerId}`).then((data: any) => {
+	return Api.get(`/algorithm/plan/calculate/${playerId}?amplua=${amplua}`).then((data: any) => {
 		return new Status().deserialize(data) as Status;
 	});
 }

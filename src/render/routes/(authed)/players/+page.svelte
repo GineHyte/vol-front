@@ -12,6 +12,10 @@
 		DataTableSkeleton,
 		Button,
 		Loading,
+		ComposedModal,
+		ModalBody,
+		ModalHeader,
+		ClickableTile,
 	} from 'carbon-components-svelte';
 	import { ChartStacked, MachineLearningModel } from 'carbon-icons-svelte';
 	import {
@@ -27,7 +31,7 @@
 	import { Player } from '$lib/scripts/models';
 	import ModalCreate from '$lib/ui/ModalCreate.svelte';
 	import ModalEdit from '$lib/ui/ModalEdit.svelte';
-	import { pushNotification } from '$lib/utils/utils';
+	import { getAmplua, pushNotification } from '$lib/utils/utils';
 	import Stats from './Stats.svelte';
 	import Plan from './Plan.svelte';
 	import { t } from '$lib/utils/utils';
@@ -43,18 +47,18 @@
 	let playerName = $state('');
 	let generatePlanLoading = $state(false);
 	let calculatePlayerStatsLoading = $state(false);
-	let selectionPlayerOpen = $state(false);
 	let selectedPlayer: Player | undefined = $state(undefined);
+	let generatePlanAmpluaSelectionModalOpen = $state(false);
 
-	async function onGeneratePlan() {
+	async function onGeneratePlanAmpluaClick(amplua: string) {
 		if (!selectedPlayerId) {
 			return; // Exit early if no player selected
 		}
-
 		generatePlanLoading = true;
+		generatePlanAmpluaSelectionModalOpen = false;
 
 		try {
-			const status = await generatePlan(selectedPlayerId);
+			const status = await generatePlan(selectedPlayerId, amplua);
 
 			if (!status) {
 				pushNotification('generatePlanError');
@@ -73,6 +77,10 @@
 			// regardless of success, errors, or early returns
 			generatePlanLoading = false;
 		}
+	}
+	async function onGeneratePlanButtonClick() {
+		generatePlanAmpluaSelectionModalOpen = true;
+		return;
 	}
 
 	async function onCalculatePlayerStats() {
@@ -238,7 +246,7 @@
 									kind="ghost"
 									iconDescription={t('buttons.trainingPlan')}
 									icon={MachineLearningModel}
-									on:click={onGeneratePlan}
+									on:click={onGeneratePlanButtonClick}
 								></Button>
 							{/if}
 						</div>
@@ -256,6 +264,19 @@
 			</Row>
 		</Grid>
 	</Content>
+{/if}
+
+{#if generatePlanAmpluaSelectionModalOpen}
+	<ComposedModal size={'sm'} bind:open={generatePlanAmpluaSelectionModalOpen}>
+		<ModalHeader title="Amplua" />
+		<ModalBody>
+			{#each Object.entries(getAmplua()) as [key, value]}
+				<ClickableTile on:click={async () => await onGeneratePlanAmpluaClick(key)}>
+					{value}
+				</ClickableTile>
+			{/each}
+		</ModalBody>
+	</ComposedModal>
 {/if}
 
 {#if createOpen}
@@ -286,7 +307,7 @@
 			createOpen = true;
 		}}
 		getFunc={getPlayers}
-		editFunc={(currentId: number) => {
+		editFunc={async (currentId: number) => {
 			selectedPlayerId = currentId;
 		}}
 		headers={[{ key: 'firstName', value: t('fields.firstName') }]}

@@ -113,9 +113,7 @@
 				{#if teamA}
 					<ModalCreateRelation
 						title={t('buttons.selectTeamB')}
-						getFunc={async () => {
-							return await getTeams(new PaginationProps(1, 100));
-						}}
+						getFunc={getTeamsRenderer}
 						bind:open={selectTeamBOpen}
 						on:submit={(e) => {
 							teamB = e.detail;
