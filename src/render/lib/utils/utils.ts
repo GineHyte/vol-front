@@ -25,10 +25,9 @@ export function settingsUpdater(settings: any) {
         locale.set(settings.locale);
     }
     if (typeof window !== 'undefined' && window.electron) {
-        window.electron.setSettings(settings);
+        window.electron.setSettings({...settings});
     }
     if (typeof document !== 'undefined') {
-        console.log("theme update!", settings.theme);
         document.documentElement.setAttribute('theme', settings.theme);
     }
 }

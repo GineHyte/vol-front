@@ -85,16 +85,14 @@
 	class="mb-4"
 /> -->
 <Button class="mt-4" on:click={checkUpdate}>{t('buttons.checkUpdate')}</Button>
-{#if settings.theme}
-	<Theme
-		on:update={(e) => {
-			settings.theme = e.detail.theme as CarbonTheme;
-		}}
-		render="select"
-		theme={settings.theme}
-		select={themeSelectorOptions}
-	/>
-{/if}
+<Theme
+	on:update={(e) => {
+		settings.theme = e.detail.theme as CarbonTheme;
+	}}
+	render="select"
+	theme={settings.theme}
+	select={themeSelectorOptions}
+/>
 <p>{t('settings.version')}: {$versionRenderer}</p>
 
 <Button class="absolute bottom-4 left-4" on:click={saveSettings}>{t('common.save')}</Button>

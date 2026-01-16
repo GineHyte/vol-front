@@ -45,6 +45,7 @@
 		errorText = '';
 
 		settings.apiUrl = server;
+		settingsRenderer.set(settings);
 
 		if (plausibilityCheck(username, password)) {
 			login(username, password)
