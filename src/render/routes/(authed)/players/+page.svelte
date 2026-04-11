@@ -268,7 +268,7 @@
 
 {#if generatePlanAmpluaSelectionModalOpen}
 	<ComposedModal size={'sm'} bind:open={generatePlanAmpluaSelectionModalOpen}>
-		<ModalHeader title="Amplua" />
+		<ModalHeader title={t('titles.amplua')} />
 		<ModalBody>
 			{#each Object.entries(getAmplua()) as [key, value]}
 				<ClickableTile on:click={async () => await onGeneratePlanAmpluaClick(key)}>
