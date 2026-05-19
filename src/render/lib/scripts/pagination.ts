@@ -21,14 +21,14 @@ export class Pagination<T extends Model> {
 	items: T[];
 
 	constructor(
-		data: { page: number; size: number; pages: number; total: number; items: any[] },
+		data: { page?: number; size?: number; pages?: number; total?: number; items: any[] },
 		type: { new (): T },
 	) {
 		if (data) {
-			this.page = data.page;
-			this.pages = data.pages;
-			this.size = data.size;
-			this.total = data.total;
+			this.page = data.page ?? 1;
+			this.pages = data.pages ?? 1;
+			this.size = data.size ?? 0;
+			this.total = data.total ?? 0;
 			this.items = data.items.map((item: any) => {
 				return item instanceof type ? item : this.deserialize(item, type);
 			});

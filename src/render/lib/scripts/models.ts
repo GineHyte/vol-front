@@ -80,6 +80,7 @@ export class Team extends Model {
 	}
 }
 
+
 export class Game extends Model {
 	id: any;
 	name: any;
@@ -88,6 +89,7 @@ export class Game extends Model {
 	toDatetime: any;
 	teamA: any;
 	teamB: any;
+	playerUpdates: any;
 
 	constructor() {
 		super();
@@ -99,10 +101,12 @@ export class Game extends Model {
 		this.toDatetime = new Field('to_datetime', Datetime, t('fields.endDate'));
 		this.teamA = new Field('team_a', NameWithIdType, t('fields.teamA'), ['name']);
 		this.teamB = new Field('team_b', NameWithIdType, t('fields.teamB'), ['name']);
+		this.playerUpdates = new Field('player_updates', new Datatype([GamePlayerUpdate]));
 
 		return this.proxify();
 	}
 }
+
 
 export class Status extends Model {
 	status: any;
@@ -117,6 +121,7 @@ export class Status extends Model {
 		return this.proxify();
 	}
 }
+
 
 export class Action extends Model {
 	id: any;
@@ -144,6 +149,7 @@ export class Action extends Model {
 	}
 }
 
+
 export class Tech extends Model {
 	id: any;
 	name: any;
@@ -159,6 +165,7 @@ export class Tech extends Model {
 		return this.proxify();
 	}
 }
+
 
 export class Subtech extends Model {
 	id: any;
@@ -179,8 +186,6 @@ export class Subtech extends Model {
 		return this.proxify();
 	}
 }
-
-
 
 
 export class ExerciseBase extends Model {
@@ -534,6 +539,7 @@ export class ActionsBatchUpdateOptions extends Model {
 	}
 }
 
+
 export class ImpactRow extends Model {
 	id: any;
 	impact: any;
@@ -548,4 +554,19 @@ export class ImpactRow extends Model {
 	}
 
 
+}
+
+
+export class GamePlayerUpdate extends Model {
+	playerBefore: any;
+	playerAfter: any;
+
+	constructor() {
+		super();
+
+		this.playerBefore = new Field("player_before", NameWithIdType)
+		this.playerAfter = new Field("player_after", NameWithIdType)
+
+		return this.proxify()
+	}
 }

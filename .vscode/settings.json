@@ -11,9 +11,12 @@
 		"rust": false,
 		"python": false,
 		"objectscript-class": true,
+		"javascript": true,
 		"svelte": false,
 		"typescript": false,
-		"json": true,
-		"javascript": true
+		"objectscript-int": true,
+		"java": true,
+		"typescriptreact": true,
+		"json": true
 	}
 }
