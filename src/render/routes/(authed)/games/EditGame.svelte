@@ -46,6 +46,7 @@
 	async function editGameRenderer() {
 		game.teamA = teamA.id;
 		game.teamB = teamB.id;
+		game.playerUpdates = playerUpdates;
 		let status = await editGame(game);
 		if (status.status === 'success') {
 			pushNotification('editGameSuccess');
@@ -56,12 +57,12 @@
 	}
 
 	async function getTeamsRenderer(pprop: PaginationProps): Promise<Pagination<any>> {
-		let teams = await getTeams(pprop);
-		teams.items = teams.items.map((team: any) => {
-			team.players = team.players.map((player: any) => player.player.name);
-			return team;
-		});
-		return teams;
+		// let teams = 
+		// teams.items = teams.items.map((team: any) => {
+		// 	team.players = team.players.map((player: any) => player.player.name);
+		// 	return team;
+		// });
+		return await getTeams(pprop);
 	}
 
 	function playersTeam2NameWithId(playersTeam: PlayerTeam[]): NameWithId[] {
@@ -82,7 +83,6 @@
 
 	async function getPlayersAfterRenderer(pprop: PaginationProps): Promise<Pagination<NameWithId>> {
 		console.log(teamA)
-		console.log(teamA.players)
 		return new Pagination<NameWithId>(
 			{ items: playersTeam2NameWithId([...teamA.players, ...teamB.players]) },
 			NameWithId,
@@ -161,6 +161,7 @@
 						alreadySelectedIds={[teamA.id, teamB.id]}
 						bind:open={selectTeamAOpen}
 						on:submit={(e) => {
+							console.log(e.detail);
 							teamA = e.detail;
 							selectTeamAOpen = false;
 						}}
@@ -172,6 +173,7 @@
 						alreadySelectedIds={[teamA.id, teamB.id]}
 						bind:open={selectTeamBOpen}
 						on:submit={(e) => {
+							console.log(e.detail);
 							teamB = e.detail;
 							selectTeamBOpen = false;
 						}}
