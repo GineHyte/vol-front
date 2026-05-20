@@ -11,6 +11,7 @@ export default defineConfig({
 		target: 'esnext',
 		outDir: 'build',
 		assetsDir: '.',
+		sourcemap: true,
 		rollupOptions: {
 			output: {
 				entryFileNames: `assets/[name].js`,

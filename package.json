@@ -10,7 +10,7 @@
 		"dev": "cross-env NODE_ENV=dev npm run dev:all",
 		"dev:all": "concurrently -n=svelte,electron -c='#ff3e00',blue \"npm run dev:svelte\" \"npm run dev:electron\"",
 		"dev:svelte": "vite dev",
-		"dev:electron": "electron . --no-sandbox",
+		"dev:electron": "electron . --no-sandbox --remote-debugging-port=9222",
 		"build": "cross-env NODE_ENV=production npm run build:svelte && npm run build:electron",
 		"build:svelte": "vite build",
 		"build:electron": "node package.cjs",
