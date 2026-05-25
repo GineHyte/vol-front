@@ -21,7 +21,7 @@
 			page = page - 1;
 		}}
 	/>
-	<span>{page}</span>
+	<span>{page}/{total}</span>
 	<Button
 		kind="ghost"
 		tooltipPosition="left"

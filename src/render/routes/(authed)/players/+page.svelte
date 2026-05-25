@@ -310,7 +310,10 @@
 		editFunc={async (currentId: number) => {
 			selectedPlayerId = currentId;
 		}}
-		headers={[{ key: 'firstName', value: t('fields.firstName') }]}
+		headers={[
+			{ key: 'firstName', value: t('fields.firstName') },
+			{ key: 'lastName', value: t('fields.lastName') }
+		]}
 	/>
 {/key}
 {#if showStatistics && selectedPlayerId}
