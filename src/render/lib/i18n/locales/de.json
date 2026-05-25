@@ -115,6 +115,8 @@
     "selectImpact": "Auswirkung auswählen",
     "selectTeam": "Team auswählen",
     "selectPlayer": "Spieler auswählen",
+    "selectPlayerBefore": "Spieler vorher auswählen",
+    "selectPlayerAfter": "Spieler nachher auswählen",
     "selectedImpact": "Ausgewählte Auswirkung:",
     "selectedTeam": "Ausgewähltes Team:",
     "selectedPlayer": "Ausgewählter Spieler:",

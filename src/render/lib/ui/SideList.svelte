@@ -39,7 +39,7 @@
 		deepDuplicateFunc,
 	}: Props = $props();
 
-	let pageSize = 4;
+	let pageSize = 8;
 	let page = $state(1);
 	let target: any = $state();
 	let tableUpdate = $state(false);

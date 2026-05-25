@@ -116,6 +116,8 @@
     "selectImpact": "Вибрати якісний показник гри",
     "selectTeam": "Вибрати команду",
     "selectPlayer": "Вибрати гравця",
+    "selectPlayerBefore": "Вибрати гравця до",
+    "selectPlayerAfter": "Вибрати гравця після",
     "selectedImpact": "Обраний якісний показник гри:",
     "selectedTeam": "Обрана команда:",
     "selectedPlayer": "Обраний гравець:",

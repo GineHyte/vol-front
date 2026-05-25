@@ -46,7 +46,13 @@
 	async function editGameRenderer() {
 		game.teamA = teamA.id;
 		game.teamB = teamB.id;
-		game.playerUpdates = playerUpdates;
+		console.log(playerUpdates)
+		game.playerUpdates = playerUpdates.map(playerUpdate => {
+			return {
+				player_before: playerUpdate.playerBefore.id,
+				player_after: playerUpdate.playerAfter.id
+			};
+		});
 		let status = await editGame(game);
 		if (status.status === 'success') {
 			pushNotification('editGameSuccess');
@@ -63,6 +69,15 @@
 		// 	return team;
 		// });
 		return await getTeams(pprop);
+	}
+
+	async function getTeamsWithPlayersRenderer(pprop: PaginationProps): Promise<Pagination<any>> {
+		let teams =  await getTeams(pprop);
+		teams.items = teams.items.map((team: any) => {
+			team.players = team.players.map((player: any) => player.player.name);
+			return team;
+		});
+		return teams
 	}
 
 	function playersTeam2NameWithId(playersTeam: PlayerTeam[]): NameWithId[] {
@@ -161,11 +176,10 @@
 						alreadySelectedIds={[teamA.id, teamB.id]}
 						bind:open={selectTeamAOpen}
 						on:submit={(e) => {
-							console.log(e.detail);
 							teamA = e.detail;
 							selectTeamAOpen = false;
 						}}
-						excludeHeaders={['id']}
+						excludeHeaders={['id', 'players']}
 					/>
 					<ModalCreateRelation
 						title={t('buttons.selectTeamB')}
@@ -173,11 +187,10 @@
 						alreadySelectedIds={[teamA.id, teamB.id]}
 						bind:open={selectTeamBOpen}
 						on:submit={(e) => {
-							console.log(e.detail);
 							teamB = e.detail;
 							selectTeamBOpen = false;
 						}}
-						excludeHeaders={['id']}
+						excludeHeaders={['id', 'players']}
 					/>
 				{/key}
 				<ModalCreateRelation
@@ -189,7 +202,7 @@
 						playerBeforeTeamOpen = false;
 						playerBeforeOpen = true;
 					}}
-					excludeHeaders={['id']}
+					excludeHeaders={['id', 'players']}
 				/>
 				{#if playerBeforeOpen}
 					<ModalCreateRelation

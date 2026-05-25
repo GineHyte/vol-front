@@ -117,6 +117,8 @@
     "selectImpact": "Select Impact",
     "selectTeam": "Select Team",
     "selectPlayer": "Select Player",
+    "selectPlayerBefore": "Select Player Before",
+    "selectPlayerAfter": "Select Player After",
     "selectedImpact": "Selected impact:",
     "selectedTeam": "Selected team:",
     "selectedPlayer": "Selected player:",
