@@ -152,6 +152,18 @@ export async function deleteTech(id: number): Promise<Status> {
 	});
 }
 
+export async function editTech(tech: Tech): Promise<Status> {
+	return Api.put(`/techs/${tech.id}`, tech.serialize()).then((data: any) => {
+		return new Status().deserialize(data) as Status;
+	});
+}
+
+export async function editSubtech(subtech: Subtech): Promise<Status> {
+	return Api.put(`/subtechs/${subtech.id}`, subtech.serialize()).then((data: any) => {
+		return new Status().deserialize(data) as Status;
+	});
+}
+
 export async function getSubtechs(
 	techId: number | undefined = undefined,
 	paginationProps: PaginationProps = new PaginationProps(),

@@ -30,6 +30,8 @@
 	import { PaginationProps } from '$lib/scripts/pagination';
 	import ContextMenu from '$lib/ui/ContextMenu.svelte';
 	import ModalText from '@/render/lib/ui/ModalText.svelte';
+	import EditTech from './EditTech.svelte';
+	import EditSubtech from './EditSubtech.svelte';
 
 	let techId: number | undefined = $state(undefined);
 	let createOpen = $state(false);
@@ -41,6 +43,10 @@
 	let techTextOpen = $state(false);
 	let modalTextText = $state('');
 	let modalTextTitle = $state('');
+	let editTechId: number | undefined = $state(undefined);
+	let editTechOpen = $state(false);
+	let editSubtechId: number | undefined = $state(undefined);
+	let editSubtechOpen = $state(false);
 
 	function selectTech(id: number) {
 		techId = id;
@@ -183,6 +189,10 @@
 						target={targetForSubtechs}
 						deleteFunc={removeSubtech}
 						duplicateFunc={duplicateSubtech}
+						editFunc={async (id) => {
+							editSubtechId = id;
+							editSubtechOpen = true;
+						}}
 						updateFunc={() => (subtechTableUpdate = !subtechTableUpdate)}
 					/>
 				</Row>
@@ -214,7 +224,10 @@
 		title={t('titles.tech')}
 		deleteFunc={removeTech}
 		duplicateFunc={duplicateTech}
-		editFunc={() => {}}
+		editFunc={async (id) => {
+			editTechId = id;
+			editTechOpen = true;
+		}}
 		newFunc={() => {
 			createOpen = true;
 		}}
@@ -222,6 +235,18 @@
 		headers={[{ key: 'name', value: t('common.name') }]}
 	/>
 {/key}
+
+<EditTech
+	bind:editOpen={editTechOpen}
+	editTechId={editTechId}
+	updateTable={() => (subtechTableUpdate = !subtechTableUpdate)}
+/>
+
+<EditSubtech
+	bind:editOpen={editSubtechOpen}
+	editSubtechId={editSubtechId}
+	updateTable={() => (subtechTableUpdate = !subtechTableUpdate)}
+/>
 
 {#if techTextOpen}
 	<ModalText bind:open={techTextOpen} title={modalTextTitle} text={modalTextText} />

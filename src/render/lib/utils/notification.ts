@@ -130,6 +130,26 @@ const NOTIFICATIONS: { [key: string]: () => NotificationType} = {
         message: t('notifications.subtechCannotBeCreated'),
         kind: 'error',
     }),
+    editTechSuccess: () => ({
+        title: t('notifications.success'),
+        message: t('notifications.techEdited'),
+        kind: 'success',
+    }),
+    editTechError: () => ({
+        title: t('notifications.error'),
+        message: t('notifications.techCannotBeEdited'),
+        kind: 'error',
+    }),
+    editSubtechSuccess: () => ({
+        title: t('notifications.success'),
+        message: t('notifications.subtechEdited'),
+        kind: 'success',
+    }),
+    editSubtechError: () => ({
+        title: t('notifications.error'),
+        message: t('notifications.subtechCannotBeEdited'),
+        kind: 'error',
+    }),
     settingsServerIPError: () => ({
         title: t('notifications.error'),
         message: t('notifications.settingsNotFound'),
